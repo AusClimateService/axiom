@@ -1,0 +1,91 @@
+variable,long_name,standard_name,cell_methods,cell_measures,units,positive,dimensions,modeling_realm,frequency
+tas,Near-Surface Air Temperature,air_temperature,area: time: mean,area: areacella,K,NA,longitude latitude time height2m,atmos,mon
+ts,Surface Temperature,surface_temperature,area: time: mean,area: areacella,K,NA,longitude latitude time,atmos,mon
+tasmin,Daily Minimum Near-Surface Air Temperature,air_temperature,area: mean time: minimum within days time: mean over days,area: areacella,K,NA,longitude latitude time height2m,atmos,mon
+tasmax,Daily Maximum Near-Surface Air Temperature,air_temperature,area: mean time: maximum within days time: mean over days,area: areacella,K,NA,longitude latitude time height2m,atmos,mon
+psl,Sea Level Pressure,air_pressure_at_mean_sea_level,area: time: mean,area: areacella,Pa,NA,longitude latitude time,atmos,mon
+ps,Surface Air Pressure,surface_air_pressure,area: time: mean,area: areacella,Pa,NA,longitude latitude time,atmos,mon
+uas,Eastward Near-Surface Wind,eastward_wind,area: time: mean,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,mon
+vas,Northward Near-Surface Wind,northward_wind,area: time: mean,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,mon
+sfcWind,Near-Surface Wind Speed,wind_speed,area: time: mean,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,mon
+hurs,Near-Surface Relative Humidity,relative_humidity,area: time: mean,area: areacella,%,NA,longitude latitude time height2m,atmos,mon
+huss,Near-Surface Specific Humidity,specific_humidity,area: time: mean,area: areacella,1,NA,longitude latitude time height2m,atmos,mon
+pr,Precipitation,precipitation_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+prsn,Snowfall Flux,snowfall_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+prc,Convective Precipitation,convective_precipitation_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+evspsbl,Evaporation Including Sublimation and Transpiration,water_evapotranspiration_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+sbl,Surface Snow and Ice Sublimation Flux,tendency_of_atmosphere_mass_content_of_water_vapor_due_to_sublimation_of_surface_snow_and_ice,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,landIce,mon
+tauu,Surface Downward Eastward Wind Stress,surface_downward_eastward_stress,area: time: mean,area: areacella,Pa,down,longitude latitude time,atmos,mon
+tauv,Surface Downward Northward Wind Stress,surface_downward_northward_stress,area: time: mean,area: areacella,Pa,down,longitude latitude time,atmos,mon
+hfls,Surface Upward Latent Heat Flux,surface_upward_latent_heat_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+hfss,Surface Upward Sensible Heat Flux,surface_upward_sensible_heat_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rlds,Surface Downwelling Longwave Radiation,surface_downwelling_longwave_flux_in_air,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,mon
+rlus,Surface Upwelling Longwave Radiation,surface_upwelling_longwave_flux_in_air,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rsds,Surface Downwelling Shortwave Radiation,surface_downwelling_shortwave_flux_in_air,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,mon
+rsus,Surface Upwelling Shortwave Radiation,surface_upwelling_shortwave_flux_in_air,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rsdscs,Surface Downwelling Clear-Sky Shortwave Radiation,surface_downwelling_shortwave_flux_in_air_assuming_clear_sky,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,mon
+rsuscs,Surface Upwelling Clear-Sky Shortwave Radiation,surface_upwelling_shortwave_flux_in_air_assuming_clear_sky,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rldscs,Surface Downwelling Clear-Sky Longwave Radiation,surface_downwelling_longwave_flux_in_air_assuming_clear_sky,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,mon
+rsdt,TOA Incident Shortwave Radiation,toa_incoming_shortwave_flux,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,mon
+rsut,TOA Outgoing Shortwave Radiation,toa_outgoing_shortwave_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rlut,TOA Outgoing Longwave Radiation,toa_outgoing_longwave_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rlutcs,TOA Outgoing Clear-Sky Longwave Radiation,toa_outgoing_longwave_flux_assuming_clear_sky,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+rsutcs,TOA Outgoing Clear-Sky Shortwave Radiation,toa_outgoing_shortwave_flux_assuming_clear_sky,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,mon
+prw,Water Vapor Path,atmosphere_mass_content_of_water_vapor,area: time: mean,area: areacella,kg m-2,NA,longitude latitude time,atmos,mon
+clt,Total Cloud Cover Percentage,cloud_area_fraction,area: time: mean,area: areacella,%,NA,longitude latitude time,atmos,mon
+clwvi,Condensed Water Path,atmosphere_mass_content_of_cloud_condensed_water,area: time: mean,area: areacella,kg m-2,NA,longitude latitude time,atmos,mon
+clivi,Ice Water Path,atmosphere_mass_content_of_cloud_ice,area: time: mean,area: areacella,kg m-2,NA,longitude latitude time,atmos,mon
+rtmt,Net Downward Radiative Flux at Top of Model,net_downward_radiative_flux_at_top_of_atmosphere_model,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,mon
+ccb,Air Pressure at Convective Cloud Base,air_pressure_at_convective_cloud_base,area: time: mean,area: areacella,Pa,NA,longitude latitude time,atmos,mon
+cct,Air Pressure at Convective Cloud Top,air_pressure_at_convective_cloud_top,area: time: mean,area: areacella,Pa,NA,longitude latitude time,atmos,mon
+ci,Fraction of Time Convection Occurs in Cell,convection_time_fraction,area: time: mean,area: areacella,1,NA,longitude latitude time,atmos,mon
+sci,Fraction of Time Shallow Convection Occurs,shallow_convection_time_fraction,area: time: mean,area: areacella,1,NA,longitude latitude time,atmos,mon
+fco2antt,Carbon Mass Flux into Atmosphere Due to All Anthropogenic Emissions of CO2 [kgC m-2 s-1],tendency_of_atmosphere_mass_content_of_carbon_dioxide_expressed_as_carbon_due_to_anthropogenic_emission,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+fco2fos,Carbon Mass Flux into Atmosphere Due to Fossil Fuel Emissions of CO2 [kgC m-2 s-1],tendency_of_atmosphere_mass_content_of_carbon_dioxide_expressed_as_carbon_due_to_emission_from_fossil_fuel_combustion,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+fco2nat,Surface Carbon Mass Flux into the Atmosphere Due to Natural Sources [kgC m-2 s-1],surface_upward_mass_flux_of_carbon_dioxide_expressed_as_carbon_due_to_emission_from_natural_sources,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,mon
+cl,Percentage Cloud Cover,cloud_area_fraction_in_atmosphere_layer,area: time: mean,area: areacella,%,NA,longitude latitude alevel time,atmos,mon
+clw,Mass Fraction of Cloud Liquid Water,mass_fraction_of_cloud_liquid_water_in_air,area: time: mean,area: areacella,kg kg-1,NA,longitude latitude alevel time,atmos,mon
+cli,Mass Fraction of Cloud Ice,mass_fraction_of_cloud_ice_in_air,area: time: mean,area: areacella,kg kg-1,NA,longitude latitude alevel time,atmos,mon
+mc,Convective Mass Flux,atmosphere_net_upward_convective_mass_flux,area: time: mean,area: areacella,kg m-2 s-1,up,longitude latitude alevhalf time,atmos,mon
+ta,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev19 time,atmos,mon
+ta200,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev19 time,atmos,mon
+ta500,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev19 time,atmos,mon
+ta850,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev19 time,atmos,mon
+ua,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+ua200,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+ua500,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+ua850,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+va,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+va200,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+va500,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+va850,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev19 time,atmos,mon
+hus,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev19 time,atmos,mon
+hus200,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev19 time,atmos,mon
+hus500,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev19 time,atmos,mon
+hus850,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev19 time,atmos,mon
+hur,Relative Humidity,relative_humidity,time: mean,area: areacella,%,NA,longitude latitude plev19 time,atmos,mon
+wap,Omega (=dp/dt),lagrangian_tendency_of_air_pressure,time: mean,area: areacella,Pa s-1,NA,longitude latitude plev19 time,atmos,mon
+zg,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev19 time,atmos,mon
+zg200,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev19 time,atmos,mon
+zg500,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev19 time,atmos,mon
+zg850,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev19 time,atmos,mon
+o3,Mole Fraction of O3,mole_fraction_of_ozone_in_air,time: mean,area: areacella,mol mol-1,NA,longitude latitude plev19 time,atmos atmosChem,mon
+o3,Mole Fraction of O3,mole_fraction_of_ozone_in_air,area: mean time: mean within years time: mean over years,area: areacella,mol mol-1,NA,longitude latitude plev19 time2,atmos atmosChem,monC
+co2,Mole Fraction of CO2,mole_fraction_of_carbon_dioxide_in_air,time: mean,area: areacella,mol mol-1,NA,longitude latitude plev19 time,atmos,mon
+co2,Mole Fraction of CO2,mole_fraction_of_carbon_dioxide_in_air,area: mean time: mean within years time: mean over years,area: areacella,mol mol-1,NA,longitude latitude plev19 time2,atmos,monC
+co2mass,Total Atmospheric Mass of CO2,atmosphere_mass_of_carbon_dioxide,area: time: mean,NA,kg,NA,time,atmos,mon
+co2mass,Total Atmospheric Mass of CO2,atmosphere_mass_of_carbon_dioxide,area: mean time: mean within years time: mean over years,NA,kg,NA,time2,atmos,monC
+ch4,Mole Fraction of CH4,mole_fraction_of_methane_in_air,time: mean,area: areacella,mol mol-1,NA,longitude latitude plev19 time,atmos atmosChem,mon
+ch4,Mole Fraction of CH4,mole_fraction_of_methane_in_air,area: mean time: mean within years time: mean over years,area: areacella,mol mol-1,NA,longitude latitude plev19 time2,atmos atmosChem,monC
+ch4global,Global Mean Mole Fraction of CH4,mole_fraction_of_methane_in_air,area: time: mean,NA,1.00E-09,NA,time,atmos atmosChem,mon
+ch4global,Global Mean Mole Fraction of CH4,mole_fraction_of_methane_in_air,area: mean time: mean within years time: mean over years,NA,1.00E-09,NA,time2,atmos atmosChem,monC
+n2o,Mole Fraction of N2O,mole_fraction_of_nitrous_oxide_in_air,time: mean,area: areacella,mol mol-1,NA,longitude latitude plev19 time,atmos atmosChem,mon
+n2o,Mole Fraction of N2O,mole_fraction_of_nitrous_oxide_in_air,area: mean time: mean within years time: mean over years,area: areacella,mol mol-1,NA,longitude latitude plev19 time2,atmos atmosChem,monC
+n2oglobal,Global Mean Mole Fraction of N2O,mole_fraction_of_nitrous_oxide_in_air,area: time: mean,NA,1.00E-09,NA,time,atmos atmosChem,mon
+n2oglobal,Global Mean Mole Fraction of N2O,mole_fraction_of_nitrous_oxide_in_air,area: mean time: mean within years time: mean over years,NA,1.00E-09,NA,time2,atmos atmosChem,monC
+cfc11global,Global Mean Mole Fraction of CFC11,mole_fraction_of_cfc11_in_air,area: time: mean,NA,1.00E-12,NA,time,atmos atmosChem,mon
+cfc12global,Global Mean Mole Fraction of CFC12,mole_fraction_of_cfc12_in_air,area: time: mean,NA,1.00E-12,NA,time,atmos atmosChem,mon
+hcfc22global,Global Mean Mole Fraction of HCFC22,mole_fraction_of_hcfc22_in_air,area: time: mean,NA,1.00E-12,NA,time,atmos atmosChem,mon
+cfc113global,Global Mean Mole Fraction of CFC113,mole_fraction_of_cfc113_in_air,area: time: mean,NA,1.00E-12,NA,time,atmos atmosChem,mon
+pfull,Pressure at Model Full-Levels,air_pressure,area: mean time: mean within years time: mean over years,area: areacella,Pa,NA,longitude latitude alevel time2,atmos,monC
+phalf,Pressure on Model Half-Levels,air_pressure,area: mean time: mean within years time: mean over years,area: areacella,Pa,NA,longitude latitude alevhalf time2,atmos,monC

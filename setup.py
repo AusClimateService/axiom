@@ -7,7 +7,8 @@ setup(
     author_email='ben.schroeter@csiro.au',
     install_requires=[
         'xarray',
-        'netCDF4'
+        'netCDF4',
+        'beautifulsoup4'
     ],
     scripts=['bin/axv']
 )

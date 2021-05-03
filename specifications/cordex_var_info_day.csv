@@ -1,0 +1,52 @@
+variable,long_name,standard_name,cell_methods,cell_measures,units,positive,dimensions,modeling_realm,frequency
+huss,Near-Surface Specific Humidity,specific_humidity,area: time: mean,area: areacella,1,NA,longitude latitude time height2m,atmos,day
+tasmin,Daily Minimum Near-Surface Air Temperature,air_temperature,area: mean time: minimum,area: areacella,K,NA,longitude latitude time height2m,atmos,day
+tasmax,Daily Maximum Near-Surface Air Temperature,air_temperature,area: mean time: maximum,area: areacella,K,NA,longitude latitude time height2m,atmos,day
+tas,Near-Surface Air Temperature,air_temperature,area: time: mean,area: areacella,K,NA,longitude latitude time height2m,atmos,day
+pr,Precipitation,precipitation_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,day
+psl,Sea Level Pressure,air_pressure_at_mean_sea_level,area: time: mean,area: areacella,Pa,NA,longitude latitude time,atmos,day
+sfcWind,Near-Surface Wind Speed,wind_speed,area: time: mean,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,day
+mrso,Total Soil Moisture Content,mass_content_of_water_in_soil,area: mean where land time: mean,area: areacella,kg m-2,NA,longitude latitude time,land,day
+mrsos,Moisture in Upper Portion of Soil Column,mass_content_of_water_in_soil_layer,area: mean where land time: mean,area: areacella,kg m-2,NA,longitude latitude time sdepth1,land,day
+hurs,Near-Surface Relative Humidity,relative_humidity,area: time: mean,area: areacella,%,NA,longitude latitude time height2m,atmos,day
+hursmin,Daily Minimum Near-Surface Relative Humidity,relative_humidity,area: mean time: minimum,area: areacella,%,NA,longitude latitude time height2m,atmos,day
+hursmax,Daily Maximum Near-Surface Relative Humidity,relative_humidity,area: mean time: maximum,area: areacella,%,NA,longitude latitude time height2m,atmos,day
+snc,Snow Area Percentage,surface_snow_area_fraction,area: time: mean,area: areacella,%,NA,longitude latitude time,landIce land,day
+clt,Total Cloud Cover Percentage,cloud_area_fraction,area: time: mean,area: areacella,%,NA,longitude latitude time,atmos,day
+tslsi,Surface Temperature Where Land or Sea Ice,surface_temperature,area: time: mean (comment: over land and sea ice),area: areacella,K,NA,longitude latitude time,land,day
+snw,Surface Snow Amount,surface_snow_amount,area: mean where land time: mean,area: areacella,kg m-2,NA,longitude latitude time,landIce land,day
+prc,Convective Precipitation,convective_precipitation_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,day
+prsn,Snowfall Flux,snowfall_flux,area: time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,atmos,day
+mrro,Total Runoff,runoff_flux,area: mean where land time: mean,area: areacella,kg m-2 s-1,NA,longitude latitude time,land,day
+uas,Eastward Near-Surface Wind,eastward_wind,area: time: mean,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,day
+vas,Northward Near-Surface Wind,northward_wind,area: time: mean,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,day
+sfcWindmax,Daily Maximum Near-Surface Wind Speed,wind_speed,area: mean time: maximum,area: areacella,m s-1,NA,longitude latitude time height10m,atmos,day
+hfls,Surface Upward Latent Heat Flux,surface_upward_latent_heat_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,day
+hfss,Surface Upward Sensible Heat Flux,surface_upward_sensible_heat_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,day
+rlds,Surface Downwelling Longwave Radiation,surface_downwelling_longwave_flux_in_air,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,day
+rlus,Surface Upwelling Longwave Radiation,surface_upwelling_longwave_flux_in_air,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,day
+rsds,Surface Downwelling Shortwave Radiation,surface_downwelling_shortwave_flux_in_air,area: time: mean,area: areacella,W m-2,down,longitude latitude time,atmos,day
+rsus,Surface Upwelling Shortwave Radiation,surface_upwelling_shortwave_flux_in_air,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,day
+rlut,TOA Outgoing Longwave Radiation,toa_outgoing_longwave_flux,area: time: mean,area: areacella,W m-2,up,longitude latitude time,atmos,day
+ta,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev8 time,atmos,day
+ta200,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev8 time,atmos,day
+ta500,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev8 time,atmos,day
+ta850,Air Temperature,air_temperature,time: mean,area: areacella,K,NA,longitude latitude plev8 time,atmos,day
+hur,Relative Humidity,relative_humidity,time: mean,area: areacella,%,NA,longitude latitude plev8 time,atmos,day
+hus,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev8 time,atmos,day
+hus200,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev8 time,atmos,day
+hus500,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev8 time,atmos,day
+hus850,Specific Humidity,specific_humidity,time: mean,area: areacella,1,NA,longitude latitude plev8 time,atmos,day
+wap,Omega (=dp/dt),lagrangian_tendency_of_air_pressure,time: mean,area: areacella,Pa s-1,NA,longitude latitude plev8 time,atmos,day
+va,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+va200,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+va500,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+va850,Northward Wind,northward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+ua,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+ua200,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+ua500,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+ua850,Eastward Wind,eastward_wind,time: mean,area: areacella,m s-1,NA,longitude latitude plev8 time,atmos,day
+zg,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev8 time,atmos,day
+zg200,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev8 time,atmos,day
+zg500,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev8 time,atmos,day
+zg850,Geopotential Height,geopotential_height,time: mean,area: areacella,m,NA,longitude latitude plev8 time,atmos,day

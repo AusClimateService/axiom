@@ -1,0 +1,9 @@
+variable,long_name,standard_name,cell_methods,cell_measures,units,positive,dimensions,modeling_realm,frequency
+areacella,Grid-Cell Area for Atmospheric Grid Variables,cell_area,area: sum,NA,m2,NA,longitude latitude,atmos land,fx
+areacellr,Grid-Cell Area for River Model Variables,cell_area,area: sum,NA,m2,NA,longitude latitude,land,fx
+orog,Surface Altitude,surface_altitude,area: mean,area: areacella,m,NA,longitude latitude,land,fx
+sftlf,Percentage of the grid  cell occupied by land (including lakes),land_area_fraction,area: mean,area: areacella,%,NA,longitude latitude,atmos,fx
+sftgif,Land Ice Area Percentage,land_ice_area_fraction,area: mean,area: areacella,%,NA,longitude latitude,land,fx
+mrsofc,Capacity of Soil to Store Water (Field Capacity),soil_moisture_content_at_field_capacity,area: mean where land,area: areacella,kg m-2,NA,longitude latitude,land,fx
+rootd,Maximum Root Depth,root_depth,area: mean,area: areacella,m,NA,longitude latitude,land,fx
+zfull,Altitude of Model Full-Levels,height_above_reference_ellipsoid,area: mean,area: areacella,m,NA,longitude latitude alevel,atmos,fx
