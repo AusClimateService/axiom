@@ -1,4 +1,4 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
     name='axiom',
@@ -8,7 +8,13 @@ setup(
     install_requires=[
         'xarray',
         'netCDF4',
-        'beautifulsoup4'
+        'xmlschema',
+        'lxml',
+        'dicttoxml',
+        'xmltodict'
     ],
-    scripts=['bin/axv']
+    scripts=['bin/axv'],
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest'],
+    packages=find_packages()
 )

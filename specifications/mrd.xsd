@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="metadata">
+        <xs:complexType>
+            <xs:all>
+
+                <!-- Lineage -->
+                <xs:element name="author" type="xs:string"/>
+                <xs:element name="owner" type="xs:string"/>
+                <xs:element name="version" type="xs:string"/>
+                <xs:element name="created" type="xs:dateTime"/>
+                <xs:element name="license" type="xs:string"/>
+                <xs:element name="citation" type="xs:string"/>
+                <xs:element name="history" type="xs:string"/>
+
+                <!-- Resolution -->
+                <xs:element name="resolution_horizontal" type="xs:string"/>
+                <xs:element name="resolution_vertical" type="xs:string"/>
+                <xs:element name="resolution_temporal" type="xs:string"/>
+
+                <!-- Averaging -->
+                <xs:element name="averaging_horizontal" type="xs:string"/>
+                <xs:element name="averaging_vertical" type="xs:string"/>
+                <xs:element name="averaging_temporal" type="xs:string"/>
+
+            </xs:all>
+
+        </xs:complexType>
+
+    </xs:element>
+
+</xs:schema>

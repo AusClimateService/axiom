@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <author>Ben</author>
+    <owner>Ben</owner>
+    <version>0.1.1</version>
+    <created>2021-05-07T23:23:07</created>
+    <license>CC Attribution</license>
+    <citation>My Ref</citation>
+    <history>My Ref</history>
+    <resolution_horizontal>1deg</resolution_horizontal>
+    <resolution_vertical>m</resolution_vertical>
+    <resolution_temporal>1hr</resolution_temporal>
+    <averaging_horizontal>1deg</averaging_horizontal>
+    <averaging_vertical>m</averaging_vertical>
+    <averaging_temporal>1hr</averaging_temporal>
+    <test></test>
+</metadata>
