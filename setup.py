@@ -11,9 +11,10 @@ setup(
         'xmlschema',
         'lxml',
         'dicttoxml',
-        'xmltodict'
+        'xmltodict',
+        'tabulate'
     ],
-    scripts=['bin/axv'],
+    scripts=['bin/axv', 'bin/axiom'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     packages=find_packages()

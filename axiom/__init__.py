@@ -62,6 +62,25 @@ def validate_xml(xml, xsd):
     xsd.validate(xml)
 
 
+def validate2(xml, xsd, allow_unknown=True):
+
+    # Get a list of the errors
+    errors = xsd.iter_errors(xml)
+
+    errors_parsed = list()
+
+    # Filter unknown elements if requested
+    for error in errors:
+
+        # if 'Unexpected' in error.reason and allow_unknown is True:
+        #     continue
+
+        errors_parsed.append(error)
+
+    errors = errors_parsed
+    return errors
+
+
 def xml2dict(xml):
     """Convert xml to dictionary.
 
@@ -132,3 +151,8 @@ def xml2str(xml, **kwargs):
         str : String representation of the XML document.
     """
     return et.tostring(xml, **kwargs)
+
+def extract_metadata_xml(filepath):
+
+    ds = xr.open_dataset(filepath)
+    return dict2xml(ds.attrs)

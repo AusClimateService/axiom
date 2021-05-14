@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+import argparse
+import axiom as ax
+from axiom.validate import Validator, ValidationError
+import sys
+
+
+def parse_and_dispatch(parser):
+    """Parse arguments for the script and dispatch to the correct function.
+
+    Args:
+        argparse.ArgumentParser : Parser object.
+    """
+    args = parser.parse_args()
+
+    if args.func:
+        args.func(**vars(args))
+    else:
+        parser.print_help()
+
+
+def _validate(schema_filepath, input_filepath, report_filepath=None, **kwargs):
+    """Perform the validation.
+
+    Args:
+        schema_filepath (str) : Path to the schema file.
+        input_filepath (str) : Path to the data file to validate against the schema.
+    """
+
+    # Open the schema
+    schema = ax.open_xsd(schema_filepath)
+
+    # Extract an XML representation of the metadata from the input filepath
+    metadata = ax.extract_metadata_xml(input_filepath)
+
+    # Create a validator and validate
+    v = Validator()
+    v.validate(metadata, schema)
+
+    # Dump report if requested
+    if report_filepath:
+        v.generate_report(report_filepath, input_filepath, schema_filepath)
+
+    # Failure
+    if v.is_valid == False:
+        sys.exit(1)
+
+
+def get_parser():
+    """Get a parser object.
+
+    Returns:
+        argparse.ArgumentParser() : Parser.
+    """
+
+    # Base parser, for dispatch to subparsers
+    parser = argparse.ArgumentParser()
+    parser.set_defaults(func=None)
+    subparsers = parser.add_subparsers(help='Sub command')
+
+    # Validation parser
+    parser_validate = subparsers.add_parser('validate')
+    parser_validate.description = 'Validate an input file against a schema.'
+    parser_validate.add_argument('schema_filepath', type=str, help='Path to schema file.')
+    parser_validate.add_argument('input_filepath', type=str, help='File to validate')
+    parser_validate.add_argument('-r', '--report_filepath', type=str, default=None, help='Path to write validation report.')
+    parser_validate.set_defaults(func=_validate)
+
+    # Return the fully constructed parser
+    return parser
+
+
+if __name__ == '__main__':
+
+    # Get and dispatch arguments
+    parser = get_parser()
+    parse_and_dispatch(parser)
