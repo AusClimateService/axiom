@@ -1,6 +1,10 @@
 # Axiom
 
-A utility for validating/applying metadata templates for scientific data files.
+*An established rule or principle, a self-evident truth*
+
+Axiom is a prototype utility for validating/applying metadata templates for scientific data files.
+
+It works on the principles of XML schema validation () whereby metadata is extracted from scientific data, converted to XML and validated against a required standard (schema).
 
 ## Installation
 
@@ -10,49 +14,69 @@ A utility for validating/applying metadata templates for scientific data files.
 
 ## Command-line utilities
 
-### Validator (axv)
+### Validate
 
-A command-line utility to validate a data file against a known specification.
+The validation utility is used to evaluate whether a data file has the required metadata to meet the standards specified in a schema file.
 
-```shell
-$ axv -h
-usage: axv [-h] [-s {v1,latest}] input_path
+```
+$ axiom validate -h
+usage: axiom validate [-h] [-r REPORT_FILEPATH] schema_filepath input_filepath
 
-Axiom Validator v0.1.0
+Validate an input file against a schema.
 
 positional arguments:
-  input_path            Path to the file to validate.
+  schema_filepath       Path to schema file.
+  input_filepath        File to validate
 
 optional arguments:
   -h, --help            show this help message and exit
-  -s {v1,latest}, --specification {v1,latest}
-                        Specification to validate against. Defaults to latest.
+  -r REPORT_FILEPATH, --report_filepath REPORT_FILEPATH
+                        Path to write validation report.
 ```
 
-Example output:
+Example usage (Spread across multiple lines for clarity):
 
-```shell
-$ axv test.nc
-2021-01-06 13:52:05,278 - axiom.validate.validator - INFO - Axiom Validator v0.1.0
-2021-01-06 13:52:05,316 - axiom.validate.validator - INFO - Validating /Users/sch576/work/axiom/test.nc
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Validating global attributes.
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Attribute: author
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <class 'str'>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <function nonempty_str at 0x7ff1b5272790>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Attribute: pwd
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <class 'str'>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <function nonempty_str at 0x7ff1b5272790>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Attribute: command
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <class 'str'>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <function nonempty_str at 0x7ff1b5272790>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Attribute: created
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <class 'str'>
-2021-01-06 13:52:05,316 - axiom.validate.validator - DEBUG - Checking <function parse at 0x7ff1b31b3160>
-2021-01-06 13:52:05,318 - axiom.validate.validator - INFO - SUCCESS! File /Users/sch576/work/axiom/test.nc meets <axiom.validate.specification.V1 object at 0x7ff1b52707c0> specification.
+```
+$ SCHEMA=specifications/mrd.xsd
+$ DATA_FILE=/path/to/data.nc
+axiom validate $SCHEMA $DATA_FILE -r report.txt
 ```
 
-### Editor (axe)
+This will return a nonzero exit code if the data provided fails to match the schema. A report can optionally be generated, which takes the following form to advise the user how to "fix" their metadata to match the requirements of the schema.
 
-A command-line utility for applying a metadata specification to a data file.
-
-(in progress)
+```cat report.txt
+Axiom Validator 0.1.0
+Report generated: 2021-05-14 04:57:46.729151
+schema_filepath: specifications/mrd.xsd
+input_filepath: /path/to/data.nc
+Status: FAIL
++-----------------------+------------------------------------------------------+
+| Key                   | Error                                                |
++=======================+======================================================+
+| author                | Required key author is missing.                      |
++-----------------------+------------------------------------------------------+
+| owner                 | Required key owner is missing.                       |
++-----------------------+------------------------------------------------------+
+| version               | Required key version is missing.                     |
++-----------------------+------------------------------------------------------+
+| created               | Required key created is missing.                     |
++-----------------------+------------------------------------------------------+
+| license               | Required key license is missing.                     |
++-----------------------+------------------------------------------------------+
+| citation              | Required key citation is missing.                    |
++-----------------------+------------------------------------------------------+
+| history               | Value of history does not match schema requirements. |
++-----------------------+------------------------------------------------------+
+| resolution_horizontal | Required key resolution_horizontal is missing.       |
++-----------------------+------------------------------------------------------+
+| resolution_vertical   | Required key resolution_vertical is missing.         |
++-----------------------+------------------------------------------------------+
+| resolution_temporal   | Required key resolution_temporal is missing.         |
++-----------------------+------------------------------------------------------+
+| averaging_horizontal  | Required key averaging_horizontal is missing.        |
++-----------------------+------------------------------------------------------+
+| averaging_vertical    | Required key averaging_vertical is missing.          |
++-----------------------+------------------------------------------------------+
+| averaging_temporal    | Required key averaging_temporal is missing.          |
++-----------------------+------------------------------------------------------+
+```
