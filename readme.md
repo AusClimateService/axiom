@@ -4,7 +4,7 @@
 
 Axiom is a prototype utility for validating/applying metadata templates for scientific data files.
 
-It works on the principles of XML schema validation () whereby metadata is extracted from scientific data, converted to XML and validated against a required standard (schema).
+It works on the principles of XML schema validation (https://www.w3schools.com/xml/schema_intro.asp) whereby metadata is extracted from scientific data, converted to XML and validated against a required standard (schema).
 
 ## Installation
 
