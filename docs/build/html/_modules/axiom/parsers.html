@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>axiom.parsers &#8212; Axiom 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for axiom.parsers</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Parser classes, for parsing metadata specifications.&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">xml.etree.ElementTree</span> <span class="k">as</span> <span class="nn">et</span>
+<span class="kn">import</span> <span class="nn">lxml.etree</span> <span class="k">as</span> <span class="nn">le</span>
+
+
+<div class="viewcode-block" id="Parser"><a class="viewcode-back" href="../../index.html#axiom.parsers.Parser">[docs]</a><span class="k">class</span> <span class="nc">Parser</span><span class="p">:</span>
+
+    <span class="sd">&quot;&quot;&quot;Abstract class for standardised subclasses.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Parser.parse"><a class="viewcode-back" href="../../index.html#axiom.parsers.Parser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse the filepath into a dictionary of variables.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str) : Path to the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict : Dictionary of variables with metadata.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            NotImplementedError: [description]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="CFSpecificationsParser"><a class="viewcode-back" href="../../index.html#axiom.parsers.CFSpecificationsParser">[docs]</a><span class="k">class</span> <span class="nc">CFSpecificationsParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Parser for the CFConventions standard name table.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CFSpecificationsParser.parse"><a class="viewcode-back" href="../../index.html#axiom.parsers.CFSpecificationsParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse the CF standard names table.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str): Path to the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list : List of variables with</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># xml = md.parse(filepath)</span>
+        <span class="n">xml</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">features</span><span class="o">=</span><span class="s1">&#39;html.parser&#39;</span><span class="p">)</span>
+
+        <span class="n">parsed</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">xml</span><span class="o">.</span><span class="n">standard_name_table</span><span class="o">.</span><span class="n">findAll</span><span class="p">(</span><span class="s1">&#39;entry&#39;</span><span class="p">):</span>
+
+            <span class="n">parsed</span><span class="p">[</span><span class="n">entry</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">description</span><span class="o">.</span><span class="n">text</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">units</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">canonical_units</span><span class="o">.</span><span class="n">text</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">grib</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">grib</span><span class="o">.</span><span class="n">text</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">amip</span><span class="o">=</span><span class="n">entry</span><span class="o">.</span><span class="n">amip</span><span class="o">.</span><span class="n">text</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">parsed</span></div></div>
+
+
+<div class="viewcode-block" id="CordexCSVParser"><a class="viewcode-back" href="../../index.html#axiom.parsers.CordexCSVParser">[docs]</a><span class="k">class</span> <span class="nc">CordexCSVParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Parse a Cordex CSV file with a header line into a list of variables.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="CordexCSVParser.parse"><a class="viewcode-back" href="../../index.html#axiom.parsers.CordexCSVParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse a CSV file with header line into variable dict.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str): Path to the file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict : Dictionary of variables and metadata.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="n">parsed</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;records&#39;</span><span class="p">):</span>
+            <span class="n">parsed</span><span class="p">[</span><span class="n">record</span><span class="p">[</span><span class="s1">&#39;variable&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">record</span>
+
+        <span class="k">return</span> <span class="n">parsed</span></div></div>
+
+
+<div class="viewcode-block" id="XMLSchemaParser"><a class="viewcode-back" href="../../index.html#axiom.parsers.XMLSchemaParser">[docs]</a><span class="k">class</span> <span class="nc">XMLSchemaParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Parser for XSD files.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="XMLSchemaParser.parse"><a class="viewcode-back" href="../../index.html#axiom.parsers.XMLSchemaParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse an xsd document.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str) : Path to the xsd file.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            lxml.etree.XMLSchema : Schema.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">le</span><span class="o">.</span><span class="n">XMLSchema</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">filepath</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="XMLParser"><a class="viewcode-back" href="../../index.html#axiom.parsers.XMLParser">[docs]</a><span class="k">class</span> <span class="nc">XMLParser</span><span class="p">(</span><span class="n">Parser</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;Parser for XML files.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="XMLParser.parse"><a class="viewcode-back" href="../../index.html#axiom.parsers.XMLParser.parse">[docs]</a>    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">schema</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Parse an XML file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            filepath (str) : Path to the xml file.</span>
+<span class="sd">            schema (lxml.etree.XMLSchema) : Optional schema.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            lxml.etree._Element : XML object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_parser</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">XMLParser</span><span class="p">(</span><span class="n">schema</span><span class="o">=</span><span class="n">schema</span><span class="p">)</span>
+        <span class="n">raw</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">le</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">parser</span><span class="o">=</span><span class="n">_parser</span><span class="p">)</span></div></div>
+
+
+<div class="viewcode-block" id="ParserFactory"><a class="viewcode-back" href="../../index.html#axiom.parsers.ParserFactory">[docs]</a><span class="k">class</span> <span class="nc">ParserFactory</span><span class="p">():</span>
+
+    <span class="sd">&quot;&quot;&quot;Convenience class to abstract the type of parser required.&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ParserFactory.get_parser"><a class="viewcode-back" href="../../index.html#axiom.parsers.ParserFactory.get_parser">[docs]</a>    <span class="k">def</span> <span class="nf">get_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get a parser suitable for the name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (str): Name of the parser.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Parser: Subclass of Parser suitable for parsing the requested name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">instances</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">xml</span><span class="o">=</span><span class="n">XMLParser</span><span class="p">,</span>
+            <span class="n">xsd</span><span class="o">=</span><span class="n">XMLSchemaParser</span><span class="p">,</span>
+            <span class="n">schema</span><span class="o">=</span><span class="n">XMLSchemaParser</span><span class="p">,</span>
+            <span class="n">cordex</span><span class="o">=</span><span class="n">CordexCSVParser</span><span class="p">,</span>
+            <span class="n">cf</span><span class="o">=</span><span class="n">CFSpecificationsParser</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">instances</span><span class="p">[</span><span class="n">name</span><span class="p">]()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Axiom</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2021, Ben Schroeter.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
