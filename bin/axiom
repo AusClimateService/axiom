@@ -1,0 +1,122 @@
+#!/usr/bin/env python
+import argparse
+from  axiom.validation.validator import Validator
+import axiom.utilities as au
+from axiom.report import generate_report
+import sys
+import os
+
+
+def parse_and_dispatch(parser):
+    """Parse arguments for the script and dispatch to the correct function.
+
+    Args:
+        argparse.ArgumentParser : Parser object.
+    """
+    args = parser.parse_args()
+
+    if args.func:
+        args.func(**vars(args))
+    else:
+        parser.print_help()
+
+
+def _validate(schema_filepath, input_filepath, report_filepath=None, **kwargs):
+
+    # Create a validator
+    v = Validator(schema=schema_filepath)
+
+    # Work out what data type we're using
+    filename, ext = os.path.splitext(input_filepath)
+
+    # Load the metadata
+    if ext == '.nc':
+        metadata = au.extract_metadata(input_filepath)
+    elif ext == '.json':
+        metadata = au.load_metadata_json(input_filepath)
+    else:
+        raise TypeError('Axiom only supports reading metadata from NetCDF or JSON files.')
+
+    # Validate
+    v.validate(metadata)
+    
+    # Generate a report
+    if report_filepath:
+        generate_report(v, input_filepath, report_filepath)
+
+    # Return
+    exit_code = 0 if v.is_valid else 1
+    sys.exit(exit_code)
+
+
+def _convert_cf(table_filepath, output_filepath, **kwargs):
+    """Convert the CF conventions standard name table XML to Axiom schema.
+
+    Args:
+        table_filepath (str): Path.
+        output_filepath (str): Path.
+    """
+    # Load
+    schema = au.load_cf_standard_name_table(table_filepath)
+
+    # Save
+    au.save_schema(schema, output_filepath)
+
+
+def _convert_cordex(csv_filepath, output_filepath, **kwargs):
+    """Convert a CORDEX attributes CSV to Axiom schema.
+
+    Args:
+        csv_filepath (str): Path.
+        output_filepath (str): Path.
+    """
+    # Load
+    schema = au.load_cordex_csv(csv_filepath)
+
+    # Save
+    au.save_schema(schema, output_filepath)
+
+
+def get_parser():
+    """Get a parser object.
+
+    Returns:
+        argparse.ArgumentParser() : Parser.
+    """
+
+    # Base parser, for dispatch to subparsers
+    parser = argparse.ArgumentParser()
+    parser.set_defaults(func=None)
+    subparsers = parser.add_subparsers(help='Sub command')
+
+    # Validation parser
+    parser_validate = subparsers.add_parser('validate')
+    parser_validate.description = 'Validate an input file against a schema.'
+    parser_validate.add_argument('schema_filepath', type=str, help='Path to schema file.')
+    parser_validate.add_argument('input_filepath', type=str, help='File to validate')
+    parser_validate.add_argument('-r', '--report_filepath', type=str, default=None, help='Path to write validation report.')
+    parser_validate.set_defaults(func=_validate)
+
+    # CF Conversion
+    parser_cf = subparsers.add_parser('convert_cf')
+    parser_cf.description = 'Convert CF Conventions standard names table XML to Axiom schema.'
+    parser_cf.add_argument('table_filepath', type=str, help='Path to the standard names table.')
+    parser_cf.add_argument('output_filepath', type=str, help='Path to which to write the schema.')
+    parser_cf.set_defaults(func=_convert_cf)
+
+    # CORDEX
+    parser_cordex = subparsers.add_parser('convert_cordex')
+    parser_cordex.description = 'Convert CORDEX attribute CSV Axiom schema.'
+    parser_cordex.add_argument('csv_filepath', type=str, help='Path to the CSV file.')
+    parser_cordex.add_argument('output_filepath', type=str, help='Path to which to write the schema.')
+    parser_cordex.set_defaults(func=_convert_cordex)
+
+    # Return the fully constructed parser
+    return parser
+
+
+if __name__ == '__main__':
+
+    # Get and dispatch arguments
+    parser = get_parser()
+    parse_and_dispatch(parser)

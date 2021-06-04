@@ -1,15 +1,10 @@
 """General utilities."""
 import logging
-import sys
-from datetime import datetime
-import pytz
-from axiom.parsers import ParserFactory
-import lxml.etree as le
-import axiom.metadata as am
-from axiom.validate import validate_xml
-import axiom.conversion as axs
+from sys import version
+import json
 import xml.etree.ElementTree as et
-from xml.dom import minidom
+import pandas as pd
+from datetime import datetime
 
 
 def get_logger(name, level='debug'):
@@ -73,55 +68,199 @@ def has_attr(obj, attr):
     return attr in obj.attrs.keys()
 
 
-def _add_node(parent, child, text=None):
-    _child = et.SubElement(parent, child)
-
-    if text:
-        _child.text = text
-
-    return _child
-
-
-def build_xml(root='metadata', **kwargs):
-    """Build an xml document from a set of keywords.
+def extract_metadata(ds):
+    """Extract metadata from an xarray dataset.
 
     Args:
-        root (str) : Name of the root node. Defaults to "metadata".
-        **kwargs : Key/value pairs, where key is str and value can be str, datetime or dict.
+        ds (xarray.Dataset): Dataset.
+    
+    Returns:
+        dict : Metadata dictionary.
+    """
+    # Add global attributes
+    metadata = dict(
+        _global=ds.attrs,
+        variables=dict()
+    )
+
+    # Add variable attributes (includes coordinates)
+    for v in get_variables_and_coordinates(ds):
+        metadata['variables'][v] = ds[v].attrs
+    
+    return metadata
+
+
+def load_metadata_json(filepath):
+    """Load a metadata.json file.
+
+    Args:
+        filepath (str): Path to the json file.
 
     Returns:
-        str : Formatted XML string for printing/writing.
+        dict: Metadata dictionary.
     """
+    metadata = json.loads(open(filepath, 'r').read())
+    return metadata
 
-    # Create the root element
-    _root = et.Element(root)
 
-    for key, value in kwargs.items():
+def load_schema_json(filepath):
+    """Load a schema.json file.
 
-        # String
-        if isinstance(value, str):
-            _add_node(_root, key, value)
+    Args:
+        filepath (str): Path to the json file.
+    
+    Returns:
+        dict : Schema dictionary.
+    """
+    return load_metadata_json(filepath)
 
-        # List
-        if isinstance(value, list):
-            for item in value:
-                _add_node(_root, key, item)
 
-        # Date
-        if isinstance(value, datetime):
-            _add_node(_root, key, value.strftime('%Y-%m-%dT%H:%M:%S'))
+def load_cf_standard_name_table(filepath):
+    """Load and convert a CF standard name table XML into a metadata schema.
 
-        # Dictionary
-        if isinstance(value, dict):
+    Args:
+        filepath (str): Path to the file.
+    
+    Returns:
+        dict : Metadata dictionary (will be long).
+    """
+    xml = et.parse(filepath)
+    root = xml.getroot()
 
-            _parent = _add_node(_root, key)
+    # Set up the schema information
+    schema = dict(
+        name='CF Standard Names Table',
+        description='Specification converted from the CF standard names table',
+        original_file=filepath.split('/')[-1],
+        variables=dict()
+    )
 
-            for _key, _value in value.items():
-                _add_node(_parent, _key, _value)
+    # Header mappings
+    header_mapping = dict(
+        version_number='version',
+        institution='contact',
+        contact='contact_email',
+        last_modified='created'
+    )
 
-    # Create XML
-    raw_xml = et.tostring(_root, 'utf-8')
+    # Variable mappings
+    child_mapping = dict(
+        canonical_units='units',
+        grib='grib',
+        amip='amip',
+        description='description'
+    )
 
-    # Make it pretty
-    xml = minidom.parseString(raw_xml).toprettyxml(indent='    ')
-    return xml
+    # Iterate through the children
+    for child in root:
+
+        # Map the header information
+        if child.tag not in ['entry', 'alias']:
+            schema[header_mapping[child.tag]] = child.text
+
+        # Variable information
+        if child.tag == 'entry':
+
+            # Get the name of the variable
+            key = child.attrib['id']
+
+            _schema = dict(
+                standard_name={
+                    'type': 'string',
+                    'allowed': [key]
+                }
+            )
+
+            # Iterate through the required metadata attributes
+            for _child in child:
+
+                _key = child_mapping[_child.tag]
+
+                _schema[_key] = {
+                    'type': 'string'
+                }
+
+                # Allow for nullable fields
+                if _child.text:
+                    _schema[_key]['allowed'] = [_child.text]
+            
+            # Add variable schema to the main schema
+            schema['variables'][key] = _schema
+        
+        # Copy aliases
+        if child.tag == 'alias':
+            other = child.find('entry_id').text
+            schema['variables'][child.attrib['id']] = schema['variables'][other]
+
+    return schema
+
+
+def save_schema(schema, filepath):
+    """Save the schema to a json file at filepath.
+
+    Args:
+        schema (dict): Schema dictionary.
+        filepath (str): Path to which to save the schema.
+    """
+    json.dump(schema, open(filepath, 'w'), indent=4)
+
+
+def get_timestamp():
+    """Generate a JSON-compliant timestamp.
+
+    Returns:
+        str : Timestamp.
+    """
+    return datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+
+
+def load_cordex_csv(filepath, **kwargs):
+    """Load a cordex csv (i.e. from CCAM) and convert it into a metadata schema.
+
+    Note: There are no _global attributes.
+
+    Args:
+        filepath (str): Path to file
+        **kwargs : Additional key/value pairs to add to the schema header (i.e. contact etc.)
+    
+    Returns:
+        dict : Schema dictionary
+    """
+    # Load the CSV verbatim
+    df = pd.read_csv(filepath)
+
+    schema = dict(
+        name='CORDEX Metadata Specification',
+        description='Converted from CSV',
+        original_file=filepath.split('/')[-1],
+        created=get_timestamp(),
+        **kwargs,
+        _global=dict()
+    )
+
+    # Convert the lines into metadata specifications
+    variables = dict()
+
+    # Loop through variables
+    for line in df.to_dict('records'):
+
+        key = line['variable']
+        variables[key] = dict()
+
+        # Loop through attributes
+        for attribute, value in line.items():
+
+            # Skip variable, we already have it
+            if attribute == 'variable':
+                continue
+        
+            variables[key][attribute] = {
+                'type': 'string',
+            }
+
+            # Check if there is an expected value
+            if pd.isna(value) == False:
+                variables[key][attribute]['allowed'] = [value]
+
+    schema['variables'] = variables
+    return schema

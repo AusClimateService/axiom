@@ -8,12 +8,10 @@ setup(
     install_requires=[
         'xarray',
         'netCDF4',
-        'xmlschema',
-        'lxml',
-        'dicttoxml',
-        'xmltodict'
+        'cerberus',
+        'tabulate'
     ],
-    scripts=['bin/axv'],
+    scripts=['bin/axiom'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
     packages=find_packages()
