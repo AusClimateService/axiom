@@ -52,6 +52,12 @@ class Validator:
             self.errors['_global'] = v._errors
             self.is_valid = False
 
+        # Set up a default variable schema, to enfore a minimum standard
+        if '_default' in metadata['variables'].keys():
+            default_schema = metadata['variables']['_default']
+        else:
+            default_schema = dict()
+
         # Validate each variable one by one
         for k, attrs in metadata['variables'].items():
 
@@ -59,8 +65,12 @@ class Validator:
             if k not in self.schema['variables'].keys() and allow_unknown:
                 continue
 
+            # Apply the default schema, overwrite with the variable-specific one
+            _schema = default_schema
+            _schema.update(self.schema['variables'][k])
+
             v = CerberusValidator(
-                schema=self.schema['variables'][k],
+                schema=_schema,
                 allow_unknown=allow_unknown,
                 require_all=True
             )

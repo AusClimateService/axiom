@@ -59,6 +59,29 @@ For example:
 
 Again, all attributes defined in a variable's schema are required by default.
 
+Default variable attribute
+--------------------------
+
+There is one special configuration option for variable schemas, the ``_default`` configuration option. If a schema provides a ``_default`` configuration option, it sets a base set of validation rules which all other variables inherit or override.
+
+For example:
+
+.. code-block:: json
+
+    {
+        "variables": {
+            "_default": {
+                "units" : {"type": "string"},
+                "description" : {"type": "string"},
+                "standard_name": {"type": "string"},
+                "long_name": {"type": "string"}
+            }
+        }
+    }
+
+
+This example will enforce all variables to require units, description, standard_name and long_name as metadata attributes, unless they provide their own set of rules.
+
 Putting it all together
 ~~~~~~~~~~~~~~~~~~~~~~~
 
