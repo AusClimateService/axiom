@@ -61,12 +61,12 @@ def generate_report(validator, input_filepath, report_filepath):
         # Attribute missing
         if _is_missing(e):
             error = 'Attribute is missing'
-        
+
         # Incorrect type
         elif _is_incorrect_type(e):
             expected_type = e.constraint
             error = f'Incorrect type, should be {expected_type}'
-        
+
         else:
             error = 'Unknown error'
 
@@ -95,7 +95,7 @@ def generate_report(validator, input_filepath, report_filepath):
             elif _is_incorrect_value(e):
                 allowed_values = ','.join(e.constraint)
                 error = f'Incorrect value, must be one of {allowed_values}'
-            
+
             else:
                 error = 'Unknown error'
 
@@ -119,5 +119,5 @@ def generate_report(validator, input_filepath, report_filepath):
 
     # Put it all together and dump to file
     content = '\n'.join(lines)
-    content = content + table
+    content = content + table + '\n'
     open(report_filepath, 'w').write(content)

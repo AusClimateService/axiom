@@ -5,6 +5,7 @@ import json
 import xml.etree.ElementTree as et
 import pandas as pd
 from datetime import datetime
+import xarray as xr
 
 
 def get_logger(name, level='debug'):
@@ -72,11 +73,14 @@ def extract_metadata(ds):
     """Extract metadata from an xarray dataset.
 
     Args:
-        ds (xarray.Dataset): Dataset.
-    
+        ds (str or xarray.Dataset): Path to (netcdf) or dataset.
+
     Returns:
         dict : Metadata dictionary.
     """
+    if isinstance(ds, str):
+        ds = xr.open_dataset(ds)
+
     # Add global attributes
     metadata = dict(
         _global=ds.attrs,
@@ -86,7 +90,7 @@ def extract_metadata(ds):
     # Add variable attributes (includes coordinates)
     for v in get_variables_and_coordinates(ds):
         metadata['variables'][v] = ds[v].attrs
-    
+
     return metadata
 
 
@@ -108,7 +112,7 @@ def load_schema_json(filepath):
 
     Args:
         filepath (str): Path to the json file.
-    
+
     Returns:
         dict : Schema dictionary.
     """
@@ -120,7 +124,7 @@ def load_cf_standard_name_table(filepath):
 
     Args:
         filepath (str): Path to the file.
-    
+
     Returns:
         dict : Metadata dictionary (will be long).
     """
@@ -183,10 +187,10 @@ def load_cf_standard_name_table(filepath):
                 # Allow for nullable fields
                 if _child.text:
                     _schema[_key]['allowed'] = [_child.text]
-            
+
             # Add variable schema to the main schema
             schema['variables'][key] = _schema
-        
+
         # Copy aliases
         if child.tag == 'alias':
             other = child.find('entry_id').text
@@ -222,7 +226,7 @@ def load_cordex_csv(filepath, **kwargs):
     Args:
         filepath (str): Path to file
         **kwargs : Additional key/value pairs to add to the schema header (i.e. contact etc.)
-    
+
     Returns:
         dict : Schema dictionary
     """
@@ -253,7 +257,7 @@ def load_cordex_csv(filepath, **kwargs):
             # Skip variable, we already have it
             if attribute == 'variable':
                 continue
-        
+
             variables[key][attribute] = {
                 'type': 'string',
             }

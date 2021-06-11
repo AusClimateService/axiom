@@ -26,7 +26,7 @@ class Validator:
         if isinstance(schema, str):
             self.schema_filepath = schema
             schema = au.load_schema_json(schema)
-        
+
         self.schema = schema
 
 
@@ -42,7 +42,7 @@ class Validator:
         """
 
         # Reset the errors and valid status
-        self.is_valid = None
+        self.is_valid = True
         self.errors = dict(_global=list(), variables=dict())
         self.date_validated = datetime.utcnow()
 
@@ -53,21 +53,24 @@ class Validator:
             self.is_valid = False
 
         # Set up a default variable schema, to enfore a minimum standard
-        if '_default' in metadata['variables'].keys():
-            default_schema = metadata['variables']['_default']
+        if '_default' in self.schema['variables'].keys():
+            default_schema = self.schema['variables']['_default']
         else:
             default_schema = dict()
 
         # Validate each variable one by one
         for k, attrs in metadata['variables'].items():
 
-            # Skip unknown variables if permitted
-            if k not in self.schema['variables'].keys() and allow_unknown:
-                continue
-
             # Apply the default schema, overwrite with the variable-specific one
             _schema = default_schema
-            _schema.update(self.schema['variables'][k])
+
+            # Skip unknown variables if permitted
+            if k not in self.schema['variables'].keys() and allow_unknown == False:
+                continue
+
+            # Apply this variable's schema to the default if it is defined
+            if k in self.schema['variables'].keys():
+                _schema.update(self.schema['variables'][k])
 
             v = CerberusValidator(
                 schema=_schema,
