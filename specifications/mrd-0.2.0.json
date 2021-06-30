@@ -1,0 +1,67 @@
+{
+    "name": "Market Ready Data",
+    "description": "Prototype specification for Market Ready Data",
+    "version": "0.2.0",
+    "contact": "Ben Schroeter",
+    "contact_email": "ben.schroeter@csiro.au",
+    "_global": {
+        "author": {
+            "type": "string"
+        },
+        "version": {
+            "type": "string"
+        },
+        "owner": {
+            "type": "string"
+        },
+        "funding_source": {
+            "type": "string"
+        },
+        "conventions": {
+            "type": "string"
+        },
+        "license": {
+            "type": "string"
+        },
+        "uuid": {
+            "type": "string"
+        },
+        "citation_data": {
+            "type": "string"
+        },
+        "citation_paper": {
+            "type": "string"
+        },
+        "created": {
+            "type": "datetime"
+        },
+        "peer_review": {
+            "type": "string"
+        },
+        "repository_url": {
+            "type": "string"
+        },
+        "author_organisation": {
+            "type": "string"
+        },
+        "author_organisation_email": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "_default": {
+            "standard_name": {
+                "type": "string"
+            },
+            "long_name": {
+                "type": "string"
+            },
+            "units": {
+                "type": "string"
+            },
+            "cell_methods": {
+                "type": "string"
+            }
+        }
+    }
+}
