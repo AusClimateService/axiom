@@ -1,0 +1,426 @@
+{
+    "time_units": "days since 1949-12-01 00:00:00",
+    "reference_time": "1949-12-01 00:00:00",
+    "templates": {
+        "drs_base": [
+            "/",
+            "%(rcm_institute)s",
+            "%(gcm_institute)s-%(gcm_model)s",
+            "%(experiment)s",
+            "%(ensemble)s",
+            "%(rcm_institute)s-%(rcm_model)s",
+            "%(rcm_version_id)s"
+        ],
+        "drs_path": [
+            "/",
+            "%(output_directory)s",
+            "%(project)s",
+            "output",
+            "%(domain)s",
+            "%(rcm_institute)s",
+            "%(gcm_institute)s-%(gcm_model)s",
+            "%(experiment)s",
+            "%(ensemble)s",
+            "%(rcm_institute)s-%(rcm_model)s",
+            "%(rcm_version_id)s",
+            "%(frequency_mapping)s",
+            "%(variable)s"
+        ],
+        "input_filename": "",
+        "filename": [
+            "_",
+            "%(variable)s",
+            "%(domain)s",
+            "%(gcm_institute)s-%(gcm_model)s",
+            "%(experiment)s",
+            "%(ensemble)s",
+            "%(rcm_institute)s-%(rcm_model)s",
+            "%(rcm_version_id)s",
+            "%(frequency_mapping)s",
+            "%(start_date)s-%(end_date)s.nc"
+        ],
+        "filename_fixed": [
+            "_",
+            "%(variable)s",
+            "%(domain)s",
+            "%(gcm_institute)s-%(gcm_model)s",
+            "%(experiment)s",
+            "%(ensemble)s",
+            "%(rcm_institute)s-%(rcm_model_path)s",
+            "%(rcm_version_id)s",
+            "%(path_freq)s.nc"
+        ],
+        "description_era": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s reanalysis. Forcing mode: %(mode)s",
+        "description_other": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "fixed_variables": [
+        "areacella",
+        "orog",
+        "sftlf",
+        "sftgif",
+        "mrsofc",
+        "rootd",
+        "he",
+        "sigmu",
+        "soilt",
+        "vegt",
+        "grid",
+        "uriver",
+        "vriver"
+    ],
+    "defaults": {
+        "ensemble": "r1i1p1",
+        "rcm_version_id": "v1",
+        "rcm_version": "r3355",
+        "rcm_version_cordex": "1704",
+        "rcm_institute": "CSIRO",
+        "rcm_model": "CCAM-r3355",
+        "rcm_model_cordex": "CCAM-1704",
+        "contact": "ccam@csiro.au; Marcus Thatcher (Marcus.Thatcher@csiro.au); Tony Rafter (Tony.Rafter@csiro.au); Claire Trenham (Claire.Trenham@csiro.au)",
+        "institute_id": "CSIRO",
+        "institution": "Commonwealth Scientific and Industrial Research Organisation",
+        "references": "https://confluence.csiro.au/display/CCAM",
+        "model_id": "%(rcm_institute)s-%(rcm_model)s",
+        "experiment_id": "%(experiment)s",
+        "experiment": "%(description)s",
+        "driving_model_id": "%(gcm_institute)s-%(gcm_model)s",
+        "driving_model_ensemble_member": "%(ensemble)s",
+        "driving_experiment_name": "%(experiment)s",
+        "driving_experiment": "%(gcm_institute)s-%(gcm_model)s; %(experiment)s; %(ensemble)s",
+        "project_id": "CORDEX",
+        "CORDEX_domain": "%(domain)s",
+        "product": "output",
+        "frequency": "%(frequency_mapping)s",
+        "creation_date": "%(created)s",
+        "Conventions": "CF-1.7",
+        "tracking_id": "%(uuid)s"
+    },
+    "projects": {
+        "DELWP": {
+            "rcp": "rcp45",
+            "experiment": "rcp45",
+            "project_lower": "delwp",
+            "project_long": "2019 DELWP Victorian Climate Projections"
+        },
+        "WINE": {
+            "project_lower": "wine",
+            "rcp": "rcp85",
+            "experiment": "",
+            "project_long": "2018 Australian Wine Industry Projections"
+        },
+        "ACS": {
+            "base": "surf.ccam_%(res_km)skm",
+            "project_lower": "acs",
+            "experiment": "",
+            "project_long": "2021 Climate and Resiliences Service Australia",
+            "variables_2d": [
+                "pr",
+                "ps",
+                "ts",
+                "clh",
+                "cll",
+                "clm",
+                "clt",
+                "prc",
+                "prw",
+                "psl",
+                "sic",
+                "snc",
+                "snd",
+                "snm",
+                "snw",
+                "tas",
+                "uas",
+                "vas",
+                "hfls",
+                "hfss",
+                "hurs",
+                "huss",
+                "mrro",
+                "mrso",
+                "orog",
+                "prsn",
+                "rlds",
+                "rlut",
+                "rsds",
+                "rsdt",
+                "rsus",
+                "rsut",
+                "sund",
+                "tauu",
+                "tauv",
+                "zmla",
+                "clivi",
+                "clwvi",
+                "mrfso",
+                "mrros",
+                "sftlf",
+                "ta200",
+                "ta500",
+                "ta850",
+                "ua200",
+                "ua500",
+                "ua850",
+                "va200",
+                "va500",
+                "va850",
+                "zg200",
+                "zg500",
+                "hus850",
+                "prhmax",
+                "tasmax",
+                "tasmin",
+                "evspsbl",
+                "sfcWind",
+                "evspsblpot",
+                "sfcWindmax"
+            ],
+            "variables_3d": []
+        },
+        "_default": {
+            "base": "%(frequency)s_ccam_%(project_lower)s_%(model_lower)s_%(experiment)s_%(resolution)skm",
+            "variables_2d": [
+                "tas",
+                "tasmax",
+                "tasmin",
+                "pr",
+                "ps",
+                "psl",
+                "hurs",
+                "huss",
+                "sfcWind",
+                "clt",
+                "sund",
+                "rsds",
+                "rlds",
+                "hfls",
+                "hfss",
+                "rsus",
+                "rlus",
+                "evspsbl",
+                "evspsblpot",
+                "mrros",
+                "snw",
+                "prc",
+                "rlut",
+                "rsdt",
+                "rsut",
+                "uas",
+                "vas",
+                "tauu",
+                "tauv",
+                "ts",
+                "zmla",
+                "prw",
+                "clivi",
+                "clwvi",
+                "clh",
+                "clm",
+                "cll",
+                "snd",
+                "prsn",
+                "orog",
+                "sftlf"
+            ],
+            "variables_3d": {
+                "ta": [200, 500, 850],
+                "ua": [200, 500, 850],
+                "va": [200, 500, 850],
+                "zg": [200, 500],
+                "hus": [850]
+            }
+        },
+        "_default_12min": {
+            "variables_2d": [
+                "pr",
+                "psl",
+                "tas",
+                "uas",
+                "vas",
+                "grpl",
+                "hurs",
+                "prsn"
+            ],
+            "variables_3d": []
+        }
+    },
+    "models":{
+        "ERA": {
+            "model_lower": "eraint",
+            "model_short": "era",
+            "gcm_model": "ERAINT",
+            "gcm_institute": "ECMWF",
+            "run_type": "Evaluation",
+            "mode": "sea surface temperatures only",
+            "_cordex": {
+                "rcm_version_id": "v1-SST"
+            }
+        },
+        "ERA-NUDGED": {
+            "model_lower": "eraint-nudged",
+            "model_short": "era-n",
+            "gcm_model": "ERAINT",
+            "gcm_institute": "ECMWF",
+            "run_type": "Evaluation",
+            "mode": "spectrally nudged atmosphere",
+            "_cordex": {
+                "rcm_version_id": "v1-nudgedAtm"
+            }
+        },
+        "ERA5": {
+            "model_lower": "era5",
+            "model_short": "era5",
+            "gcm_model": "ERA5",
+            "gcm_institute": "ECMWF",
+            "run_type": "Evaluation",
+            "mode": "spectrally nudged atmosphere",
+            "_cordex": {
+                "rcm_version_id": "v1-nudgedAtm"
+            }
+        },
+        "ACCESS1-0": {
+            "model_lower": "access1-0",
+            "model_short": "acc1-0",
+            "gcm_model": "ACCESS1-0",
+            "gcm_institute": "CSIRO-BOM",
+            "run_type": "Climate change",
+            "mode": "bias- and variance-corrected sea surface temperatures"
+        },
+        "CCSM4": {
+            "model_lower": "ccsm4",
+            "model_short": "ccsm4"
+        },
+        "CNRM-CM5": {
+            "model_lower": "cnrm-cm5",
+            "model_short": "cnrm",
+            "gcm_model": "CNRM-CM5",
+            "gcm_institute": "CNRM-CERFACS",
+            "run_type": "Climate change",
+            "mode": "bias- and variance-corrected sea surface temperatures"
+        },
+        "GFDL-ESM2M": {
+            "model_lower": "gfdl-esm2m",
+            "model_short": "gfdl",
+            "gcm_model": "GFDL-ESM2M",
+            "gcm_institute": "NOAA-GFDL",
+            "run_type": "Climate change",
+            "mode": "bias- and variance-corrected sea surface temperatures"
+        },
+        "HadGEM2": {
+            "model_lower": "",
+            "model_short": "hadgem",
+            "gcm_model": "HadGEM2-CC",
+            "gcm_institute": "MOHC",
+            "run_type": "Climate change",
+            "mode": "bias- and variance-corrected sea surface temperatures"
+        },
+        "MIROC5": {
+            "model_lower": "miroc5",
+            "model_short": "miroc"
+        },
+        "MPI-ESM-LR": {
+            "model_lower": "mpi-esm-lr",
+            "model_short": "mpiesm"
+        },
+        "NorESM1-M": {
+            "model_lower": "noresm1-m",
+            "model_short": "norsesm",
+            "gcm_model": "NorESM1-M",
+            "gcm_institute": "NCC",
+            "run_type": "Climate change",
+            "mode": "bias- and variance-corrected sea surface temperatures"
+        }
+    },
+    "domains": {
+        "AUS-50": {
+            "dx": 0.5,
+            "lon_min": 35.0,
+            "lon_max": 175.0,
+            "lat_min": -60.0,
+            "lat_max": 0.0
+        },
+        "VIC-5": {
+            "dx": 0.05,
+            "lon_min": 140.5,
+            "lon_max": 151.0,
+            "lat_min": -39.2,
+            "lat_max": -33.0
+        },
+        "SEA-10": {
+            "dx": 0.1,
+            "lon_min": 134.0,
+            "lon_max": 154.0,
+            "lat_min": -39.1,
+            "lat_max": -28.0
+        },
+        "TAS-10": {
+            "dx": 0.1,
+            "lon_min": 143.0,
+            "lon_max": 150.0,
+            "lat_min": -44.0,
+            "lat_max": -39.1
+        },
+        "AUS-44i": {
+            "dx": 0.5,
+            "lon_min": 89.0,
+            "lon_max": 207.0,
+            "lat_min": -53.0,
+            "lat_max": 12.5
+        }
+    },
+    "pbs_resources": {
+        "2d": "-l walltime=02:00:00,mem=8GB",
+        "3d": "-l walltime=03:00:00,mem=24GB"
+    },
+    "valid_frequencies": [
+        "12min",
+        "3hr",
+        "6hr",
+        "month",
+        "day",
+        "1hr",
+        "cordex"
+    ],
+    "encoding": {
+        "variables": {
+            "dtype": "float",
+            "_FillValue": 1e20,
+            "zlib": true,
+            "complevel": 1
+        },
+        "lon": {
+            "_FillValue": 1e20,
+            "dtype": "double"
+        },
+        "lat": {
+            "_FillValue": 1e20,
+            "dtype": "double"
+        },
+        "time": {
+            "_FillValue": 1e20,
+            "dtype": "double",
+            "units": "days since 1949-12-01 00:00:00"
+        }
+    },
+    "retain_metadata": {
+        "il": "il",
+        "kl": "kl",
+        "schmidt": "schmidt",
+        "rlong0": "rlon",
+        "rlat0": "rlat"
+    },
+    "remove_metadata": [
+        "ensemble",
+        "rcm_institute",
+        "rcm_model",
+        "rcm_model_cordex",
+        "rcm_version",
+        "rcm_version_cordex"
+    ],
+    "frequency_mapping": {
+        "12min": "12min",
+        "3H": "3hr",
+        "1D": "day",
+        "1M": "month"
+    }
+}
