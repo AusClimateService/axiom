@@ -1,4 +1,5 @@
 """General utilities."""
+import ast
 import logging
 from sys import version
 import json
@@ -6,6 +7,7 @@ import xml.etree.ElementTree as et
 import pandas as pd
 from datetime import datetime
 import xarray as xr
+import pkgutil
 
 
 def get_logger(name, level='debug'):
@@ -81,15 +83,22 @@ def extract_metadata(ds):
     if isinstance(ds, str):
         ds = xr.open_dataset(ds)
 
-    # Add global attributes
     metadata = dict(
-        _global=ds.attrs,
+        _global=dict(),
         variables=dict()
     )
 
+    # Add global attributes
+    for key, value in ds.attrs.items():
+        metadata['_global'][key] = infer_dtype(value)
+
     # Add variable attributes (includes coordinates)
     for v in get_variables_and_coordinates(ds):
-        metadata['variables'][v] = ds[v].attrs
+
+        metadata['variables'][v] = dict()
+
+        for key, value in ds[v].attrs.items():
+            metadata['variables'][v][key] = infer_dtype(value)
 
     return metadata
 
@@ -268,3 +277,177 @@ def load_cordex_csv(filepath, **kwargs):
 
     schema['variables'] = variables
     return schema
+
+
+def load_package_data(slug, package_name='axiom'):
+    """Load data from the installed Axiom package.
+
+    Args:
+        slug (str): Internal data path.
+        package_name (str) : Name of the package. Defaults to 'axiom'.
+    
+    Returns:
+        mixed : Dictionary of data (JSON only ATM).
+    """
+    raw = pkgutil.get_data(package_name, slug)
+    return json.loads(raw.decode('utf-8'))
+
+
+def apply_schema(ds, schema):
+    """Apply a metadata schema on a dataset.
+
+    Args:
+        ds (xarray.Dataset): Dataset.
+        schema (dict): Axiom schema dictionary.
+    
+    Returns:
+        xarray.Dataset : Dataset with schema-defined metadata applied.
+    """
+    # Apply the global metadata, if available
+    for key, _schema in schema['_global'].items():
+        if 'allowed' in _schema.keys():
+            ds.attrs[key] = _schema['allowed'][0]
+    
+    # Loop through each variable on the dataset
+    for variable in ds.data_vars.keys():
+
+        # If the variable is define
+        if variable in schema['variables'].keys():
+
+            # Extract the schema for the variable itself
+            var_schema = schema['variables'][variable]
+
+            # Loop through attributes
+            for key, _schema in var_schema.items():
+
+                # Apply if there is an expected value
+                if 'allowed' in _schema.keys():
+                    ds[variable].attrs[key] = _schema['allowed'][0]
+    
+    # Return the updated schema
+    return ds
+
+
+
+
+# def _diff_metadata(meta_a, meta_b):
+
+#     diff = dict()
+#     parsed = list()
+#     for key, value_a in meta_a.items():
+
+#         if key not in meta_b.keys():
+#             diff['key'] = (value_a, None)
+#             continue
+    
+#         value_b = meta_b[key]
+#         if value_a != value_b:
+#             diff[key] = (value_a, value_b)
+
+#     return diff
+
+def _diff_metadata(meta_a, meta_b, ignore_matches=True):
+    
+    # Dictionaries are equal
+    if meta_a == meta_b:
+        diff = {key: (None, None) for key in meta_a.keys()}
+        return diff
+
+    # Otherwise we need to parse them
+    diff = dict()
+
+    # Check attributes from A
+    parsed_keys = list()
+    for key, value1 in meta_a.items():
+        
+        # Missing from B
+        if key not in meta_b.keys():
+            diff[key] = (value1, None)
+        
+        # Same value
+        elif value1 == meta_b[key] and ignore_matches == False:
+            diff[key] = (None, None)
+        
+        # Different value
+        elif value1 != meta_b[key]:
+            diff[key] = (value1, meta_b[key])
+        
+        # Mark as parsed for meta_b
+        parsed_keys.append(key)
+
+    # Check attributes of B
+    for key, value2 in meta_b.items():
+
+        # Skip already parsed
+        if key in parsed_keys:
+            continue
+
+        # This will be the only test, the inverse has already been checked
+        if key not in meta_a.keys():
+            diff[key] = (None, value2)
+    
+    return diff
+
+
+def diff_metadata(meta_a, meta_b, ignore_matches=True):
+    """Difference the metadata between two metadata dictionaries.
+
+    Differences are encoded with values as tuples, where:
+    - (None, None) = Attributes match.
+    - (None, value2) = Attribute is missing from meta_a.
+    - (value1, None) = Attribute is missing from meta_b.
+    - (value1, value2) = Differing values between meta_a and meta_b.
+
+    Args:
+        meta_a (dict): Metadata dictionary of the form from extract_metadata.
+        meta_b (dict): Metadata dictionary of the form from extract_metadata.
+    
+    Returns:
+        dict : Dictionary of differences.
+    """
+
+    # Do the global comparison
+    diff = dict(
+        _global=_diff_metadata(
+            meta_a['_global'],
+            meta_b['_global'],
+            ignore_matches=ignore_matches
+        ),
+        variables=dict()
+    )
+
+    # Do the comparison of all the variables that the dicts share
+    for variable in meta_a['variables'].keys():
+        
+        if variable in meta_b.keys():
+            diff['variables'][variable] = _diff_metadata(
+                meta_a[variable],
+                meta_b[variable],
+                ignore_matches=ignore_matches
+            )
+    
+    return diff
+
+
+def infer_dtype(value):
+    """Infer the data type of the value passed.
+
+    Args:
+        value (unknown): Value.
+    
+    Raises:
+        ValueError : When the type can't be inferred.
+    """
+
+    if isinstance(value, bool):
+        return value
+
+    # for dtype in [float, int, bool, str]:
+    for dtype in [float, int, str]:
+
+        try:
+            return dtype(value)
+        except ValueError:
+            pass
+    
+    raise ValueError('Unable to infer type.')

@@ -14,6 +14,15 @@ from uuid import uuid4
 
 
 def is_fixed_variable(config, variable):
+    """Determine if a variable is listed in in the config as fixed.
+
+    Args:
+        config (dict): Configuration dictionary
+        variable (str): Variable name.
+
+    Returns:
+        bool: True if fixed, False otherwise.
+    """
     return variable in config['fixed_variables']
 
 
@@ -113,28 +122,56 @@ def get_domains(resolution, frequency, variable_fixed, no_frequencies):
 
 
 def get_meta(config, meta_key, key):
-    """Load metadata on top of a _default, if applicable."""
+    """Load metadata on top of a _default key, if applicable.
+
+    Args:
+        config (dict): Configuration dictionary.
+        meta_key (str): Top-level key.
+        key (str): Key.
+
+    Returns:
+        dict: Metadata dictionary, with key loaded over _default.
+    """
     
     # Start with nothing
     _meta = dict()
     
-    # Load a default
+    # Load a default, if it exists
     if '_default' in config[meta_key].keys():
         _meta.update(config[meta_key]['_default'])
     
-    # Load what was requested
+    # Load what was requested over top
     _meta.update(config[meta_key][key])
 
     return _meta
 
 
-def metadata(da, **kwargs):
+def metadata(obj, **kwargs):
+    """Add metadata to an xarray object.
+
+    Args:
+        da (xarray.DataArray or xarray.Dataset): xarray object.
+
+    Returns:
+        xarray.DataArray or xarray.Dataset : Same as caller
+    """
     for key,value in kwargs.items():
-        da.attrs[key] = value
+        obj.attrs[key] = value
     
-    return da
+    return obj
+
 
 def standardise_units(ds):
+    """Standardise units.
+
+    Only converts mm to m for now.
+
+    Args:
+        ds (xarray.Dataset): Dataset
+
+    Returns:
+        xarray.Dataset: Dataset with units standardised.
+    """
 
     for variable in ds.data_vars.keys():
         da = ds[variable]
@@ -144,6 +181,7 @@ def standardise_units(ds):
             ds[variable] = metadata(da / 1000, units='m')
         
     return ds
+
 
 if __name__ == '__main__':
 
@@ -350,9 +388,6 @@ if __name__ == '__main__':
                 # Remove any metadata that is not needed in the output
                 for rm in config['remove_metadata']:
                     global_attrs.pop(rm)
-
-                # pprint(global_attrs)
-                # sys.exit()
 
                 # Strip and reapply metadata
                 _dss.attrs = dict()
