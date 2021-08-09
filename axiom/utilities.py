@@ -1,7 +1,7 @@
 """General utilities."""
 import ast
 import logging
-from sys import version
+import sys
 import json
 import xml.etree.ElementTree as et
 import pandas as pd

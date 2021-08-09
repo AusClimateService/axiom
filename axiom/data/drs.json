@@ -372,15 +372,6 @@
         "2d": "-l walltime=02:00:00,mem=8GB",
         "3d": "-l walltime=03:00:00,mem=24GB"
     },
-    "valid_frequencies": [
-        "12min",
-        "3hr",
-        "6hr",
-        "month",
-        "day",
-        "1hr",
-        "cordex"
-    ],
     "encoding": {
         "variables": {
             "dtype": "float",
@@ -421,6 +412,6 @@
         "12min": "12min",
         "3H": "3hr",
         "1D": "day",
-        "1M": "month"
+        "1M": "mon"
     }
 }

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+from re import subn
 from  axiom.validation.validator import Validator
 import axiom.utilities as au
 from axiom.report import generate_report
@@ -77,6 +78,24 @@ def _convert_cordex(csv_filepath, output_filepath, **kwargs):
     au.save_schema(schema, output_filepath)
 
 
+def _diff(a, b, **kwargs):
+    """Perform a metadata diff between Files a and b.
+
+    Args:
+        a (str): Path to file a.
+        b (str): Path to file b.
+    """
+
+    # Load the metadata, difference it.
+    diff = au.diff_metadata(
+        au.extract_metadata(a),
+        au.extract_metadata(b)
+    )
+
+    # Simple dump to screen
+    print(diff)
+
+
 def get_parser():
     """Get a parser object.
 
@@ -110,6 +129,13 @@ def get_parser():
     parser_cordex.add_argument('csv_filepath', type=str, help='Path to the CSV file.')
     parser_cordex.add_argument('output_filepath', type=str, help='Path to which to write the schema.')
     parser_cordex.set_defaults(func=_convert_cordex)
+
+    # Diff tool
+    parser_diff = subparsers.add_parser('diff')
+    parser_diff.description = 'Difference 2 files for metadata.'
+    parser_diff.add_argument('a')
+    parser_diff.add_argument('b')
+    parser_diff.set_defaults(func=_diff)
 
     # Return the fully constructed parser
     return parser
