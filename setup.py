@@ -9,7 +9,8 @@ setup(
         'xarray',
         'netCDF4',
         'cerberus',
-        'tabulate'
+        'tabulate',
+	'dask'
     ],
     scripts=['bin/axiom'],
     setup_requires=['pytest-runner'],

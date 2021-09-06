@@ -363,7 +363,7 @@
         "AUS-44i": {
             "dx": 0.5,
             "lon_min": 89.0,
-            "lon_max": -153,
+            "lon_max": 207,
             "lat_min": -53.0,
             "lat_max": 12.5
         }

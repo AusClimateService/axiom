@@ -459,10 +459,6 @@ if __name__ == '__main__':
     logger.debug('Sorting data')
     dss = dss.sortby(['time', 'lat', 'lon'])
 
-    print(dss)
-
-    # sys.exit()
-
     # Work out which schema to use based on output frequency
     logger.debug('Applying metadata schema')
     if 'M' in args.output_frequency:
@@ -470,9 +466,7 @@ if __name__ == '__main__':
     else:
         schema = axs.load_schema('cordex-day.json')
 
-    # print(schema)
-    # sys.exit()
-    # dss = au.apply_schema(dss, schema)
+    dss = au.apply_schema(dss, schema)
 
     # Process each year
     logger.debug('Starting processing')
@@ -480,52 +474,42 @@ if __name__ == '__main__':
     # Loop through each year
     for year in years:
 
-        # Work out the end year based on some hard-coded rules
         start_year = year
-        end_year = start_year + 9
 
         # TODO: Need a cleaner way to do this
         if start_year < 2006:
             context['experiment'] = 'historical'
         else:
             context['experiment'] = context['rcp']
-
+        #
         if context['gcm_model'] in ['ERAINT', 'ERA5']:
             context['experiment'] = 'evaluation'
-            description_template = 'description_era'
+            context['description'] = get_template(config, 'description_era') % context
         else:
             description_template = 'description_other'
+            context['description'] = get_template(config, 'description_other') % context
 
-        context['description'] = get_template(config, description_template) % context
-
-        if start_year == 2006:
-            end_year = 2009
-
-        # Non-ERA
-        elif start_year == 2000 and model['model_lower'][:3] != 'era':
-            end_year = 2005
-
-        # ERA
-        elif start_year == 2000 and model['model_lower'][:3] != 'era':
-            end_year = 2014
-
-        start_date = f'{start_year}0101'
-        end_date = f'{end_year}1231'
-
-        context['start_date'] = start_date
-        context['end_date'] = end_date
+        start_date = f'{year}0101'
+        end_date = f'{year}1231'
 
         logger.debug(f'start_date = {start_date}')
         logger.debug(f'end_date = {end_date}')
-
         logger.debug(f'Processing {year}')
 
         # Loop through each output frequency
         for output_frequency in args.output_frequency:
 
+            # Update the dates based on the frequency
+            if output_frequency == '1M':
+                context['start_date'] = start_date[:-2] # remove the days
+                context['end_date'] = end_date[:-2]
+            else:
+                context['start_date'] = start_date
+                context['end_date'] = end_date
+
             logger.debug(f'Processing {output_frequency} frequency')
 
-            logger.debug('Resampling')
+            logger.debug(f'Resampling to {output_frequency}')
             dss_f = dss.resample(time=output_frequency).mean()
 
             for domain in args.domain:
@@ -535,29 +519,22 @@ if __name__ == '__main__':
 
                 _domain = config['domains'][domain]
 
+                logger.debug('Subsetting domain')
+                logger.debug(_domain)
+
                 # Fix to cross the meridian
-                lon_min, lon_max = _domain['lon_min'], _domain['lon_max']
-                if lon_max < lon_min:
-                    constraint = (dss_f.lon <= lon_min) | (dss_f.lon >= lon_max)
-
+                if _domain['lon_max'] < _domain['lon_min']:
+                    logger.debug('Domain crosses the meridian')
+                    lon_constraint = (dss_f.lon <= _domain['lon_min']) | (dss_f.lon >= _domain['lon_max'])
                 else:
-                    constraint = (dss_f.lon >= lon_min) & (dss_f.lon <= lon_max)
+                    lon_constraint = (dss_f.lon >= _domain['lon_min']) & (dss_f.lon <= _domain['lon_max'])
 
-                dss_d = dss_f.where(constraint, drop=True)
+                # Add latitudes
+                lat_constraint = (dss_f.lat >= _domain['lat_min']) & (dss_f.lat <= _domain['lat_max'])
+                constraint = lon_constraint & lat_constraint
 
                 # Subset the domain
-                # logger.debug('Subsetting domain.')
-                # lon_constraint = (dss_d.lon >= _domain['lon_min']) & (dss_d.lon <= _domain['lon_max'])
-                # lat_constraint = (dss_d.lat >= _domain['lat_min']) & (dss_d.lat <= _domain['lat_max'])
-                #
-                # # lon_slice = slice(_domain['lon_min'], _domain['lon_max'])
-                # # lat_slice = slice(_domain['lat_min'], _domain['lat_max'])
-                # # dss_d = dss_f.sel(lon=lon_slice, lat=lat_slice)
-                #
-                # # Have to subset the domain to account for antimeridian coordinates
-                # dss_d = dss_d.sel(lon=lon_constraint, lat=lat_constraint)
-                # print(dss_d)
-                # sys.exit()
+                dss_d = dss_f.where(constraint, drop=True)
 
                 logger.debug('Starting metadata assembly')
 
@@ -583,13 +560,14 @@ if __name__ == '__main__':
                 # Add in meta that we'd like to retain, renaming it in the process
                 logger.debug('Retaining metadata from inputs')
                 for old_key, new_key in config['retain_metadata'].items():
-
                     if old_key in dss.attrs.keys():
+                        logger.debug(f'Retaining {old_key}, renamed to {new_key}')
                         global_attrs[new_key] = dss.attrs[old_key]
 
                 # Remove any metadata that is not needed in the output
                 logger.debug('Removing requested metadata from inputs')
                 for rm in config['remove_metadata']:
+                    logger.debug(f'Removing {rm}')
                     global_attrs.pop(rm)
 
                 # Strip and reapply metadata
@@ -639,123 +617,3 @@ if __name__ == '__main__':
                         encoding=encoding,
                         unlimited_dims=['time']
                     )
-
-
-        # # Work out the end year based on some hard-coded rules
-        # start_year = year
-        # end_year = start_year + 9
-
-        # if start_year == 2006:
-        #     end_year = 2009
-
-        # # Non-ERA
-        # elif start_year == 2000 and model['model_lower'][:3] != 'era':
-        #     end_year = 2005
-
-        # # ERA
-        # elif start_year == 2000 and model['model_lower'][:3] != 'era':
-        #     end_year = 2014
-
-        # start_date = f'{start_year}0101'
-        # end_date = f'{end_year}1231'
-
-        # context['start_date'] = start_date
-        # context['end_date'] = end_date
-
-        # logger.debug(f'start_date = {start_date}')
-        # logger.debug(f'end_date = {end_date}')
-
-        # sys.exit()
-
-        # sys.exit()
-
-
-        # # Loop through each frequency
-        # for frequency in domains['frequencies']:
-
-        #     # Perform the resampling to get the frequency required
-        #     dss_f = dss.resample(time=frequency).mean()
-
-        #     # Loop through each domain
-        #     for domain in domains['domains']:
-
-        #         context['domain'] = domain
-
-        #         # Get the bounding box
-        #         _domain = config['domains'][domain]
-
-        #         # Subset the domain
-        #         lon_slice = slice(_domain['lon_min'], _domain['lon_max'])
-        #         lat_slice = slice(_domain['lat_min'], _domain['lat_max'])
-        #         _dss = dss_f.sel(lon=lon_slice, lat=lat_slice)
-
-        #         # Assemble global attributes from context
-        #         if model['model_lower'][:3] == 'era':
-        #             context['description'] = config['templates']['description_era'] % context
-        #         else:
-        #             context['description'] = config['templates']['description_other'] % context
-
-        #         context['frequency_mapping'] = config['frequency_mapping'][frequency]
-        #         context['created'] = datetime.utcnow()
-        #         context['uuid'] = uuid4()
-
-        #         global_attrs = dict()
-
-        #         for key, value in config['defaults'].items():
-        #             global_attrs[key] = value % context
-
-        #         # Add in meta that we'd like to retain, renaming it in the process
-        #         for old_key, new_key in config['retain_metadata'].items():
-
-        #             if old_key in dss.attrs.keys():
-        #                 global_attrs[new_key] = dss.attrs[old_key]
-
-        #         # Remove any metadata that is not needed in the output
-        #         for rm in config['remove_metadata']:
-        #             global_attrs.pop(rm)
-
-        #         # Strip and reapply metadata
-        #         _dss.attrs = dict()
-        #         _dss.attrs = global_attrs
-
-        #         # Loop through variables and write out data
-        #         for variable in _dss.data_vars.keys():
-
-        #             # Update the context
-        #             context['variable'] = variable
-
-        #             # Get the full output filepath with string interpolation
-        #             output_dir = get_template(config, 'drs_path') % context
-        #             output_filename = get_template(config, 'filename') % context
-        #             output_filepath = os.path.join(output_dir, output_filename)
-
-        #             # Skip if already there and overwrite is not set, otherwise continue
-        #             if os.path.isfile(output_filepath) and args.overwrite == False:
-        #                 continue
-
-        #             # Create the output directory
-        #             os.makedirs(output_dir, exist_ok=True)
-
-        #             # Assemble the encoding dictionaries (to ensure time units work!)
-        #             encoding = config['encoding'].copy()
-        #             encoding[variable] = encoding.pop('variables')
-
-        #             # Nested list selection creates a degenerate dataset for per-variable files
-        #             _dss[[variable]].to_netcdf(
-        #                 output_filepath,
-        #                 format='NETCDF4_CLASSIC',
-        #                 encoding=encoding
-        #             )
-
-
-    # # Test the difference
-    # meta_a = au.extract_metadata(
-    #     '/g/data/v14/bjs581/ccam/datastore/raf018/CCAM/WINE/ACCESS1-0/50km/DRS/CORDEX/output/AUS-44i/CSIRO/CSIRO-BOM-ACCESS1-0/historical/r1i1p1/CSIRO-CCAM-1704/v1/mon/tasmax/tasmax_AUS-44i_CSIRO-BOM-ACCESS1-0_historical_r1i1p1_CSIRO-CCAM-1704_v1_mon_200501-200512.nc'
-    # )
-
-    # meta_b = au.extract_metadata(
-    #     '/g/data/v14/bjs581/ccam/output3/WINE/output/AUS-44i/CSIRO/CSIRO-BOM-ACCESS1-0/r1i1p1/CSIRO-CCAM-1704/v1/month/tasmax/tasmax_AUS-44i_CSIRO-BOM-ACCESS1-0__r1i1p1_CSIRO-CCAM-1704_v1_month_20050101-20141231.nc'
-    # )
-
-    # meta_diff = au.diff_metadata(meta_a, meta_b)
-    # pprint(meta_diff)
