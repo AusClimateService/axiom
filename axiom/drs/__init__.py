@@ -1,318 +1,40 @@
-"""CCAM DRS post-processing"""
+"""Main entrypoint for DRS processing."""
 import os
 import argparse
-import xarray as xr
-import glob
-import sys
-import axiom.utilities as au
-import axiom_schemas as axs
-import numpy as np
-
-from pprint import pprint
-from calendar import monthrange
-import pandas as pd
-from datetime import datetime, timedelta
+from datetime import datetime
 from uuid import uuid4
-import re
-from axiom.exceptions import ResolutionDetectionException
+import xarray as xr
+import axiom.utilities as au
+import axiom.drs.utilities as adu
+import axiom_schemas as axs
 
 
-def is_fixed_variable(config, variable):
-    """Determine if a variable is listed in in the config as fixed.
-
-    Args:
-        config (dict): Configuration dictionary
-        variable (str): Variable name.
-
-    Returns:
-        bool: True if fixed, False otherwise.
-    """
-    return variable in config['fixed_variables']
-
-
-def get_template(config, key):
-    """Get an interpolation template out of the config.
-
-    Args:
-        config (dict): Dictionary.
-        key (str): Template key.
-
-    Returns:
-        str: Template.
-    """
-    # Get the template out of the configuration
-    template = config['templates'][key]
-
-    # Convert list to string (helps with really long templates)
-    if isinstance(template, list):
-
-        # The delimiter is the first item in the list
-        template = template[0].join(template[1:])
-
-    return template
-
-def get_domains(resolution, frequency, variable_fixed, no_frequencies):
-    """Get the domains for the arguments provided.
-
-    Args:
-        resolution (int): Resolution
-        frequency (str): Frequency
-        variable_fixed (bool): Is the variable fixed?
-        no_frequencies (bool): True if no frequencies were provided.
-
-    Raises:
-        Exception: When the arguments provided don't yield any domain information.
-
-    Returns:
-        dict: Dictionary of domain information.
-    """
-
-    is_cordex = frequency == 'cordex'
-
-    domains, frequencies, resolution_dir, degrees = None, None, None, None
-
-    # Quickly bail if necessary
-    assert resolution in [50, 5, 10, 12]
-
-    if resolution == 50:
-
-        degrees = 0.5
-        resolution_dir = f'{resolution}km'
-
-        if not is_cordex:
-            domains = ['AUS-50']
-
-        else:
-
-            domains = ['AUS-44i']
-            frequencies = ['1D', '1M']
-
-            if variable_fixed:
-                frequencies = ['1D']
-
-        if no_frequencies:
-            frequencies = ['3H', '1D', '1M']
-
-    elif resolution == 5:
-
-        domains = ['VIC-5']
-        degrees = 0.05
-        resolution_dir = f'{resolution}km'
-
-    elif resolution == 10:
-
-        domains = ['SEA-10', 'TAS-10']
-        resolution_dir = '5km',
-        degrees = 0.1
-
-    elif resolution == 12:
-
-        if not is_cordex:
-            raise Exception('Domain not known.')
-
-        domains = ['AUS-44i']
-        frequencies = ['1D', '1M']
-
-        if variable_fixed:
-            frequencies = ['1D']
-
-    # Return everything
-    return dict(
-        domains=domains,
-        frequencies=frequencies,
-        resolution_dir=resolution_dir,
-        degrees=degrees
-    )
-
-
-def get_meta(config, meta_key, key):
-    """Load metadata on top of a _default key, if applicable.
-
-    Args:
-        config (dict): Configuration dictionary.
-        meta_key (str): Top-level key.
-        key (str): Key.
-
-    Returns:
-        dict: Metadata dictionary, with key loaded over _default.
-    """
-
-    # Start with nothing
-    _meta = dict()
-
-    # Load a default, if it exists
-    if '_default' in config[meta_key].keys():
-        _meta.update(config[meta_key]['_default'])
-
-    # Load what was requested over top
-    _meta.update(config[meta_key][key])
-
-    return _meta
-
-
-def metadata(obj, **kwargs):
-    """Add metadata to an xarray object.
-
-    Args:
-        da (xarray.DataArray or xarray.Dataset): xarray object.
-
-    Returns:
-        xarray.DataArray or xarray.Dataset : Same as caller
-    """
-    for key,value in kwargs.items():
-        obj.attrs[key] = value
-
-    return obj
-
-
-def standardise_units(ds):
-    """Standardise units.
-
-    Only converts mm to m for now.
-
-    Args:
-        ds (xarray.Dataset): Dataset
-
-    Returns:
-        xarray.Dataset: Dataset with units standardised.
-    """
-
-    for variable in ds.data_vars.keys():
-        da = ds[variable]
-
-        # Convert mm to m
-        if ds[variable].attrs['units'] == 'mm':
-            ds[variable] = metadata(da / 1000, units='m')
-
-    return ds
-
-
-def detect_resolution(paths):
-    """Attempt to detect the input resolution from a list of paths.
-
-    Args:
-        paths (list): List of file paths.
-
-    Raises:
-        ResolutionDetectionException: If there are too many possible resolutions in a path.
-        ResolutionDetectionException: If there are inconsistent resolutions detected between paths.
-
-    Returns:
-        int: Resolution in km.
-    """
-
-    # Set up pattern for searching
-    regex = r'([0-9.]*km)'
-    res = None
-
-    for path in paths:
-
-        matches = re.findall(regex,  path)
-
-        # Too many  options to choose from
-        if len(matches) != 1:
-            raise ResolutionDetectionException(f'Unable to detect resolution from {path}, there are too many possibilities.')
-
-        # First detection
-        if res is None:
-            res = matches[0]
-
-        # Already detected, but not the same
-        elif res != matches[0]:
-            raise ResolutionDetectionException(f'Detected resolutions are inconsistent between supplied paths.')
-
-    # Made it this far, we have a detectable resolution
-    return float(res.replace('km', ''))
-
-
-def input_files_exist(paths):
-    """Ensure all the input files actually exist.
-
-    Args:
-        paths (list): List of paths.
-
-    Returns:
-        bool: True if they all exist, False otherwise.
-    """
-
-    for path in paths:
-        if not os.path.isfile(path):
-            return False
-
-    return True
-
-
-def preprocess_cordex(ds):
-    """Preprocess the data upon loading for CORDEX requirments.
-
-    Args:
-        ds (xarray.Dataset): Dataset.
-
-    Returns:
-        xarray.Dataset: Dataset with preprocessing applied.
-    """
-
-    # Remove the first timestep, there is no data there
-    ds = ds.isel(time=slice(1,None), drop=True)
-
-    # Subtract 1min from the last time step, it steps over the boundary
-    ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
-
-    # Roll longitudes
-    # ds = ds.assign_coords(lon=(((ds.lon + 180) % 360) - 180))
-
-    return ds
-
-
-def _center_date(dt):
-    """Centre the date for compatibility with CDO-processed data.
-
-    Args:
-        dt (object): Date object.
-
-    Returns:
-        same as called: Date object with day set to middle of the month.
-    """
-    num_days = monthrange(dt.year, dt.month)[1]
-    return dt.replace(day=num_days // 2)
-
-
-def postprocess_cordex(ds):
-    """For CORDEX processing, there is some minor postprocessing that happens.
-
-    Args:
-        ds (xarray.Dataset): Data.
-
-    Returns:
-        xarray.Dataset: Data with postprocessing applied.
-    """
-
-    # Time coordinates need to be centered into the middle of the month
-    centered_times = ds.time.to_pandas().apply(_center_date).values
-    ds = ds.assign_coords(dict(time=centered_times))
-
-    return ds
-
-
-def parse_args(config):
+def get_parser(config=None, parent=None):
     """Parse arguments for command line utiltities.
 
     Returns:
         argparse.Namespace : Arguments object.
     """
 
+    if config is None:
+        config = au.load_package_data('data/drs.json')
+
     # Pull some config
     VALID_PROJECTS = config['projects'].keys()
     VALID_MODELS = config['models'].keys()
     VALID_DOMAINS = config['domains'].keys()
 
-    # Build a parser
-    parser = argparse.ArgumentParser()
+    # Build a parser, or add one to the top-level CLI
+    if parent is None:
+        parser = argparse.ArgumentParser()
+    else:
+        parser = parent.add_parser('drs')
+
     parser.description = "DRS utility"
 
     # Paths
     parser.add_argument('input_files', type=str, help='Input filepaths', nargs="+")
-    parser.add_argument('output_directory', type=str, help='Output base directory (DRS structure built from here')
+    parser.add_argument('output_directory', type=str, help='Output base directory (DRS structure built from here)')
     parser.add_argument('-o', '--overwrite', default=False, help='Overwrite existing output', action='store_true')
 
     # Temporal
@@ -358,33 +80,38 @@ def parse_args(config):
         default=False
     )
 
-    return parser.parse_args()
+    return parser
 
 
-if __name__ == '__main__':
+def main(config=None, args=None):
 
     logger = au.get_logger(__name__)
 
-    logger.debug('Loading config')
-    config = au.load_package_data('data/drs.json')
+    if config is None:
+        config = au.load_package_data('data/drs.json')
 
     # Parse arguments
-    args = parse_args(config)
+    if args is None:
+        args = get_parser(config).parse_args()
+
+    # Convert args to obj (if passed from toplevel CLI)
+    # if isinstance(args, dict):
+    #     args = au.dict2obj(args)
 
     # Detect the input resolution if it it not supplied
     if args.input_resolution is None:
         logger.debug('No input resolution supplied, auto-detecting')
-        args.input_resolution = detect_resolution(args.input_files)
+        args.input_resolution = adu.detect_resolution(args.input_files)
         logger.debug(f'Input resolution detected as {args.input_resolution} km')
 
     # Test that the input files exist
     logger.debug('Ensuring all input files actually exist.')
-    assert input_files_exist(args.input_files)
+    assert adu.input_files_exist(args.input_files)
 
     # Load project, model and domain metadata
     logger.debug(f'Loading project ({args.project}) and model ({args.model}) metadata.')
-    project = get_meta(config, 'projects', args.project)
-    model = get_meta(config, 'models', args.model)
+    project = adu.get_meta(config, 'projects', args.project)
+    model = adu.get_meta(config, 'models', args.model)
 
     # Establish the filename base template (this will need to be interpolated)
     filename_base = project['base']
@@ -438,12 +165,12 @@ if __name__ == '__main__':
     # Remove the first timestep from each cordex monthly file
     if args.cordex:
         logger.debug('Preprocessing cordex inputs.')
-        dss = xr.open_mfdataset(args.input_files, chunks=dict(time=1), preprocess=preprocess_cordex)
+        dss = xr.open_mfdataset(args.input_files, chunks=dict(time=1), preprocess=adu.preprocess_cordex)
     else:
         dss = xr.open_mfdataset(args.input_files, chunks=dict(time=1))
 
     logger.debug('Standardising units')
-    dss = standardise_units(dss)
+    dss = adu.standardise_units(dss)
 
     # Subset the variables requested
     logger.debug('Extracting variables %s' % list(variables.keys()))
@@ -484,10 +211,10 @@ if __name__ == '__main__':
         #
         if context['gcm_model'] in ['ERAINT', 'ERA5']:
             context['experiment'] = 'evaluation'
-            context['description'] = get_template(config, 'description_era') % context
+            context['description'] = adu.get_template(config, 'description_era') % context
         else:
             description_template = 'description_other'
-            context['description'] = get_template(config, 'description_other') % context
+            context['description'] = adu.get_template(config, 'description_other') % context
 
         start_date = f'{year}0101'
         end_date = f'{year}1231'
@@ -586,8 +313,8 @@ if __name__ == '__main__':
 
                     # Get the full output filepath with string interpolation
                     logger.debug('Working out output paths')
-                    output_dir = get_template(config, 'drs_path') % context
-                    output_filename = get_template(
+                    output_dir = adu.get_template(config, 'drs_path') % context
+                    output_filename = adu.get_template(
                         config, 'filename') % context
                     output_filepath = os.path.join(output_dir, output_filename)
                     logger.debug(f'output_filepath = {output_filepath}')
@@ -607,7 +334,7 @@ if __name__ == '__main__':
                     encoding[variable] = encoding.pop('variables')
 
                     # Center the months etc.
-                    dss_d = postprocess_cordex(dss_d)
+                    dss_d = adu.postprocess_cordex(dss_d)
 
                     # Nested list selection creates a degenerate dataset for per-variable files
                     logger.debug(f'Writing {output_filepath}')
@@ -617,3 +344,8 @@ if __name__ == '__main__':
                         encoding=encoding,
                         unlimited_dims=['time']
                     )
+
+
+if __name__ == '__main__':
+    config = au.load_package_data('data/drs.json')
+    main(config=config)

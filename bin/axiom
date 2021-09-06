@@ -7,6 +7,7 @@ from axiom.report import generate_report
 import sys
 import os
 from tabulate import tabulate
+import axiom.drs as ad
 
 def parse_and_dispatch(parser):
     """Parse arguments for the script and dispatch to the correct function.
@@ -143,6 +144,12 @@ def _diff(a, b, ignore, **kwargs):
         print('Files have the same metadata, except for that which is ignored.')
         sys.exit(0)
 
+
+def _drs(**kwargs):
+    print(kwargs)
+    ad.main(args=kwargs)
+
+
 def get_parser():
     """Get a parser object.
 
@@ -184,6 +191,10 @@ def get_parser():
     parser_diff.add_argument('b')
     parser_diff.add_argument('-i', '--ignore', help='Comma-separated list of keys to ignore, format is variable:att', type=str, default=None)
     parser_diff.set_defaults(func=_diff)
+
+    # DRS
+    parser_drs = ad.get_parser(parent=subparsers)
+    parser_drs.set_defaults(func=_drs)
 
     # Return the fully constructed parser
     return parser
