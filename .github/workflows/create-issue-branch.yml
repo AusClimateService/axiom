@@ -1,4 +1,3 @@
-mode: chatops
 on:
   issues:
     types: [ assigned ]
