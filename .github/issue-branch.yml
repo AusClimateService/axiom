@@ -1,1 +1,4 @@
 mode: chatops
+branchName: tiny
+autoCloseIssue: true
+defaultBranch: 'dev'
