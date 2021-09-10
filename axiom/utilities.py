@@ -8,6 +8,13 @@ import pandas as pd
 from datetime import datetime
 import xarray as xr
 import pkgutil
+from collections import namedtuple
+
+
+def dict2obj(d):
+    """Convert a dictionary to an object."""
+    obj = namedtuple("dict2obj", d.keys())(*d.values())
+    return obj
 
 
 def get_logger(name, level='debug'):
@@ -285,7 +292,7 @@ def load_package_data(slug, package_name='axiom'):
     Args:
         slug (str): Internal data path.
         package_name (str) : Name of the package. Defaults to 'axiom'.
-    
+
     Returns:
         mixed : Dictionary of data (JSON only ATM).
     """
@@ -299,7 +306,7 @@ def apply_schema(ds, schema):
     Args:
         ds (xarray.Dataset): Dataset.
         schema (dict): Axiom schema dictionary.
-    
+
     Returns:
         xarray.Dataset : Dataset with schema-defined metadata applied.
     """
@@ -307,7 +314,7 @@ def apply_schema(ds, schema):
     for key, _schema in schema['_global'].items():
         if 'allowed' in _schema.keys():
             ds.attrs[key] = _schema['allowed'][0]
-    
+
     # Loop through each variable on the dataset
     for variable in ds.data_vars.keys():
 
@@ -323,7 +330,7 @@ def apply_schema(ds, schema):
                 # Apply if there is an expected value
                 if 'allowed' in _schema.keys():
                     ds[variable].attrs[key] = _schema['allowed'][0]
-    
+
     # Return the updated schema
     return ds
 
@@ -339,7 +346,7 @@ def apply_schema(ds, schema):
 #         if key not in meta_b.keys():
 #             diff['key'] = (value_a, None)
 #             continue
-    
+
 #         value_b = meta_b[key]
 #         if value_a != value_b:
 #             diff[key] = (value_a, value_b)
@@ -347,7 +354,7 @@ def apply_schema(ds, schema):
 #     return diff
 
 def _diff_metadata(meta_a, meta_b, ignore_matches=True):
-    
+
     # Dictionaries are equal
     if meta_a == meta_b:
         diff = {key: (None, None) for key in meta_a.keys()}
@@ -359,19 +366,19 @@ def _diff_metadata(meta_a, meta_b, ignore_matches=True):
     # Check attributes from A
     parsed_keys = list()
     for key, value1 in meta_a.items():
-        
+
         # Missing from B
         if key not in meta_b.keys():
             diff[key] = (value1, None)
-        
+
         # Same value
         elif value1 == meta_b[key] and ignore_matches == False:
             diff[key] = (None, None)
-        
+
         # Different value
         elif value1 != meta_b[key]:
             diff[key] = (value1, meta_b[key])
-        
+
         # Mark as parsed for meta_b
         parsed_keys.append(key)
 
@@ -385,7 +392,7 @@ def _diff_metadata(meta_a, meta_b, ignore_matches=True):
         # This will be the only test, the inverse has already been checked
         if key not in meta_a.keys():
             diff[key] = (None, value2)
-    
+
     return diff
 
 
@@ -401,7 +408,7 @@ def diff_metadata(meta_a, meta_b, ignore_matches=True):
     Args:
         meta_a (dict): Metadata dictionary of the form from extract_metadata.
         meta_b (dict): Metadata dictionary of the form from extract_metadata.
-    
+
     Returns:
         dict : Dictionary of differences.
     """
@@ -418,14 +425,14 @@ def diff_metadata(meta_a, meta_b, ignore_matches=True):
 
     # Do the comparison of all the variables that the dicts share
     for variable in meta_a['variables'].keys():
-        
+
         if variable in meta_b.keys():
             diff['variables'][variable] = _diff_metadata(
                 meta_a[variable],
                 meta_b[variable],
                 ignore_matches=ignore_matches
             )
-    
+
     return diff
 
 
@@ -434,7 +441,7 @@ def infer_dtype(value):
 
     Args:
         value (unknown): Value.
-    
+
     Raises:
         ValueError : When the type can't be inferred.
     """
@@ -449,5 +456,5 @@ def infer_dtype(value):
             return dtype(value)
         except ValueError:
             pass
-    
+
     raise ValueError('Unable to infer type.')

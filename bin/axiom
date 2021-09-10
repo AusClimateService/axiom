@@ -6,7 +6,8 @@ import axiom.utilities as au
 from axiom.report import generate_report
 import sys
 import os
-
+from tabulate import tabulate
+import axiom.drs as ad
 
 def parse_and_dispatch(parser):
     """Parse arguments for the script and dispatch to the correct function.
@@ -40,7 +41,7 @@ def _validate(schema_filepath, input_filepath, report_filepath=None, **kwargs):
 
     # Validate
     v.validate(metadata)
-    
+
     # Generate a report
     if report_filepath:
         generate_report(v, input_filepath, report_filepath)
@@ -78,12 +79,13 @@ def _convert_cordex(csv_filepath, output_filepath, **kwargs):
     au.save_schema(schema, output_filepath)
 
 
-def _diff(a, b, **kwargs):
+def _diff(a, b, ignore, **kwargs):
     """Perform a metadata diff between Files a and b.
 
     Args:
         a (str): Path to file a.
         b (str): Path to file b.
+        ignore (str) : Directive to ignore
     """
 
     # Load the metadata, difference it.
@@ -92,8 +94,60 @@ def _diff(a, b, **kwargs):
         au.extract_metadata(b)
     )
 
+    # Set up a list to ignore from checks
+    _ignore = dict()
+
+    if ignore is not None:
+        for directive in ignore.split(','):
+            var, att = directive.split(':')
+            if var not in _ignore.keys():
+                _ignore[var] = list()
+            _ignore[var].append(att)
+
+    # Assume the files have the same metadata until they fail
+    different = False
+
+    # Start building a table
+    lines = list()
+    header = ['variable', 'attribute', 'a', 'b']
+    lines.append(header)
+
+    # Check global
+    for key, value in diff['_global'].items():
+
+        # Raise a failure if this is not to be ignored
+        if '_global' not in _ignore.keys() or key not in _ignore['_global']:
+            different = True
+
+        lines.append(['_global', key, value[0], value[1]])
+
+
+    # Check variables
+    for variable in diff['variables'].keys():
+        for key, value in diff['variables'][variable].items():
+
+            if variable not in _ignore.keys() or key not in _ignore[variable]:
+                different = True
+
+            lines.append([variable, key, value[0], value[1]])
+
     # Simple dump to screen
-    print(diff)
+    print(f'a = {a}')
+    print(f'b = {b}')
+
+    if different:
+        table = tabulate(lines)
+        print(table)
+        sys.exit(1)
+
+    else:
+        print('Files have the same metadata, except for that which is ignored.')
+        sys.exit(0)
+
+
+def _drs(**kwargs):
+    print(kwargs)
+    ad.main(args=kwargs)
 
 
 def get_parser():
@@ -130,12 +184,17 @@ def get_parser():
     parser_cordex.add_argument('output_filepath', type=str, help='Path to which to write the schema.')
     parser_cordex.set_defaults(func=_convert_cordex)
 
-    # Diff tool
+    # Diff (metadata) tool
     parser_diff = subparsers.add_parser('diff')
     parser_diff.description = 'Difference 2 files for metadata.'
     parser_diff.add_argument('a')
     parser_diff.add_argument('b')
+    parser_diff.add_argument('-i', '--ignore', help='Comma-separated list of keys to ignore, format is variable:att', type=str, default=None)
     parser_diff.set_defaults(func=_diff)
+
+    # DRS
+    parser_drs = ad.get_parser(parent=subparsers)
+    parser_drs.set_defaults(func=_drs)
 
     # Return the fully constructed parser
     return parser
