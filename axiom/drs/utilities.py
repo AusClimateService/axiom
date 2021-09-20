@@ -293,3 +293,27 @@ def postprocess_cordex(ds):
     ds = ds.assign_coords(dict(time=centered_times))
 
     return ds
+
+
+def parse_domain_directive(directive):
+    """Parse a domain directive (i.e. from CLI).
+
+    Args:
+        directive (str): Domain directive of the form name,dx,lat_min,lat_max,lon_min,lon_max
+    
+    Returns:
+        dict : Domain dictionary
+    
+    Raises:
+        ValueError : If the domain cannot be parsed.
+    """
+    name, *directives = directive.split(',')
+    dx, lat_min, lat_max, lon_min, lon_max = map(float, directives)
+    return dict(
+        name=name,
+        dx=dx,
+        lat_min=lat_min,
+        lat_max=lat_max,
+        lon_min=lon_min,
+        lon_max=lon_max
+    )
