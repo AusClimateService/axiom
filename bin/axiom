@@ -146,7 +146,11 @@ def _diff(a, b, ignore, **kwargs):
 
 
 def _drs(**kwargs):
-    print(kwargs)
+    """DRS subsystem.
+    
+    Args:
+        **kwargs : Arguments required for DRS.
+    """
     ad.main(args=kwargs)
 
 

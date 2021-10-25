@@ -12,6 +12,10 @@ import axiom_schemas as axs
 def get_parser(config=None, parent=None):
     """Parse arguments for command line utiltities.
 
+    Args:
+        config (dict) : Configuration dictionary.
+        parent (obj) : Parent parser object (for integration into the main axiom CLI)
+
     Returns:
         argparse.Namespace : Arguments object.
     """
@@ -83,7 +87,7 @@ def get_parser(config=None, parent=None):
     return parser
 
 
-def main(input_files, output_directory, start_year, end_year, output_frequency, project, model, variable, domains, cordex=False, input_resolution=None):
+def main(input_files, output_directory, start_year, end_year, output_frequency, project, model, variable, domains, cordex=False, input_resolution=None, overwrite=False):
     """Process the input files into DRS format.
 
     Args:
@@ -98,6 +102,7 @@ def main(input_files, output_directory, start_year, end_year, output_frequency, 
         domains (list) : List of domains to process.
         cordex (bool) : Process for cordex.
         input_resolution (float, optional): Input resolution in km. Defaults to None, detected from filepaths.
+        overwrite (bool, optional): Overwrite outputs. Defaults to False.
     """
 
     local_args = locals()
@@ -180,6 +185,7 @@ def main(input_files, output_directory, start_year, end_year, output_frequency, 
     else:
         dss = xr.open_mfdataset(input_files, chunks=dict(time=1))
 
+    # Standardise the units.
     logger.debug('Standardising units')
     dss = adu.standardise_units(dss)
 
@@ -345,7 +351,7 @@ def main(input_files, output_directory, start_year, end_year, output_frequency, 
                     logger.debug(f'output_filepath = {output_filepath}')
 
                     # Skip if already there and overwrite is not set, otherwise continue
-                    if os.path.isfile(output_filepath) and args.overwrite == False:
+                    if os.path.isfile(output_filepath) and overwrite == False:
                         logger.debug(f'{output_filepath} exists and overwrite is set to False, skipping.')
                         continue
 
