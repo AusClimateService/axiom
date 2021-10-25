@@ -24,7 +24,7 @@ jobs:
     - name: Install Axiom and Axiom Schemas
       run: |
         pip install -e .
-        pip install git+https://github.com/climate-resilient-enterprise/axiom-schemas/archive/refs/heads/master.zip
+        pip install https://github.com/climate-resilient-enterprise/axiom-schemas/archive/refs/heads/master.zip
     - name: Lint with flake8
       run: |
         conda install flake8
