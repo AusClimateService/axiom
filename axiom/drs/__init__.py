@@ -83,7 +83,6 @@ def get_parser(config=None, parent=None):
     return parser
 
 
-# def main(config=None, args=None):
 def main(input_files, output_directory, start_year, end_year, output_frequency, project, model, variable, domains, cordex=False, input_resolution=None):
     """Process the input files into DRS format.
 
