@@ -12,6 +12,10 @@ import axiom_schemas as axs
 def get_parser(config=None, parent=None):
     """Parse arguments for command line utiltities.
 
+    Args:
+        config (dict) : Configuration dictionary.
+        parent (obj) : Parent parser object (for integration into the main axiom CLI)
+
     Returns:
         argparse.Namespace : Arguments object.
     """
@@ -83,43 +87,53 @@ def get_parser(config=None, parent=None):
     return parser
 
 
-def main(config=None, args=None):
+def main(input_files, output_directory, start_year, end_year, output_frequency, project, model, variable, domains, cordex=False, input_resolution=None, overwrite=False):
+    """Process the input files into DRS format.
+
+    Args:
+        input_files (list): List of filepaths.
+        output_directory (str): Output directory (DRS path built from here)
+        start_year (int): Starting year.
+        end_year (int): Ending year.
+        output_frequency (str): Output frequency.
+        project (str): Project code.
+        model (str): Model key
+        variable (str): Variable.
+        domains (list) : List of domains to process.
+        cordex (bool) : Process for cordex.
+        input_resolution (float, optional): Input resolution in km. Defaults to None, detected from filepaths.
+        overwrite (bool, optional): Overwrite outputs. Defaults to False.
+    """
+
+    local_args = locals()
 
     logger = au.get_logger(__name__)
 
-    if config is None:
-        config = au.load_package_data('data/drs.json')
-
-    # Parse arguments
-    if args is None:
-        args = get_parser(config).parse_args()
-
-    # Convert args to obj (if passed from toplevel CLI)
-    # if isinstance(args, dict):
-    #     args = au.dict2obj(args)
+    # Load the DRS configuration from Axiom.
+    config = au.load_package_data('data/drs.json')
 
     # Detect the input resolution if it it not supplied
-    if args.input_resolution is None:
+    if input_resolution is None:
         logger.debug('No input resolution supplied, auto-detecting')
-        args.input_resolution = adu.detect_resolution(args.input_files)
-        logger.debug(f'Input resolution detected as {args.input_resolution} km')
+        input_resolution = adu.detect_resolution(input_files)
+        logger.debug(f'Input resolution detected as {input_resolution} km')
 
     # Test that the input files exist
     logger.debug('Ensuring all input files actually exist.')
-    assert adu.input_files_exist(args.input_files)
+    assert adu.input_files_exist(input_files)
 
     # Load project, model and domain metadata
-    logger.debug(f'Loading project ({args.project}) and model ({args.model}) metadata.')
-    project = adu.get_meta(config, 'projects', args.project)
-    model = adu.get_meta(config, 'models', args.model)
+    logger.debug(f'Loading project ({project}) and model ({model}) metadata.')
+    project = adu.get_meta(config, 'projects', project)
+    model = adu.get_meta(config, 'models', model)
 
     # Establish the filename base template (this will need to be interpolated)
     filename_base = project['base']
 
-    if args.variable:
+    if variable:
 
-        logger.debug(f'User has supplied variables ({args.variable}).')
-        variables = {v: list() for v in args.variable}
+        logger.debug(f'User has supplied variables ({variable}).')
+        variables = {v: list() for v in variable}
 
     else:
 
@@ -139,22 +153,24 @@ def main(config=None, args=None):
         logger.debug(f'{num_variables} variables to process.')
 
     # Test that the output directory exists, create if not
-    logger.debug(f'Creating {args.output_directory}')
-    os.makedirs(args.output_directory, exist_ok=True)
+    logger.debug(f'Creating {output_directory}')
+    os.makedirs(output_directory, exist_ok=True)
 
     # Loop through the years between start and end in decades
     logger.debug('Constructing a list of years to process')
-    years = range(args.start_year, args.end_year+1, 10)
+    years = range(start_year, end_year+1, 10)
 
     # Assemble the context object (order dependent!)
     logger.debug('Assembling interpolation context.')
     context = config['defaults'].copy()
     context.update(project)
     context.update(model)
-    context.update(vars(args))
+
+    # Add the local arguments tot he context for compatibility
+    context.update(local_args)
 
     # Add rcm metadata
-    if args.cordex:
+    if cordex:
         logger.debug('User has requested CORDEX processing, adding rcm metadata')
         context['rcm_version'] = context['rcm_version_cordex']
         context['rcm_model'] = context['rcm_model_cordex']
@@ -163,12 +179,13 @@ def main(config=None, args=None):
     logger.debug('Loading files into distributed memory, this may take some time.')
 
     # Remove the first timestep from each cordex monthly file
-    if args.cordex:
+    if cordex:
         logger.debug('Preprocessing cordex inputs.')
-        dss = xr.open_mfdataset(args.input_files, chunks=dict(time=1), preprocess=adu.preprocess_cordex)
+        dss = xr.open_mfdataset(input_files, chunks=dict(time=1), preprocess=adu.preprocess_cordex)
     else:
-        dss = xr.open_mfdataset(args.input_files, chunks=dict(time=1))
+        dss = xr.open_mfdataset(input_files, chunks=dict(time=1))
 
+    # Standardise the units.
     logger.debug('Standardising units')
     dss = adu.standardise_units(dss)
 
@@ -188,7 +205,7 @@ def main(config=None, args=None):
 
     # Work out which schema to use based on output frequency
     logger.debug('Applying metadata schema')
-    if 'M' in args.output_frequency:
+    if 'M' in output_frequency:
         schema = axs.load_schema('cordex-month.json')
     else:
         schema = axs.load_schema('cordex-day.json')
@@ -197,6 +214,19 @@ def main(config=None, args=None):
 
     # Process each year
     logger.debug('Starting processing')
+
+    # Validate the domains
+    valid_domains = dict()
+    for domain in domains:
+
+        # Predefined domain
+        if domain in config['domains'].keys():
+            valid_domains[domain] = config['domains'][domain]
+        
+        # Arbitrary domain
+        else:
+            domain = adu.parse_domain_directive(domain)
+            valid_domains[domain['name']] = domain
 
     # Loop through each year
     for year in years:
@@ -224,40 +254,41 @@ def main(config=None, args=None):
         logger.debug(f'Processing {year}')
 
         # Loop through each output frequency
-        for output_frequency in args.output_frequency:
+        for _output_frequency in output_frequency:
 
             # Update the dates based on the frequency
-            if output_frequency == '1M':
+            if _output_frequency == '1M':
                 context['start_date'] = start_date[:-2] # remove the days
                 context['end_date'] = end_date[:-2]
             else:
                 context['start_date'] = start_date
                 context['end_date'] = end_date
 
-            logger.debug(f'Processing {output_frequency} frequency')
+            logger.debug(f'Processing {_output_frequency} frequency')
 
-            logger.debug(f'Resampling to {output_frequency}')
-            dss_f = dss.resample(time=output_frequency).mean()
+            logger.debug(f'Resampling to {_output_frequency}')
+            dss_f = dss.resample(time=_output_frequency).mean()
 
-            for domain in args.domain:
+            for domain_name, domain in valid_domains.items():
 
-                logger.debug(f'Processing {domain}')
-                context['domain'] = domain
+                logger.debug(f'Processing {domain_name}')
+                context['domain'] = domain_name
 
+                # Allow arbitrary domains
                 _domain = config['domains'][domain]
 
                 logger.debug('Subsetting domain')
-                logger.debug(_domain)
+                logger.debug(domain)
 
                 # Fix to cross the meridian
-                if _domain['lon_max'] < _domain['lon_min']:
+                if domain['lon_max'] < domain['lon_min']:
                     logger.debug('Domain crosses the meridian')
-                    lon_constraint = (dss_f.lon <= _domain['lon_min']) | (dss_f.lon >= _domain['lon_max'])
+                    lon_constraint = (dss_f.lon <= domain['lon_min']) | (dss_f.lon >= domain['lon_max'])
                 else:
-                    lon_constraint = (dss_f.lon >= _domain['lon_min']) & (dss_f.lon <= _domain['lon_max'])
+                    lon_constraint = (dss_f.lon >= domain['lon_min']) & (dss_f.lon <= domain['lon_max'])
 
                 # Add latitudes
-                lat_constraint = (dss_f.lat >= _domain['lat_min']) & (dss_f.lat <= _domain['lat_max'])
+                lat_constraint = (dss_f.lat >= domain['lat_min']) & (dss_f.lat <= domain['lat_max'])
                 constraint = lon_constraint & lat_constraint
 
                 # Subset the domain
@@ -320,7 +351,7 @@ def main(config=None, args=None):
                     logger.debug(f'output_filepath = {output_filepath}')
 
                     # Skip if already there and overwrite is not set, otherwise continue
-                    if os.path.isfile(output_filepath) and args.overwrite == False:
+                    if os.path.isfile(output_filepath) and overwrite == False:
                         logger.debug(f'{output_filepath} exists and overwrite is set to False, skipping.')
                         continue
 

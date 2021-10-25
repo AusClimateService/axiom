@@ -45,3 +45,9 @@ The ``convert_cordex`` subcommand will convert a CORDEX attribute CSV (from CCAM
 .. code-block:: shell
 
     axiom convert_cordex codex_var_info_day.csv cordex-day.json
+
+
+DRS
+---
+
+See :ref:`DRS <drs>`
