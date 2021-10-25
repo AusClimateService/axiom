@@ -12,7 +12,7 @@ def parse_domain(directive):
         TypeError : When the directive is unable to be parsed.
     """
     segments = directive.split(',')
-    assert len(segments) == 5
+    assert len(segments) == 6
     name = segments[0]
     dx, lat_min, lat_max, lon_min, lon_max = [float(s) for s in segments[1:]]
 
