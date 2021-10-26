@@ -9,6 +9,7 @@ import os
 from tabulate import tabulate
 import axiom.drs as ad
 
+
 def parse_and_dispatch(parser):
     """Parse arguments for the script and dispatch to the correct function.
 

@@ -39,3 +39,32 @@ Command-line interface
                             Variables to process, omit to use those defined in
                             config.
     --cordex              Process for CORDEX
+
+
+Python API
+----------
+
+The DRS functionality can be accessed via the Python API. For example:
+
+.. code-block:: python
+
+    import axiom.drs as drs
+    import glob
+
+    # Get a list of input files.
+    input_files = sorted(glob.glob('/path/to/input/files/*.nc'))
+
+    # Call the command
+    drs.main(
+        input_files,
+        output_directory='/path/to/build/drs', # The full DRS structure will be built from here.
+        start_year=2019, end_year=2019, # A single year
+        output_frequency='1M', # Monthly frequency
+        project='DELWP',
+        model='ACCESS1-0',
+        variable='tasmax',
+        domains=['AUS-50'],
+        cordex=True,
+        input_resolution=None, # Auto-detect from input files.
+        overwrite=True # Do not skip existing outputs, overwrite them.
+    )
