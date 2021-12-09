@@ -15,5 +15,6 @@ setup(
     scripts=['bin/axiom'],
     setup_requires=['pytest-runner'],
     tests_require=['pytest'],
-    packages=find_packages()
+    packages=find_packages(),
+    package_data=dict(axiom=['data/*'])
 )
