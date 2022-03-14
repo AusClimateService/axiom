@@ -116,6 +116,7 @@
         "ACS": {
             "base": "surf.ccam_%(res_km)skm",
             "project_lower": "acs",
+            "rcp": "rcp85",
             "experiment": "",
             "project_long": "2021 Climate and Resiliences Service Australia",
             "variables_2d": [

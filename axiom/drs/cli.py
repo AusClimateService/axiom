@@ -27,8 +27,8 @@ def get_parser(config=None, parent=None):
     parser.description = "DRS utility"
 
     # Paths
-    parser.add_argument('input_files', type=str, help='Input filepaths', nargs=argparse.ONE_OR_MORE)
-    parser.add_argument('output_directory', type=str, help='Output base directory (DRS structure built from here)')
+    parser.add_argument('--input_files', required=True, type=str, help='Input filepaths', nargs=argparse.ONE_OR_MORE)
+    parser.add_argument('--output_directory', required=True, type=str, help='Output base directory (DRS structure built from here)')
     parser.add_argument('-o', '--overwrite', default=False, help='Overwrite existing output', action='store_true')
 
     # Temporal
