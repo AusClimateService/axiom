@@ -9,6 +9,10 @@ from datetime import datetime
 import xarray as xr
 import pkgutil
 from collections import namedtuple
+import glob
+import os
+import configparser as cp
+from pathlib import Path
 
 
 def dict2obj(d):
@@ -286,7 +290,7 @@ def load_cordex_csv(filepath, **kwargs):
     return schema
 
 
-def load_package_data(slug, package_name='axiom'):
+def load_package_data(slug, package_name='axiom', return_type='json'):
     """Load data from the installed Axiom package.
 
     Args:
@@ -296,8 +300,21 @@ def load_package_data(slug, package_name='axiom'):
     Returns:
         mixed : Dictionary of data (JSON only ATM).
     """
-    raw = pkgutil.get_data(package_name, slug)
-    return json.loads(raw.decode('utf-8'))
+    _raw = pkgutil.get_data(package_name, slug)
+
+    # Allow return of raw data.
+    if return_type == 'json':
+        return json.loads(_raw.decode('utf-8'))
+    
+    if return_type == 'config':
+        parser = cp.ConfigParser()
+        parser.read_string(_raw.decode('utf-8'))
+        return parser
+
+    if return_type == 'raw':
+        return _raw
+
+    raise Exception('Unknown return type.')
 
 
 def apply_schema(ds, schema):
@@ -458,3 +475,66 @@ def infer_dtype(value):
             pass
 
     raise ValueError('Unable to infer type.')
+
+
+def auto_glob(path):
+    """Shorthand for sorted(glob.glob(path))
+
+    Args:
+        mask (str): Globabble path
+    
+    Returns:
+        list : List of paths that match the globbable part.    
+    """
+    if not isinstance(path, list):
+        return sorted(glob.glob(path))
+    
+    return path
+
+
+def touch(filepath):
+    """Thin wrapper for touching files.
+
+    Args:
+        filepath (str): Path.
+    """
+    Path(filepath).touch()
+
+
+def get_lock_filepath(filepath):
+    """Get a lock file path for filepath.
+
+    Args:
+        filepath (str): Path.
+
+    Returns:
+        str: Lock file path.
+    """
+    return filepath + '.lock'
+
+
+def lock(filepath):
+    """Place a lock on a filepath.
+
+    Args:
+        filepath (str): Path to the file.
+    """
+    touch(get_lock_filepath(filepath))
+
+
+def unlock(filepath):
+    """Remove a lock on a filepath.
+
+    Args:
+        filepath (str): Path to the file.
+    """
+    os.remove(get_lock_filepath(filepath))
+
+
+def is_locked(filepath):
+    """Check if a file is locked.
+
+    Args:
+        filepath (str): Path to the file.
+    """
+    return os.path.isfile(get_lock_filepath(filepath))

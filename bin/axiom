@@ -7,6 +7,7 @@ from axiom.report import generate_report
 import sys
 import os
 from tabulate import tabulate
+import axiom.drs.cli as adc
 import axiom.drs as ad
 
 
@@ -16,10 +17,12 @@ def parse_and_dispatch(parser):
     Args:
         argparse.ArgumentParser : Parser object.
     """
-    args = parser.parse_args()
+    # Parse and convert to dictionary
+    args = vars(parser.parse_args())
 
-    if args.func:
-        args.func(**vars(args))
+    if 'func' in args.keys():
+        func = args.pop('func')
+        func(**args)
     else:
         parser.print_help()
 
@@ -152,7 +155,18 @@ def _drs(**kwargs):
     Args:
         **kwargs : Arguments required for DRS.
     """
-    ad.main(args=kwargs)
+    ad.main(**kwargs)
+
+def _drs_consume(**kwargs):
+    """Consume JSON files for DRS subsystem.
+    
+    Args:
+        **kwargs : Arguments.
+    """
+    logger = au.get_logger(__name__)
+    for json_filepath in kwargs['input_filepaths']:
+        logger.info(f'Consuming {json_filepath}')
+        ad.consume(json_filepath)
 
 
 def get_parser():
@@ -198,8 +212,12 @@ def get_parser():
     parser_diff.set_defaults(func=_diff)
 
     # DRS
-    parser_drs = ad.get_parser(parent=subparsers)
+    parser_drs = adc.get_parser(parent=subparsers)
     parser_drs.set_defaults(func=_drs)
+
+    # DRS parser that can consume JSON files
+    parser_drs_consume = adc.get_parser_consume(parent=subparsers)
+    parser_drs_consume.set_defaults(func=_drs_consume)
 
     # Return the fully constructed parser
     return parser

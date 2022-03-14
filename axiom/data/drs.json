@@ -1,6 +1,11 @@
 {
     "time_units": "days since 1949-12-01 00:00:00",
     "reference_time": "1949-12-01 00:00:00",
+    "use_dask": true,
+    "filename_filtering": {
+        "variable": true,
+        "year": true
+    },
     "templates": {
         "drs_base": [
             "/",
@@ -366,6 +371,13 @@
             "lon_max": 207,
             "lat_min": -53.0,
             "lat_max": 12.5
+        },
+        "AUS-11i":{
+            "dx": 0.125,
+            "lon_min": 88.75,
+            "lon_max": 207.25,
+            "lat_min": -53.25,
+            "lat_max": 12.75
         }
     },
     "pbs_resources": {
