@@ -14,7 +14,9 @@ import pandas as pd
 from datetime import datetime, timedelta
 from uuid import uuid4
 import re
-from axiom.exceptions import ResolutionDetectionException
+from axiom.exceptions import ResolutionDetectionException, MalformedDRSJSONPayloadException
+from cerberus import Validator
+from axiom.drs.domain import Domain
 
 
 def is_fixed_variable(config, variable):
@@ -145,8 +147,11 @@ def get_meta(config, meta_key, key):
     if '_default' in config[meta_key].keys():
         _meta.update(config[meta_key]['_default'])
 
-    # Load what was requested over top
-    _meta.update(config[meta_key][key])
+    # Load what was requested over top, if it exists
+    if key in config[meta_key].keys():
+        _meta.update(config[meta_key][key])
+    else:
+        au.get_logger(__name__).warn(f'Key {key} is not present in {meta_key}, loading defaults only.')
 
     return _meta
 
@@ -243,7 +248,7 @@ def input_files_exist(paths):
     return True
 
 
-def preprocess_cordex(ds):
+def preprocess_ccam(ds):
     """Preprocess the data upon loading for CORDEX requirments.
 
     Args:
@@ -317,3 +322,70 @@ def parse_domain_directive(directive):
         lon_min=lon_min,
         lon_max=lon_max
     )
+
+
+def parse_domain(directive):
+    """Parse a domain directive.
+
+    Domains are of the form: "name,fx,lat_min,lat_max,lon_min,lon_max"
+
+    Args:
+        directive (str) : Domain directive of the form name,dx,lat_min,lat_max,lon_min,lon_max.
+
+    Returns:
+        dict : Domain specification.
+
+    Raises:
+        AssertionError : When the directive is missing componenents.
+        TypeError : When the directive is unable to be parsed.
+    """
+    segments = directive.split(',')
+    assert len(segments) == 6
+    name = segments[0]
+    dx, lat_min, lat_max, lon_min, lon_max = [float(s) for s in segments[1:]]
+
+    # Return a dictionary of the parsed information.
+    return dict(
+        name=name,
+        dx=dx,
+        lat_min=lat_min,
+        lat_max=lat_max,
+        lon_min=lon_min,
+        lon_max=lon_max
+    )
+
+
+def load_domain_config():
+    """Load domain configuration out of installed data dir.
+
+    Returns:
+        configparser.Config: Configuration object.
+    """
+    return au.load_package_data('data/domains.ini', return_type='config')
+
+
+def get_domain(key):
+    """Load a domain out of the internal configuration.
+
+    Args:
+        key (str): Domain key or parseable domain directive.
+    
+    Returns:
+        axiom.domain.Domain : Domain object.
+    """
+
+    # Load the domain configuration as a configuration object.
+    domain_config = load_domain_config()
+    return Domain.from_config(key, domain_config)
+
+
+def is_registered_domain(key):
+    """Quick shortcut to see if the domain is already registered in the system.
+
+    Args:
+        key (str): Domain key.
+
+    Returns:
+        bool: True if registered, False otherwise.
+    """
+    return key in load_domain_config()._sections.keys()
