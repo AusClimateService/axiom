@@ -1,5 +1,5 @@
 """Tests for the DRS subsystem."""
-from axiom.drs.cli import parse_domain
+from axiom.drs.utilities import parse_domain
 
 
 def test_parse_domain():
