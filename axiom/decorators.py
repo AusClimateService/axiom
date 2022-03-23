@@ -1,5 +1,6 @@
 """Decorators."""
 import functools
+import xarray as xr
 
 
 def metadata(**meta):
@@ -17,7 +18,13 @@ def metadata(**meta):
         def __metadata(*args, **kwargs):
             result = func(*args, **kwargs)
 
-            if 'replace' in kwargs.keys() and kwargs['replace'] is True:
+            # Allow name to be set on DataArrays, special edge case.
+            if 'name' in meta.keys() and isinstance(result, xr.DataArray):
+                result.name = meta.pop('name')
+
+            # Allow the user to completely replace any existing metadata
+            if 'replace' in meta.keys() and meta['replace'] is True:
+                meta.pop('replace')
                 result.attrs = meta
             else:
                 result.attrs.update(meta)
