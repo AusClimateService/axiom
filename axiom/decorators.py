@@ -3,6 +3,24 @@ import functools
 import xarray as xr
 
 
+def singleton(cls):
+    """Define a class as a singleton.
+
+    Returns:
+        object: Singleton
+    """
+
+    instance = [None]
+    
+    @functools.wraps(cls)
+    def _singleton(*args, **kwargs):
+        if instance[0] is None:
+            instance[0] = cls(*args, **kwargs)
+        return instance[0]
+    
+    return _singleton
+
+
 def metadata(**meta):
     """Apply metadata to the xarray outputs of a function.
 
@@ -20,7 +38,7 @@ def metadata(**meta):
 
             # Allow name to be set on DataArrays, special edge case.
             if 'name' in meta.keys() and isinstance(result, xr.DataArray):
-                result.name = meta.pop('name')
+                result.name = meta.pop('name')  
 
             # Allow the user to completely replace any existing metadata
             if 'replace' in meta.keys() and meta['replace'] is True:
