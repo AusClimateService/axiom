@@ -1,13 +1,15 @@
 """CCAM DRS post-processing"""
 import os
 import argparse
+from pathlib import Path
+import configparser as cp
 import xarray as xr
 import glob
 import sys
 import axiom.utilities as au
 import axiom_schemas as axs
 import numpy as np
-
+import importlib
 from pprint import pprint
 from calendar import monthrange
 import pandas as pd
@@ -248,26 +250,26 @@ def input_files_exist(paths):
     return True
 
 
-def preprocess_ccam(ds):
-    """Preprocess the data upon loading for CORDEX requirments.
+# def preprocess_ccam(ds):
+#     """Preprocess the data upon loading for CORDEX requirments.
 
-    Args:
-        ds (xarray.Dataset): Dataset.
+#     Args:
+#         ds (xarray.Dataset): Dataset.
 
-    Returns:
-        xarray.Dataset: Dataset with preprocessing applied.
-    """
+#     Returns:
+#         xarray.Dataset: Dataset with preprocessing applied.
+#     """
 
-    # Remove the first timestep, there is no data there
-    ds = ds.isel(time=slice(1,None), drop=True)
+#     # Remove the first timestep, there is no data there
+#     ds = ds.isel(time=slice(1,None), drop=True)
 
-    # Subtract 1min from the last time step, it steps over the boundary
-    ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
+#     # Subtract 1min from the last time step, it steps over the boundary
+#     ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
 
-    # Roll longitudes
-    # ds = ds.assign_coords(lon=(((ds.lon + 180) % 360) - 180))
+#     # Roll longitudes
+#     # ds = ds.assign_coords(lon=(((ds.lon + 180) % 360) - 180))
 
-    return ds
+#     return ds
 
 
 def _center_date(dt):
@@ -389,3 +391,42 @@ def is_registered_domain(key):
         bool: True if registered, False otherwise.
     """
     return key in load_domain_config()._sections.keys()
+
+
+def load_processor(model_key, proc_type='pre'):
+    """Load a pre-or-post processor for the model, if one exists.
+
+    Args:
+        model_key (str): Model.
+
+    Returns:
+        callable: Function that takes an xarray.Dataset as input.
+    """
+    logger = au.get_logger(__name__)
+
+    try:
+        mod = importlib.import_module(f'axiom.drs.processing.{model_key}')
+        processor = getattr(mod, f'{proc_type}process_{model_key}')
+        logger.info(f'Found {proc_type}processor for {model_key}')
+        return processor
+    except:
+        logger.warning(f'No {proc_type}processor found for {model_key}, returning empty function.')
+        return lambda ds, *args: ds
+
+def interpolate_context(context):
+    """Interpolate the context dictionary into itself, filling all placeholders.
+
+    Args:
+        context (dict): Context dictionary.
+    
+    Returns:
+        dict : Interpolated context.
+    """
+    logger = au.get_logger(__name__)
+    for key, value in context.items():
+        # context[key] = value % context
+        new_value = str(value) % context
+        logger.debug(f'{key} = {new_value}')
+        context[key] = new_value
+    
+    return context

@@ -11,8 +11,9 @@ import pkgutil
 from collections import namedtuple
 import glob
 import os
-import configparser as cp
+from configparser import ConfigParser, ExtendedInterpolation
 from pathlib import Path
+import time
 
 
 def dict2obj(d):
@@ -307,7 +308,7 @@ def load_package_data(slug, package_name='axiom', return_type='json'):
         return json.loads(_raw.decode('utf-8'))
     
     if return_type == 'config':
-        parser = cp.ConfigParser()
+        parser = ConfigParser()
         parser.read_string(_raw.decode('utf-8'))
         return parser
 
@@ -333,7 +334,7 @@ def apply_schema(ds, schema):
             ds.attrs[key] = _schema['allowed'][0]
 
     # Loop through each variable on the dataset
-    for variable in ds.data_vars.keys():
+    for variable in list(ds.data_vars.keys()) + list(ds.coords.keys()):
 
         # If the variable is define
         if variable in schema['variables'].keys():
@@ -350,25 +351,6 @@ def apply_schema(ds, schema):
 
     # Return the updated schema
     return ds
-
-
-
-
-# def _diff_metadata(meta_a, meta_b):
-
-#     diff = dict()
-#     parsed = list()
-#     for key, value_a in meta_a.items():
-
-#         if key not in meta_b.keys():
-#             diff['key'] = (value_a, None)
-#             continue
-
-#         value_b = meta_b[key]
-#         if value_a != value_b:
-#             diff[key] = (value_a, value_b)
-
-#     return diff
 
 def _diff_metadata(meta_a, meta_b, ignore_matches=True):
 
@@ -510,7 +492,7 @@ def get_lock_filepath(filepath):
     Returns:
         str: Lock file path.
     """
-    return filepath + '.lock'
+    return f'{filepath}.lock'
 
 
 def lock(filepath):
@@ -538,3 +520,94 @@ def is_locked(filepath):
         filepath (str): Path to the file.
     """
     return os.path.isfile(get_lock_filepath(filepath))
+
+
+class ListAwareConfigParser(ConfigParser):
+
+    def __init__(self):
+        super().__init__(interpolation=ExtendedInterpolation())
+
+    def getlist(self, section, key, delimiter='\n', cast=str):
+        """Get an option out of the configuration and automatically split into a list.
+
+        Args:
+            section (str): Section name.
+            key (str): Option key.
+            delimiter (str, optional): Delimiter. Defaults to '\n'.
+            cast (callable): Typecast on the fly to this type.
+
+        Returns:
+            list: Configuration option as a list.
+        """
+        values = self.get(section, key).split(delimiter)
+        values = list(filter(bool, values))
+        return [cast(v) for v in values]
+    
+    def section2dict(self, section, detect_dtypes=True):
+
+        _dict = dict()
+        for option in self._sections[section].keys():
+            if detect_dtypes:
+                _dict[option] = infer_dtype(self.get(section, option))
+            else:
+                _dict[option] = self.get(section, option)
+        
+        return _dict
+
+
+def load_user_config(name):
+    """Load a configuration file from the user's $HOME/.axiom directory.
+
+    Args:
+        name (str): Name of the configuration file.
+    
+    Returns:
+        configparser.Config : Configuration.
+    """
+    # Build a path to the user's home directory for that configuration file.
+    config_path = os.path.join(
+        str(Path.home()),
+        '.axiom',
+        f'{name}.ini'
+    )
+
+    if os.path.isfile(config_path) is False:
+        raise FileNotFoundError(f'No configuration file found at {config_path}')
+
+    config = ListAwareConfigParser()
+    config.read(config_path)
+    return config
+
+
+def pluralise(obj):
+    """Automatically convert obj into a list object.
+
+    For use when an object can be defined singularly or plurally.
+
+    Args:
+        obj (object): Object.
+    """
+    if not isinstance(obj, list):
+        obj = [obj]
+    
+    return obj
+
+
+class Timer:
+    """Basic timer class."""
+
+    def __init__(self):
+        self._start_time = None
+    
+    def start(self):
+        """Start the timer."""
+        self._start_time = time.perf_counter()
+    
+    def stop(self):
+        """Stop the timer.
+        
+        Returns:
+            float : Elapsed time in seconds"""
+        elapsed_time = time.perf_counter() - self._start_time
+        self._start_time = None
+        return elapsed_time

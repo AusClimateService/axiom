@@ -1,7 +1,7 @@
 """Command-line methods for the DRS subsystem."""
 import argparse
 import axiom.utilities as au
-
+from axiom.config import load_config
 
 def get_parser(config=None, parent=None):
     """Parse arguments for command line utiltities.
@@ -13,9 +13,11 @@ def get_parser(config=None, parent=None):
     Returns:
         argparse.Namespace : Arguments object.
     """
-
-    if config is None:
-        config = au.load_package_data('data/drs.json')
+    
+    # Load the model, project and domain
+    VALID_MODELS = load_config('models').keys()
+    VALID_PROJECTS = load_config('projects').keys()
+    VALID_DOMAINS = load_config('domains').keys()
 
     # Build a parser
     if parent is None:
@@ -44,33 +46,23 @@ def get_parser(config=None, parent=None):
     )
 
     # Metadata
-    parser.add_argument('-p', '--project', required=True, type=str, choices=config['projects'].keys())
-    parser.add_argument('-m', '--model', required=True, type=str, choices=config['models'].keys())
+    parser.add_argument('-p', '--project', required=True, type=str, choices=VALID_PROJECTS)
+    parser.add_argument('-m', '--model', required=True, type=str, choices=VALID_MODELS)
 
     # Domains, we can process multiple at once
     parser.add_argument(
-        '-d', '--domains',
+        '-d', '--domain',
         required=True, type=str,
-        choices=config['domains'].keys(),
-        nargs='*', metavar='domain',
-        help='Domains to process, space-separated.'
+        choices=VALID_DOMAINS,
+        help='Domain to process'
     )
 
     # Override the variables defined in the drs.json file
     parser.add_argument(
-        '-v', '--variables',
+        '-v', '--variable',
         type=str,
-        nargs='*',
-        metavar='variables',
-        help='Variables to process, omit to use those defined in config.'
-    )
-
-    # Switch on CORDEX options
-    parser.add_argument(
-        '--cordex',
-        help='Process for CORDEX',
-        action='store_true',
-        default=False
+        required=True,
+        help='Variable to process.'
     )
 
     return parser

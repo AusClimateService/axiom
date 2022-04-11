@@ -155,7 +155,7 @@ def _drs(**kwargs):
     Args:
         **kwargs : Arguments required for DRS.
     """
-    ad.main(**kwargs)
+    ad.process(**kwargs)
 
 def _drs_consume(**kwargs):
     """Consume JSON files for DRS subsystem.
