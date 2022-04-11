@@ -411,7 +411,7 @@ def load_processor(model_key, proc_type='pre'):
         return processor
     except:
         logger.warning(f'No {proc_type}processor found for {model_key}, returning empty function.')
-        return lambda ds: ds
+        return lambda ds, *args: ds
 
 def interpolate_context(context):
     """Interpolate the context dictionary into itself, filling all placeholders.

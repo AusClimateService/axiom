@@ -3,7 +3,6 @@ import numpy as np
 import datetime
 from calendar import monthrange
 
-
 def _detect_version(ds):
     """The CCAM version can be detected from the history metadata.
 
@@ -29,11 +28,13 @@ def preprocess_ccam(ds, variable=None):
         xarray.Dataset: Dataset with preprocessing applied.
     """
 
-    # Remove the first timestep, there is no data there
-    ds = ds.isel(time=slice(1,None), drop=True)
+    if 'time' in list(ds.coords.keys()):
 
-    # Subtract 1min from the last time step, it steps over the boundary
-    ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
+        # Remove the first timestep, there is no data there
+        ds = ds.isel(time=slice(1,None), drop=True)
+
+        # Subtract 1min from the last time step, it steps over the boundary
+        ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
 
     # Rename metadata keys
     ds.attrs['rlon'] = ds.attrs.pop('rlong0')
@@ -77,6 +78,10 @@ def postprocess_ccam(ds):
     Returns:
         xarray.Dataset: Data with postprocessing applied.
     """
+
+    # Check for time-invariance
+    if 'time' not in list(ds.coords.keys()):
+        return ds
 
     # Time coordinates need to be centered into the middle of the month
     centered_times = ds.time.to_pandas().apply(_center_date).values

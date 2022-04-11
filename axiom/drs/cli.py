@@ -51,28 +51,18 @@ def get_parser(config=None, parent=None):
 
     # Domains, we can process multiple at once
     parser.add_argument(
-        '-d', '--domains',
+        '-d', '--domain',
         required=True, type=str,
         choices=VALID_DOMAINS,
-        nargs='*', metavar='domain',
-        help='Domains to process, space-separated.'
+        help='Domain to process'
     )
 
     # Override the variables defined in the drs.json file
     parser.add_argument(
-        '-v', '--variables',
+        '-v', '--variable',
         type=str,
-        nargs='*',
-        metavar='variables',
-        help='Variables to process, omit to use those defined in config.'
-    )
-
-    # Switch on CORDEX options
-    parser.add_argument(
-        '--cordex',
-        help='Process for CORDEX',
-        action='store_true',
-        default=False
+        required=True,
+        help='Variable to process.'
     )
 
     return parser

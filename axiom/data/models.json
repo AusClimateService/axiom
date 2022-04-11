@@ -1,0 +1,107 @@
+{
+    "ERA": {
+        "model_lower": "eraint",
+        "model_short": "era",
+        "gcm_model": "ERAINT",
+        "gcm_institute": "ECMWF",
+        "run_type": "Evaluation",
+        "mode": "sea surface temperatures only",
+        "_cordex": {
+            "rcm_version_id": "v1-SST"
+        },
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s reanalysis. Forcing mode: %(mode)s"
+    },
+    "ERA-NUDGED": {
+        "model_lower": "eraint-nudged",
+        "model_short": "era-n",
+        "gcm_model": "ERAINT",
+        "gcm_institute": "ECMWF",
+        "run_type": "Evaluation",
+        "mode": "spectrally nudged atmosphere",
+        "_cordex": {
+            "rcm_version_id": "v1-nudgedAtm"
+        },
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s reanalysis. Forcing mode: %(mode)s"
+    },
+    "ERA5": {
+        "model_lower": "era5",
+        "model_short": "era5",
+        "gcm_model": "ERA5",
+        "gcm_institute": "ECMWF",
+        "run_type": "Evaluation",
+        "mode": "spectrally nudged atmosphere",
+        "_cordex": {
+            "rcm_version_id": "v1-nudgedAtm"
+        },
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s reanalysis. Forcing mode: %(mode)s"
+    },
+    "ACCESS1-0": {
+        "model_lower": "access1-0",
+        "model_short": "acc1-0",
+        "gcm_model": "ACCESS1-0",
+        "gcm_institute": "CSIRO-BOM",
+        "run_type": "Climate change",
+        "mode": "bias- and variance-corrected sea surface temperatures",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "CCSM4": {
+        "model_lower": "ccsm4",
+        "model_short": "ccsm4",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "CNRM-CM5": {
+        "model_lower": "cnrm-cm5",
+        "model_short": "cnrm",
+        "gcm_model": "CNRM-CM5",
+        "gcm_institute": "CNRM-CERFACS",
+        "run_type": "Climate change",
+        "mode": "bias- and variance-corrected sea surface temperatures",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "GFDL-ESM2M": {
+        "model_lower": "gfdl-esm2m",
+        "model_short": "gfdl",
+        "gcm_model": "GFDL-ESM2M",
+        "gcm_institute": "NOAA-GFDL",
+        "run_type": "Climate change",
+        "mode": "bias- and variance-corrected sea surface temperatures",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "HadGEM2": {
+        "model_lower": "",
+        "model_short": "hadgem",
+        "gcm_model": "HadGEM2-CC",
+        "gcm_institute": "MOHC",
+        "run_type": "Climate change",
+        "mode": "bias- and variance-corrected sea surface temperatures",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "MIROC5": {
+        "model_lower": "miroc5",
+        "model_short": "miroc",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "MPI-ESM-LR": {
+        "model_lower": "mpi-esm-lr",
+        "model_short": "mpiesm",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "NorESM1-M": {
+        "model_lower": "noresm1-m",
+        "model_short": "norsesm",
+        "gcm_model": "NorESM1-M",
+        "gcm_institute": "NCC",
+        "run_type": "Climate change",
+        "mode": "bias- and variance-corrected sea surface temperatures",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    },
+    "NCC-NorESM2-MM": {
+        "model_lower": "noresm2-mm",
+        "model_short": "norsesm2",
+        "gcm_model": "NorESM2-MM",
+        "gcm_institute": "NCC",
+        "run_type": "Climate change",
+        "mode": "bias- and variance-corrected sea surface temperatures",
+        "description": "%(run_type)s run using %(gcm_institute)s-%(gcm_model)s %(experiment)s %(ensemble)s %(mode)s"
+    }
+}
