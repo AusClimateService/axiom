@@ -13,7 +13,7 @@ import sys
 from distributed import Client, LocalCluster
 from axiom.config import load_config
 from axiom import __version__ as axiom_version
-from axiom.exceptions import NoFilesToProcessException
+from axiom.exceptions import NoFilesToProcessException, DRSContextInterpolationException
 
 
 def consume(json_filepath):
@@ -137,9 +137,6 @@ def process(
     # Load model config
     logger.info(f'Loading model config ({model})')
     model = load_config('models')[model]
-
-    # Ensure the output directories exist
-    os.makedirs(output_directory, exist_ok=True)
 
     logger.debug('Loading files into distributed memory, this may take some time.')
 
@@ -297,6 +294,13 @@ def process(
             logger.debug(f'{output_filepath} exists and overwrite is set to False, skipping.')
             continue
 
+        # Check for uninterpolated keys in the output path, which should fail at this point.
+        uninterpolated_keys = adu.get_uninterpolated_placeholders(output_filepath)
+        if len(uninterpolated_keys) > 0:
+            logger.error('Uninterpolated keys remain in the output filepath.')
+            logger.error(f'output_filepath = {output_filepath}')
+            raise DRSContextInterpolationException(uninterpolated_keys)
+
         # Create the output directory
         output_dir = os.path.dirname(output_filepath)
         logger.debug(f'Creating {output_dir}')
@@ -348,6 +352,14 @@ def generate_years_list(start_year, end_year):
 
 
 def load_variable_config(project_config):
+    """Extract the variable configuration out of the project configuration.
+
+    Args:
+        project_config (dict-like): Project configuration.
+
+    Returns:
+        dict: Variable dictionary with name: [levels] (single level will have a list containing None.)
+    """
     
     # Extract the different rank variables
     v2ds = project_config['variables_2d']
