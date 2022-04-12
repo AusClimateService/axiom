@@ -1,5 +1,6 @@
 """CCAM DRS post-processing"""
 import os
+import re
 import argparse
 from pathlib import Path
 import configparser as cp
@@ -250,28 +251,6 @@ def input_files_exist(paths):
     return True
 
 
-# def preprocess_ccam(ds):
-#     """Preprocess the data upon loading for CORDEX requirments.
-
-#     Args:
-#         ds (xarray.Dataset): Dataset.
-
-#     Returns:
-#         xarray.Dataset: Dataset with preprocessing applied.
-#     """
-
-#     # Remove the first timestep, there is no data there
-#     ds = ds.isel(time=slice(1,None), drop=True)
-
-#     # Subtract 1min from the last time step, it steps over the boundary
-#     ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
-
-#     # Roll longitudes
-#     # ds = ds.assign_coords(lon=(((ds.lon + 180) % 360) - 180))
-
-#     return ds
-
-
 def _center_date(dt):
     """Centre the date for compatibility with CDO-processed data.
 
@@ -430,3 +409,19 @@ def interpolate_context(context):
         context[key] = new_value
     
     return context
+
+
+def get_uninterpolated_placeholders(string):
+    """Check if a string has any remaining uninterpolated values.
+
+    Args:
+        string (string): String object.
+    
+    Returns:
+        list : List of uninterpolated values.
+    """
+    # Regex to find matches
+    matches = re.findall(r'%\(([a-zA-Z0-9_-]+)\)s', string)
+
+    # Convert to set to remove duplicates, convert back and return
+    return sorted(list(set(matches)))
