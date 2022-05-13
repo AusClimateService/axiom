@@ -3,6 +3,7 @@ import numpy as np
 import datetime
 from calendar import monthrange
 
+
 def _detect_version(ds):
     """The CCAM version can be detected from the history metadata.
 
@@ -17,7 +18,25 @@ def _detect_version(ds):
     return yymm
 
 
-def preprocess_ccam(ds, variable=None):
+def _set_version_metadata(ds, version):
+    """Set the version metadata on the DataSet.
+
+    Args:
+        ds (xarray.DataSet): Dataset.
+        version (str): Version string.
+
+    Returns:
+        xarray.Dataset : Dataset with version metadata on it.
+    """
+    ds.attrs['rcm_model'] = f'CCAM-{version}'
+    ds.attrs['rcm_model_cordex'] = f'CCAM-{version}'
+    ds.attrs['rcm_model_version'] = version
+    ds.attrs['rcm_version'] = version
+    ds.attrs['rcm_version_cordex'] = version
+    return ds
+
+
+def preprocess_ccam(ds, **kwargs):
     """Preprocess the data upon loading for CORDEX requirments.
 
     Args:
@@ -27,6 +46,8 @@ def preprocess_ccam(ds, variable=None):
     Returns:
         xarray.Dataset: Dataset with preprocessing applied.
     """
+
+    variable = kwargs['variable']
 
     if 'time' in list(ds.coords.keys()):
 
@@ -42,12 +63,7 @@ def preprocess_ccam(ds, variable=None):
 
     # Automatically detect version
     version = _detect_version(ds)
-    ds.attrs['rcm_model'] = f'CCAM-{version}'
-    ds.attrs['rcm_model_cordex'] = f'CCAM-{version}'
-    ds.attrs['rcm_model_version'] = version
-    ds.attrs['rcm_version'] = version
-    ds.attrs['rcm_version_cordex'] = version
-
+    ds = _set_version_metadata(ds, version)
 
     # Extract the lat/lon bounds as well.
     if variable:
@@ -69,7 +85,7 @@ def _center_date(dt):
     return dt.replace(day=num_days // 2)
 
 
-def postprocess_ccam(ds):
+def postprocess_ccam(ds, **kwargs):
     """For CORDEX processing, there is some minor postprocessing that happens.
 
     Args:
@@ -84,7 +100,13 @@ def postprocess_ccam(ds):
         return ds
 
     # Time coordinates need to be centered into the middle of the month
-    centered_times = ds.time.to_pandas().apply(_center_date).values
-    ds = ds.assign_coords(dict(time=centered_times))
+    if kwargs['output_frequency'] == '1M':
+        centered_times = ds.time.to_pandas().apply(_center_date).values
+        ds = ds.assign_coords(dict(time=centered_times))
+
+    # Allow clobbering of version as provided by user in the json payloads
+    if 'model_id' in kwargs:
+        version = kwargs['model_id'].split('-')[-1]
+        ds = _set_version_metadata(ds, version)
 
     return ds

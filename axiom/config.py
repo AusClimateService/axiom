@@ -17,7 +17,7 @@ class Config(dict):
         Returns:
             Any: Value.
         """
-        return super().__getitem__(key)
+        return self.__getitem__(key)
 
 
     def __setattr__(self, key, value):
@@ -28,6 +28,27 @@ class Config(dict):
             value (Any): Value to assign.
         """
         super().__setitem__(key, value)
+
+
+    def __getitem__(self, key):
+        """Boolean fallback method, returning False if key does not exist.
+
+        Use for adding new conditional functionality.
+
+        Args:
+            key (hashable): Key
+
+        Returns:
+            object : Value in config, or False
+        """
+        
+        try:
+            value = super().__getitem__(key)
+            
+        except KeyError:
+            value = False
+
+        return value
 
 
     def load(self, config_name):

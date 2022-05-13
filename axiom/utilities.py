@@ -14,6 +14,8 @@ import os
 from configparser import ConfigParser, ExtendedInterpolation
 from pathlib import Path
 import time
+import subprocess as sp
+import numpy as np
 
 
 def dict2obj(d):
@@ -611,3 +613,29 @@ class Timer:
         elapsed_time = time.perf_counter() - self._start_time
         self._start_time = None
         return elapsed_time
+
+
+def shell(cmd, shell=True, check=True, capture_output=True, **kwargs):
+    """Execute a shell command.
+
+    Args:
+        cmd (str): Command
+        **kwargs : Passed to subprocess.run
+
+    Returns:
+        [type]: [description]
+    """
+    return sp.run(cmd, shell=shell, check=check, capture_output=capture_output, **kwargs)
+
+
+def batch_split(iterable, n_batches):
+    """Split iterable into n_batches.
+    
+    Args:
+        iterable (iterable) : Iterable object to split.
+        n_batches (int) : Number of batches.
+    
+    Returns:
+        list : List of iterables.
+    """
+    return np.array_split(iterable, n_batches)

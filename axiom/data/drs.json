@@ -4,8 +4,7 @@
     "dask": {
         "enable": true,
         "cluster": {
-            "n_workers": 4,
-            "threads_per_worker": 1
+            "n_workers": 1
         }
     },
     "filename_filtering": {
@@ -13,6 +12,7 @@
         "year": true
     },
     "copy_coordinates_from_inputs": true,
+    "detect_output_frequency_from_inputs": true,
     "schema": "cordex-cmip6.json",
     "historical_cutoff": 2006,
     "metadata_defaults": {
@@ -46,11 +46,13 @@
         "12min": "12min",
         "3H": "3hr",
         "1D": "day",
-        "1M": "mon"
+        "1M": "mon",
+        "1H": "1hr",
+        "6H": "6hr"
     },
     "encoding": {
         "variables": {
-            "dtype": "float",
+            "dtype": "float32",
             "_FillValue": 1e20,
             "zlib": true,
             "complevel": 1
