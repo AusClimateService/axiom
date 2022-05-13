@@ -20,6 +20,7 @@ import re
 from axiom.exceptions import ResolutionDetectionException, MalformedDRSJSONPayloadException
 from cerberus import Validator
 from axiom.drs.domain import Domain
+from axiom.config import load_config
 
 
 def is_fixed_variable(config, variable):
@@ -342,7 +343,7 @@ def load_domain_config():
     Returns:
         configparser.Config: Configuration object.
     """
-    return au.load_package_data('data/domains.ini', return_type='config')
+    return load_config('domains')
 
 
 def get_domain(key):
@@ -369,7 +370,7 @@ def is_registered_domain(key):
     Returns:
         bool: True if registered, False otherwise.
     """
-    return key in load_domain_config()._sections.keys()
+    return key in load_domain_config().keys()
 
 
 def load_processor(model_key, proc_type='pre'):
@@ -390,7 +391,26 @@ def load_processor(model_key, proc_type='pre'):
         return processor
     except:
         logger.warning(f'No {proc_type}processor found for {model_key}, returning empty function.')
-        return lambda ds, *args: ds
+        return lambda ds, *args, **kwargs: ds
+
+def load_preprocessor(model_key):
+    """Shorthand for the load_processor function.
+
+    Args:
+        model_key (str): Model
+    """
+    return load_processor(model_key=model_key, proc_type='pre')
+
+
+def load_postprocessor(model_key):
+    """Shorthand for the load_processor function.
+
+    Args:
+        model_key (str): Model
+    """
+    return load_processor(model_key=model_key, proc_type='post')
+
+
 
 def interpolate_context(context):
     """Interpolate the context dictionary into itself, filling all placeholders.
@@ -425,3 +445,47 @@ def get_uninterpolated_placeholders(string):
 
     # Convert to set to remove duplicates, convert back and return
     return sorted(list(set(matches)))
+
+
+def detect_input_frequency(ds):
+    """Detect the (closest) input frequency of the data.
+
+    Args:
+        ds (xarray.Dataset): Input data.
+    
+    Returns:
+        str : Pandas offset directive.
+    """
+
+    # Bail out if time-invariant
+    if is_time_invariant(ds):
+        return None
+
+    # Take the difference between the first two time steps
+    total_seconds = (ds.time.data[1] - ds.time.data[0]).astype('timedelta64[s]').astype(np.int32)
+
+    # TODO: These should be configurable
+    intervals = '1H,3H,6H,1D,1M'.split(',')
+    seconds = [
+        1*60*60,
+        3*60*60,
+        6*60*60,
+        24*60*60,
+        28*24*60*60
+    ]
+
+    # Take the closest
+    ix = np.argmin(np.abs(np.array(seconds) - total_seconds))
+    return intervals[ix]
+
+
+def is_time_invariant(ds):
+    """Test if the dataset is time-invariant (has no time coordinate)
+
+    Args:
+        ds (xarray.Dataset or xarray.DataArray): Data
+    
+    Return:
+        bool : True if no 'time' coordinate detected, False otherwise
+    """
+    return 'time' not in list(ds.coords.keys())
