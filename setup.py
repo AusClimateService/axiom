@@ -10,7 +10,9 @@ setup(
         'netCDF4',
         'cerberus',
         'tabulate',
-	    'dask'
+	    'dask',
+        'distributed',
+        'h5netcdf'
     ],
     scripts=['bin/axiom'],
     setup_requires=['pytest-runner'],

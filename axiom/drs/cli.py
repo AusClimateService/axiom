@@ -146,7 +146,7 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, **kwargs):
 
             cmd = f'qsub -N {job_name} -v {qsub_vars} -o {log_dir} {jobscript}'
 
-            if 'walltime' in kwargs.keys():
+            if 'walltime' in kwargs.keys() and kwargs['walltime'] != None:
                 walltime = kwargs['walltime']
                 cmd = f'qsub -N {job_name} -v {qsub_vars} -o {log_dir} -l walltime={walltime} {jobscript}'
 

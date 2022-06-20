@@ -16,6 +16,7 @@ from axiom import __version__ as axiom_version
 from axiom.exceptions import NoFilesToProcessException, DRSContextInterpolationException
 import shutil
 from dask.distributed import progress, wait
+import numpy as np
 
 
 def consume(json_filepath):
@@ -44,6 +45,13 @@ def consume(json_filepath):
 
     # Convert to dict
     payload = json.loads(open(json_filepath, 'r').read())
+
+    # Allow rerun of failed variables (do this after all other variables have been processed!)
+    config = load_config('drs')
+    failures_path = f'{json_filepath}_001.failed'
+    if config.rerun_failures and os.path.exists(failures_path):
+        failed_variables = open(failures_path, 'r').read().splitlines()
+        payload['variables'] = failed_variables
 
     # Process
     process_multi(**payload)
@@ -119,10 +127,11 @@ def process(
         logger.debug(
             f'{num_files} to consider after filename variable filtering.')
 
-    # Filter by those that actually have the year in the filename.
+    # Filter by those that actually have the year in the filename (plus or minus an offset).
     if config.filename_filtering['year']:
-        input_files = [
-            f for f in input_files if f'{start_year}' in os.path.basename(f)]
+        
+        input_files = filter_years(
+            input_files, start_year, offset=config.filename_filtering['year_offset'])
         num_files = len(input_files)
         logger.debug(f'{num_files} to consider after filename year filtering.')
 
@@ -168,7 +177,26 @@ def process(
         ds = xr.open_mfdataset(input_files, chunks=dict(
             time=100), preprocess=preprocess, engine='h5netcdf')
 
-    # Persist now, get it on the cluster
+    # Subset temporally
+    if not adu.is_time_invariant(ds):
+        logger.info(f'Subsetting times to {start_year}')
+        ixs = np.where(ds['time.year'] == start_year)
+        ds = ds.isel(time=slice(ixs[0][0], ixs[0][-1] + 1))
+
+    # Skip over the file if subdaily resampling is disabled, this will stop 
+    native_frequency = adu.detect_input_frequency(ds)
+
+    # Ensure blank output frequency is indeed fixed and only one can be written
+    if adu.is_time_invariant(ds):
+        output_frequency = 'fx'
+        overwrite = False        
+
+    logger.info(f'native_frequency = {native_frequency}, output_frequency = {output_frequency}')
+    if config.allow_subdaily_resampling == False and native_frequency != output_frequency and 'H' in output_frequency:
+        logger.info(f'Subdaily resampling has been disabled and input/output frequencies do not match, skipping {variable}.')
+        return
+
+    # Persist now, get it on the cluster while the rest of the metadata assembly continues
     ds = ds.persist()
 
     # Determine time-invariance
@@ -193,6 +221,7 @@ def process(
     context['res_km'] = input_resolution
 
     # Select the variable from the dataset
+    # TODO: Deprecate
     if level:
 
         # Select each of the levels requested into a new variable.
@@ -248,12 +277,16 @@ def process(
             _ds = ds.copy()
 
         # Historical cutoff is defined in $HOME/.axiom/drs.json
-        context['experiment'] = 'historical' if year < config.historical_cutoff else context['rcp']
-
-        native_frequency = adu.detect_input_frequency(_ds)
+        if config.enable_historical_cutoff == True:
+            context['experiment'] = 'historical' if year < config.historical_cutoff else context['rcp']
+        
         logger.info(f'Native frequency of data detected as {native_frequency}')
 
         # Automatically detect the output_frequency from the input data, this will not require resampling
+        
+        # Flag to trigger cell_method update below.
+        resampling_applied = False
+
         if output_frequency == 'from_input' or output_frequency == native_frequency:
             output_frequency = adu.detect_input_frequency(_ds)
             logger.info(
@@ -273,19 +306,20 @@ def process(
         else:
             logger.debug(f'Resampling to {output_frequency} mean.')
             context['frequency_mapping'] = config['frequency_mapping'][output_frequency]
-            _ds = _ds.resample(time=output_frequency).mean()
+            _ds = _ds.resample(time=output_frequency, label='left').mean()
+
+            # Update the cell methods below
+            resampling_applied = True
 
         # Start persisting the computation now
         _ds = _ds.persist()
-
-        # TODO: Add cell methods?
 
         # Monthly data should have the days truncated
         context['start_date'] = f'{year}0101' if output_frequency[-1] != 'M' else f'{year}01'
         context['end_date'] = f'{year}1231' if output_frequency[-1] != 'M' else f'{year}12'
 
         # Tracking info
-        context['created'] = datetime.utcnow()
+        context['creation_date'] = datetime.utcnow()
         context['uuid'] = uuid4()
 
         # Interpolate context
@@ -319,32 +353,40 @@ def process(
             for coord in list(_ds.coords.keys()):
                 _ds[coord].attrs = ds[coord].attrs
 
-        # Get the full output filepath with string interpolation
-        logger.debug('Working out output paths')
-        drs_path = adu.get_template(config, 'drs_path') % context
-        output_filename = adu.get_template(config, 'filename') % context
-        output_filepath = os.path.join(
-            output_directory, drs_path, output_filename)
-        logger.debug(f'output_filepath = {output_filepath}')
+        # # Get the full output filepath with string interpolation
+        # logger.debug('Working out output paths')
 
-        # Skip if already there and overwrite is not set, otherwise continue
-        if os.path.isfile(output_filepath) and overwrite == False:
-            logger.debug(
-                f'{output_filepath} exists and overwrite is set to False, skipping.')
-            continue
+        # # Derive the start/end date strings from the actual timeseries and override
+        # if config.derive_filename_times_from_data:
+        #     logger.info('User has requested that filename times reflect the actual timeseries.')
+        #     str_times = _ds.time.dt.strftime('%Y%m%d').data
+        #     context['start_date'] = str_times[0]
+        #     context['end_date'] = str_times[-1]
+        #     logger.debug('start_date = %(start_date)s, end_date = %(end_date)s' % context)
 
-        # Check for uninterpolated keys in the output path, which should fail at this point.
-        uninterpolated_keys = adu.get_uninterpolated_placeholders(
-            output_filepath)
-        if len(uninterpolated_keys) > 0:
-            logger.error('Uninterpolated keys remain in the output filepath.')
-            logger.error(f'output_filepath = {output_filepath}')
-            raise DRSContextInterpolationException(uninterpolated_keys)
+        # drs_path = adu.get_template(config, 'drs_path') % context
+        # output_filename = adu.get_template(config, 'filename') % context
+        # output_filepath = os.path.join(output_directory, drs_path, output_filename)
+        # logger.debug(f'output_filepath = {output_filepath}')
 
-        # Create the output directory
-        output_dir = os.path.dirname(output_filepath)
-        logger.debug(f'Creating {output_dir}')
-        os.makedirs(output_dir, exist_ok=True)
+        # # Skip if already there and overwrite is not set, otherwise continue
+        # if os.path.isfile(output_filepath) and overwrite == False:
+        #     logger.debug(
+        #         f'{output_filepath} exists and overwrite is set to False, skipping.')
+        #     continue
+
+        # # Check for uninterpolated keys in the output path, which should fail at this point.
+        # uninterpolated_keys = adu.get_uninterpolated_placeholders(output_filepath)
+        
+        # if len(uninterpolated_keys) > 0:
+        #     logger.error('Uninterpolated keys remain in the output filepath.')
+        #     logger.error(f'output_filepath = {output_filepath}')
+        #     raise DRSContextInterpolationException(uninterpolated_keys)
+
+        # # Create the output directory
+        # output_dir = os.path.dirname(output_filepath)
+        # logger.debug(f'Creating {output_dir}')
+        # os.makedirs(output_dir, exist_ok=True)
 
         # Assemble the encoding dictionaries (to ensure time units work!)
         logger.debug('Applying encoding')
@@ -362,19 +404,59 @@ def process(
 
         # Postprocess data if required
         postprocessor = adu.load_postprocessor(postprocessor)
-        def postprocess(ds, *args, **kwargs): return postprocessor(ds, **local_args)
+
+        def postprocess(_ds, *args, **kwargs):
+            combined = dict()
+            combined.update(kwargs)
+            combined.update(local_args)
+            combined['resampling_applied'] = resampling_applied
+    
+            return postprocessor(_ds, **combined)
+        
         _ds = postprocess(_ds)
 
-        # Write to temp file in memory, then move (performance)
-        # if config.
-        # TODO: To be implemented later
-        # tmp_filepath = os.path.join(
-        #     os.getenv('PBS_JOBFS'),
-        #     os.path.basename(output_filepath)
-        # )
+        # Update the cell methods
+        if resampling_applied:
+            _ds = update_cell_methods(_ds, variable, dim='time', method='mean')
 
-        # logger.info('Rechunking data for speed')
-        # _ds[variable] = _ds[variable].chunk(dict(time=100))
+        # Get the full output filepath with string interpolation
+        logger.debug('Working out output paths')
+
+        # Derive the start/end date strings from the actual timeseries and override
+        if config.derive_filename_times_from_data:
+            logger.info(
+                'User has requested that filename times reflect the actual timeseries.')
+            str_times = _ds.time.dt.strftime('%Y%m%d').data
+            context['start_date'] = str_times[0]
+            context['end_date'] = str_times[-1]
+            logger.debug(
+                'start_date = %(start_date)s, end_date = %(end_date)s' % context)
+
+        drs_path = adu.get_template(config, 'drs_path') % context
+        output_filename = adu.get_template(config, 'filename') % context
+        output_filepath = os.path.join(
+            output_directory, drs_path, output_filename)
+        logger.debug(f'output_filepath = {output_filepath}')
+
+        # Skip if already there and overwrite is not set, otherwise continue
+        if os.path.isfile(output_filepath) and overwrite == False:
+            logger.debug(
+                f'{output_filepath} exists and overwrite is set to False, skipping.')
+            continue
+
+        # Check for uninterpolated keys in the output path, which should fail at this point.
+        uninterpolated_keys = adu.get_uninterpolated_placeholders(
+            output_filepath)
+
+        if len(uninterpolated_keys) > 0:
+            logger.error('Uninterpolated keys remain in the output filepath.')
+            logger.error(f'output_filepath = {output_filepath}')
+            raise DRSContextInterpolationException(uninterpolated_keys)
+
+        # Create the output directory
+        output_dir = os.path.dirname(output_filepath)
+        logger.debug(f'Creating {output_dir}')
+        os.makedirs(output_dir, exist_ok=True)
 
         logger.info('Waiting for computations to finish.')
         progress(_ds)
@@ -470,16 +552,22 @@ def process_multi(variables, domain, project, **kwargs):
 
         for output_frequency in output_frequencies:
 
-            try:
-                # for level in levels:
-                logger.info(f'Processing {variable} {output_frequency}')
-                instance_kwargs = kwargs.copy()
-                instance_kwargs['variable'] = variable
-                instance_kwargs['domain'] = domain
-                instance_kwargs['project'] = project
-                instance_kwargs['output_frequency'] = output_frequency
+            # for level in levels:
+            logger.info(f'Processing {variable} {output_frequency}')
+            instance_kwargs = kwargs.copy()
+            instance_kwargs['variable'] = variable
+            instance_kwargs['domain'] = domain
+            instance_kwargs['project'] = project
+            instance_kwargs['output_frequency'] = output_frequency
 
-                # instance_kwargs['overwrite'] = False
+            instance_kwargs['overwrite'] = True
+
+            if config.dask['enable']:
+                logger.info('Waiting for dask workers')
+                client.wait_for_workers(1, timeout=60)
+                logger.info(client)
+
+            try:
 
                 process(**instance_kwargs)
 
@@ -489,8 +577,73 @@ def process_multi(variables, domain, project, **kwargs):
 
             except Exception as ex:
 
-                logger.error(
-                    f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
+                logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
                 logger.exception(ex)
 
-                # TODO: Add to failed list?
+                # Append to failed list
+                if config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
+                    
+                    failed_filepath = os.path.join(
+                        os.getenv('AXIOM_LOG_DIR'),
+                        os.getenv('PBS_JOBNAME') + '.failed'
+                    )
+
+                    with open(failed_filepath, 'a') as failed:
+                        failed.write(f'{variable}\n')
+
+            # Run regardless of success/failure
+            finally:
+                
+                if config.dask['enable'] and config.dask['restart_client_between_variables']:
+                    logger.info('User has requested dask client restarts between each variable (for resilience), restarting now.')
+                    client.restart()
+                    logger.info(client)
+
+
+def filter_years(filepaths, year, offset=0):
+    """Filter filepaths based on a year, plus or minus an offset.
+
+    Args:
+        filepaths (list): List of filepaths.
+        year (int): Year.
+        offset (int, optional): Number of years either side of YEAR to include. Defaults to 0.
+    
+    Returns:
+        list : List of filtered filepaths.
+    """
+    _filepaths = list()
+    years = range(year-offset, year+offset+1)
+    for filepath in filepaths:
+        for year in years:
+            if str(year) in os.path.basename(filepath):
+                _filepaths.append(filepath)
+    
+    return _filepaths
+
+
+def update_cell_methods(ds, variable, dim='time', method='mean'):
+    """Update the cell_methods attribute on the data.
+
+    Args:
+        ds (xarray.Dataset): Data.
+        variable (str): Variable being processed.
+        dim (str): Dimension over which method was applied.
+        method (str): Method that was applied.
+    """
+
+    da = ds[variable]
+
+    # If there is no cell_methods attribute, add it now.
+    if 'cell_methods' not in da.attrs.keys():
+        da.attrs['cell_methods'] = f'{dim}: {method}'
+
+    # If the cell method was point, change it
+    elif da.attrs['cell_methods'] == f'{dim}: point':
+        da.attrs['cell_methods'] = f'{dim}: {method}'
+
+    # If another operation was already applied and doesn't match this, append
+    elif da.attrs['cell_methods'] != f'{dim}: {method}':
+        da.attrs['cell_methods'] = da.attrs['cell_methods'] + f' {dim}: {method}'
+
+    ds[variable] = da
+    return ds
