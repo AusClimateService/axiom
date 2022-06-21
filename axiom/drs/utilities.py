@@ -459,7 +459,7 @@ def detect_input_frequency(ds):
 
     # Bail out if time-invariant
     if is_time_invariant(ds):
-        return None
+        return 'fx'
 
     # Take the difference between the first two time steps
     total_seconds = (ds.time.data[1] - ds.time.data[0]).astype('timedelta64[s]').astype(np.int32)

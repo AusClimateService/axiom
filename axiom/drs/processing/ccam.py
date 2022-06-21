@@ -1,7 +1,10 @@
 """Pre and post-processing functions for CCAM."""
 import numpy as np
+import sys
 import datetime
 from calendar import monthrange
+import axiom.drs.utilities as adu
+import axiom.utilities as au
 
 
 def _detect_version(ds):
@@ -49,40 +52,45 @@ def preprocess_ccam(ds, **kwargs):
 
     variable = kwargs['variable']
 
-    if 'time' in list(ds.coords.keys()):
-
-        # Remove the first timestep, there is no data there
-        ds = ds.isel(time=slice(1,None), drop=True)
-
-        # Subtract 1min from the last time step, it steps over the boundary
-        ds.time.data[-1] = ds.time.data[-1] - np.timedelta64(1, 'm')
-
     # Rename metadata keys
     ds.attrs['rlon'] = ds.attrs.pop('rlong0')
     ds.attrs['rlat'] = ds.attrs.pop('rlat0')
 
-    # Automatically detect version
-    version = _detect_version(ds)
+    # Automatically detect version from inputs
+    if 'model_id' not in kwargs['kwargs'].keys():
+        version = _detect_version(ds)
+    else:
+        version = kwargs['kwargs']['model_id'].split('-')[-1]
+        
     ds = _set_version_metadata(ds, version)
-
+        
     # Extract the lat/lon bounds as well.
     if variable:
         ds = ds[[variable, 'lat_bnds', 'lon_bnds']]
-    
+
     return ds
 
-
-def _center_date(dt):
-    """Centre the date for compatibility with CDO-processed data.
+def center_times(ds, output_frequency):
+    """Centers the times in the dataset.
 
     Args:
-        dt (object): Date object.
-
+        ds (xarray.Dataset): Data.
+    
     Returns:
-        same as called: Date object with day set to middle of the month.
+        xarray.Dataset : Data with times centered.
     """
-    num_days = monthrange(dt.year, dt.month)[1]
-    return dt.replace(day=num_days // 2)
+
+    # non-monthly data is simple, just halve the delta
+    if output_frequency != '1M':
+        dt = ds.time.data[1] - ds.time.data[0]
+        ds['time'] = ds.time + (dt / 2)
+        return ds
+
+    # Otherwise, we need to apply more logic to the problem.
+    dt = ds.time.data[1:] - ds.time.data[0:-1]
+    new_times = ds.time.data[:] + (dt / 2)
+    new_times = np.append(new_times, new_times[6]) # july
+    ds['time'] = new_times
 
 
 def postprocess_ccam(ds, **kwargs):
@@ -95,18 +103,51 @@ def postprocess_ccam(ds, **kwargs):
         xarray.Dataset: Data with postprocessing applied.
     """
 
-    # Check for time-invariance
-    if 'time' not in list(ds.coords.keys()):
-        return ds
+    logger = au.get_logger(__name__)
 
-    # Time coordinates need to be centered into the middle of the month
-    if kwargs['output_frequency'] == '1M':
-        centered_times = ds.time.to_pandas().apply(_center_date).values
-        ds = ds.assign_coords(dict(time=centered_times))
+    # Strip out the extra dimensions from bnds (reduces filesize considerably)
+    if 'lat_bnds' in ds.data_vars.keys():
 
-    # Allow clobbering of version as provided by user in the json payloads
-    if 'model_id' in kwargs:
-        version = kwargs['model_id'].split('-')[-1]
-        ds = _set_version_metadata(ds, version)
+        if adu.is_time_invariant(ds):
 
+            ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, drop=True)
+            ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, drop=True)
+            return ds
+
+        else:
+
+            ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, time=0, drop=True)
+            ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, time=0, drop=True)
+
+    # Center the times for non-instantaneous data.
+    _is_instantaneous = is_instantaneous(ds, kwargs['variable'])
+    _resampling_applied = kwargs['resampling_applied']
+    
+    logger.debug(f'is_instantaneous = {_is_instantaneous}')
+    logger.debug(f'resampling_applied = {_resampling_applied}')
+    if _resampling_applied == True:
+        logger.debug('TIME CENTERING TRIGGERED')
+        ds = center_times(ds, output_frequency=['output_frequency'])
+    
     return ds
+
+
+def is_instantaneous(ds, variable):
+    """Checks for the presence of CCAM-specific flags indicating that a variable is instantaneous.
+
+    Args:
+        ds (xarray.Dataset): Data.
+        variable (str): Variable currently being processed.
+    """
+
+    da = ds[variable]
+
+    # if cell_methods is missing
+    if 'cell_methods' not in da.attrs.keys():
+        return True
+    
+    # time: point is present
+    if da.attrs['cell_methods'] == 'time: point':
+        return True
+    
+    return False
