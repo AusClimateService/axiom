@@ -88,7 +88,7 @@ def center_times(ds, output_frequency):
 
     # Otherwise, we need to apply more logic to the problem.
     dt = ds.time.data[1:] - ds.time.data[0:-1]
-    new_times = new_times + (dt / 2)
+    new_times = ds.time.data[:] + (dt / 2)
     new_times = np.append(new_times, new_times[6]) # july
     ds['time'] = new_times
 
