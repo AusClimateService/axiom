@@ -3,32 +3,48 @@
     "reference_time": "1949-12-01 00:00:00",
     "dask": {
         "enable": true,
+        "restart_client_between_variables": false,
         "cluster": {
             "n_workers": 1
         }
     },
     "filename_filtering": {
         "variable": true,
-        "year": true
+        "year": true,
+        "year_offset": 1
     },
+    "allow_subdaily_resampling": false,
+    "rolling_time_averaging": true,
+    "rerun_failures": false,
+    "derive_filename_times_from_data": false,
     "copy_coordinates_from_inputs": true,
     "detect_output_frequency_from_inputs": true,
     "schema": "cordex-cmip6.json",
     "historical_cutoff": 2006,
+    "enable_historical_cutoff": false,
+    "track_failures": true,
     "metadata_defaults": {
         "contact": "%(contact)s",
+        "Conventions": "CF-1.7",
+        "CORDEX_domain": "%(domain)s",
         "creation_date": "%(creation_date)s",
-        "experiment_id": "%(driving_experiment_name)s",
-        "driving_model_id": "%(driving_model_id)s",
-        "driving_model_ensemble_member": "%(driving_model_ensemble_member)s",
         "driving_experiment_name": "%(driving_experiment_name)s",
-        "frequency": "%(frequency)s",
-        "institute_id": "%(institute_id)s",
+        "driving_model_ensemble_member": "%(ensemble)s",
+        "driving_model_id": "%(gcm_institute)s-%(gcm_model)s",
+        "ensemble": "%(ensemble)s",
+        "experiment_id": "%(driving_experiment_name)s",
+        "frequency": "%(output_frequency)s",
+        "institute_id": "CSIRO",
         "model_id": "%(model_id)s",
+        "product": "output",
+        "project_id": "%(project)s",
+        "rcm_institute": "CSIRO",
+        "rcm_model_cordex": "%(rcm_model_cordex)s",
+        "rcm_model": "%(rcm_model)s",
+        "rcm_version_cordex": "%(rcm_version_cordex)s",
         "rcm_version_id": "%(rcm_version_id)s",
-        "project_id": "%(project_id)s",
-        "CORDEX_domain": "%(cordex_domain)s",
-        "product": "%(product)s"
+        "references": "https://confluence.csiro.au/display/CCAM",
+        "tracking_id": "%(uuid)s"
     },
     "frequency_mapping":{
         "12min": "12min",
@@ -36,7 +52,8 @@
         "1D": "day",
         "1M": "mon",
         "1H": "1hr",
-        "6H": "6hr"
+        "6H": "6hr",
+        "fx": "fx"
     },
     "encoding": {
         "variables": {
@@ -47,24 +64,46 @@
         },
         "lon": {
             "_FillValue": 1e20,
-            "dtype": "double"
+            "dtype": "double",
+            "zlib": true,
+            "complevel": 1
         },
         "lev": {
             "_FillValue": 1e20,
-            "dtype": "double"
+            "dtype": "double",
+            "zlib": true,
+            "complevel": 1
         },
         "lat": {
             "_FillValue": 1e20,
-            "dtype": "double"
+            "dtype": "double",
+            "zlib": true,
+            "complevel": 1
+        },
+        "lat_bnds": {
+            "_FillValue": 1e20,
+            "dtype": "double",
+            "zlib": true,
+            "complevel": 1
+        },
+        "lon_bnds": {
+            "_FillValue": 1e20,
+            "dtype": "double",
+            "zlib": true,
+            "complevel": 1
         },
         "depth": {
             "_FillValue": 1e20,
-            "dtype": "double"
+            "dtype": "double",
+            "zlib": true,
+            "complevel": 1
         },
         "time": {
             "_FillValue": 1e20,
             "dtype": "double",
-            "units": "days since 1949-12-01 00:00:00"
+            "units": "days since 1949-12-01 00:00:00",
+            "zlib": true,
+            "complevel": 1
         }
     },
     "templates": {
