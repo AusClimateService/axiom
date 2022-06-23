@@ -157,7 +157,7 @@ def process(
         'Loading files into distributed memory, this may take some time.')
 
     # TODO: Remove!!!! This is just to make CCAM work in the short term
-    if preprocessor is None and 'ccam' in input_files[0]:
+    if preprocessor is None and 'ccam' in input_files[0] and config.auto_detect_ccam == True:
         logger.warn('CCAM preprocessor override used')
         preprocessor = 'ccam'
         postprocessor = 'ccam'

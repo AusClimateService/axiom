@@ -13,6 +13,7 @@
         "year": true,
         "year_offset": 1
     },
+    "auto_detect_ccam": false,
     "allow_subdaily_resampling": false,
     "rolling_time_averaging": true,
     "rerun_failures": false,
