@@ -189,7 +189,7 @@ def process(
     # Ensure blank output frequency is indeed fixed and only one can be written
     if adu.is_time_invariant(ds):
         output_frequency = 'fx'
-        overwrite = False        
+        overwrite = False
 
     logger.info(f'native_frequency = {native_frequency}, output_frequency = {output_frequency}')
     if config.allow_subdaily_resampling == False and native_frequency != output_frequency and 'H' in output_frequency:
@@ -353,41 +353,6 @@ def process(
             for coord in list(_ds.coords.keys()):
                 _ds[coord].attrs = ds[coord].attrs
 
-        # # Get the full output filepath with string interpolation
-        # logger.debug('Working out output paths')
-
-        # # Derive the start/end date strings from the actual timeseries and override
-        # if config.derive_filename_times_from_data:
-        #     logger.info('User has requested that filename times reflect the actual timeseries.')
-        #     str_times = _ds.time.dt.strftime('%Y%m%d').data
-        #     context['start_date'] = str_times[0]
-        #     context['end_date'] = str_times[-1]
-        #     logger.debug('start_date = %(start_date)s, end_date = %(end_date)s' % context)
-
-        # drs_path = adu.get_template(config, 'drs_path') % context
-        # output_filename = adu.get_template(config, 'filename') % context
-        # output_filepath = os.path.join(output_directory, drs_path, output_filename)
-        # logger.debug(f'output_filepath = {output_filepath}')
-
-        # # Skip if already there and overwrite is not set, otherwise continue
-        # if os.path.isfile(output_filepath) and overwrite == False:
-        #     logger.debug(
-        #         f'{output_filepath} exists and overwrite is set to False, skipping.')
-        #     continue
-
-        # # Check for uninterpolated keys in the output path, which should fail at this point.
-        # uninterpolated_keys = adu.get_uninterpolated_placeholders(output_filepath)
-        
-        # if len(uninterpolated_keys) > 0:
-        #     logger.error('Uninterpolated keys remain in the output filepath.')
-        #     logger.error(f'output_filepath = {output_filepath}')
-        #     raise DRSContextInterpolationException(uninterpolated_keys)
-
-        # # Create the output directory
-        # output_dir = os.path.dirname(output_filepath)
-        # logger.debug(f'Creating {output_dir}')
-        # os.makedirs(output_dir, exist_ok=True)
-
         # Assemble the encoding dictionaries (to ensure time units work!)
         logger.debug('Applying encoding')
         encoding = dict()
@@ -433,7 +398,15 @@ def process(
                 'start_date = %(start_date)s, end_date = %(end_date)s' % context)
 
         drs_path = adu.get_template(config, 'drs_path') % context
-        output_filename = adu.get_template(config, 'filename') % context
+        filename_template = adu.get_template(config, 'filename')
+
+        # Override for fixed variables
+        if adu.is_time_invariant(_ds):
+            logger.debug('Overriding output filename template with fixed alternative.')
+            filename_template = adu.get_template(config, 'filename_fixed')
+
+        # Assemble the output filepath
+        output_filename = filename_template % context
         output_filepath = os.path.join(
             output_directory, drs_path, output_filename)
         logger.debug(f'output_filepath = {output_filepath}')
@@ -560,7 +533,7 @@ def process_multi(variables, domain, project, **kwargs):
             instance_kwargs['project'] = project
             instance_kwargs['output_frequency'] = output_frequency
 
-            instance_kwargs['overwrite'] = True
+            # instance_kwargs['overwrite'] = True
 
             if config.dask['enable']:
                 logger.info('Waiting for dask workers')
