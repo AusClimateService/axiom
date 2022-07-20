@@ -111,6 +111,6 @@
         "drs_base": "%(rcm_institute)s/%(gcm_institute)s-%(gcm_model)s/%(driving_experiment_name)s/%(ensemble)s/%(rcm_institute)s-%(rcm_model)s/%(rcm_version_id)s",
         "drs_path": "%(output_directory)s/%(project)s/output/%(domain)s/%(rcm_institute)s/%(gcm_institute)s-%(gcm_model)s/%(driving_experiment_name)s/%(ensemble)s/%(rcm_institute)s-%(rcm_model)s/%(rcm_version_id)s/%(frequency_mapping)s/%(variable)s",
         "filename": "%(variable)s_%(domain)s_%(gcm_institute)s-%(gcm_model)s_%(driving_experiment_name)s_%(ensemble)s_%(rcm_institute)s-%(rcm_model)s_%(rcm_version_id)s_%(frequency_mapping)s_%(start_date)s-%(end_date)s.nc",
-        "filename_fixed": "%(variable)s_%(domain)s_%(gcm_institute)s-%(gcm_model)s_%(driving_experiment_name)s_%(ensemble)s_%(rcm_institute)s-%(rcm_model)s_%(rcm_version_id)s_%(path_freq)s.nc"
+        "filename_fixed": "%(variable)s_%(domain)s_%(gcm_institute)s-%(gcm_model)s_%(driving_experiment_name)s_%(ensemble)s_%(rcm_institute)s-%(rcm_model)s_%(rcm_version_id)s.nc"
     }
 }
