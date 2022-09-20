@@ -1,8 +1,6 @@
 """Pre and post-processing functions for CCAM."""
 import numpy as np
-import sys
 import datetime
-from calendar import monthrange
 import axiom.drs.utilities as adu
 import axiom.utilities as au
 
@@ -52,9 +50,10 @@ def preprocess_ccam(ds, **kwargs):
 
     variable = kwargs['variable']
 
-    # Rename metadata keys
-    ds.attrs['rlon'] = ds.attrs.pop('rlong0')
-    ds.attrs['rlat'] = ds.attrs.pop('rlat0')
+    # Rename metadata keys if needed
+    if 'rlat0' in ds.attrs.keys():
+        ds.attrs['rlon'] = ds.attrs.pop('rlong0')
+        ds.attrs['rlat'] = ds.attrs.pop('rlat0')
 
     # Automatically detect version from inputs
     if 'model_id' not in kwargs['kwargs'].keys():
@@ -105,19 +104,37 @@ def postprocess_ccam(ds, **kwargs):
 
     logger = au.get_logger(__name__)
 
+    # Strip out the extra metadata keys (Marcus 20220802)
+    remove_keys = 'ensemble,rcm_institute,rcm_model_cordex,rcm_model,rcm_version_cordex'.split(',')
+    for rk in remove_keys:
+        if rk in ds.attrs.keys():
+            logger.debug(f'Removing metadata key {rk}')
+            ds.attrs.pop(rk)
+
     # Strip out the extra dimensions from bnds (reduces filesize considerably)
     if 'lat_bnds' in ds.data_vars.keys():
 
         if adu.is_time_invariant(ds):
-
-            ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, drop=True)
-            ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, drop=True)
+            
+            if au.has_coord(ds.lat_bnds, 'lon'):
+                ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, drop=True)
+            
+            if au.has_coord(ds.lon_bnds, 'lat'):
+                ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, drop=True)
+            
             return ds
 
         else:
 
-            ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, time=0, drop=True)
-            ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, time=0, drop=True)
+            if au.has_coord(ds.lat_bnds, 'lon'):
+                ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, time=0, drop=True)
+            else:
+                ds['lat_bnds'] = ds.lat_bnds.isel(time=0, drop=True)
+
+            if au.has_coord(ds.lon_bnds, 'lat'):
+                ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, time=0, drop=True)
+            else:
+                ds['lon_bnds'] = ds.lon_bnds.isel(time=0, drop=True)
 
     # Center the times for non-instantaneous data.
     _is_instantaneous = is_instantaneous(ds, kwargs['variable'])
@@ -128,7 +145,7 @@ def postprocess_ccam(ds, **kwargs):
     if _resampling_applied == True:
         logger.debug('TIME CENTERING TRIGGERED')
         ds = center_times(ds, output_frequency=['output_frequency'])
-    
+
     return ds
 
 
@@ -151,3 +168,4 @@ def is_instantaneous(ds, variable):
         return True
     
     return False
+    

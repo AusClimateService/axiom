@@ -15,6 +15,35 @@ The drs.json file contains all of the configuration options required to drive th
 
 As there are a lot of keys and there is still rapid development underway it is not possible to describe every setting available in the drs.json file. Instead, users are encouraged to look at (or simply use) the drs.json file included in the axiom/data directory of the repository.
 
+.. list-table::
+   :widths: 10 10 40 40
+   :header-rows: 1
+
+   * - Key
+     - Type
+     - Description
+     - Example
+   * - time_units
+     - string
+     - Reference time units applied to outputs.
+     - "days since 1949-12-01 00:00:00"
+   * - reference_time
+     - string
+     - Reference time applied to outputs.
+     - "1949-12-01 00:00:00"
+   * - dask
+     - dictionary
+     - Settings to control the connection to dask.
+     - See below.
+   * - dask['enable']
+     - boolean
+     - Enable the dask interface
+     - true
+   * - dask['restart_client_between_variables']
+     - boolean
+     - Restart the client between variables.
+     - true
+
 models.json
 -----------
 

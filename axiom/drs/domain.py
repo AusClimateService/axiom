@@ -78,7 +78,7 @@ class Domain:
             str : Directive.
         """
         return f'{self.name},{self.dx},{self.lat_min},{self.lat_max},{self.lon_min},{self.lon_max}'
-    
+
 
     def subset_xarray(self, ds, drop=True):
         """Subset an xarray object with this domain object.
@@ -90,16 +90,14 @@ class Domain:
         Returns:
             xarray.Dataset or xarray.DataArray : Object subset with this domain.
         """
-        lat_constraint = (ds.lat >= self.lat_min) & (ds.lat <= self.lat_max)
-        
+
+        lon_min, lon_max = self.lon_min, self.lon_max
+
         # Fix to cross the meridian
-        if self.lon_max < self.lon_min:
-            lon_constraint = (ds.lon <= self.lon_min) | (ds.lon >= self.lon_max)
-        else:
-            lon_constraint = (ds.lon >= self.lon_min) & (ds.lon <= self.lon_max)
-        
-        constraint = lon_constraint & lat_constraint
-        return ds.where(constraint, drop=drop)
+        if lon_max < lon_min:
+            lon_min, lon_max = lon_max, lon_min
+
+        return ds.sel(lat=slice(self.lat_min, self.lat_max), lon=slice(lon_min, lon_max))
     
 
     def from_config(key, config):

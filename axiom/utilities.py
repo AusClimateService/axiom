@@ -1,5 +1,4 @@
 """General utilities."""
-import ast
 import logging
 import sys
 import json
@@ -70,6 +69,45 @@ def in_ds(variable, ds):
         bool : True if the variable exists, False otherwise.
     """
     return variable in get_variables_and_coordinates(ds)
+
+
+def has_variable(ds, variable):
+    """Check if a dataset contains a given variable.
+
+    Args:
+        ds (xarray.Dataset): Dataset.
+        variable (str): Variable name.
+
+    Returns:
+        bool: True if ds contains variable, False otherwise.
+    """
+    return variable in list(ds.data_vars.keys())
+
+
+def has_coord(dx, coord):
+    """Check if a DataArray or Dataset contains a coordinate.
+
+    Args:
+        dx (xarray.DataArray or xarray.Dataset): Data.
+        coord (str): Coordinate name.
+
+    Returns:
+        bool: True if coordinate in object, False otherwise.
+    """
+    return coord in list(dx.coords.keys())
+
+
+def has_dim(dx, dim):
+    """Check if a DataArray or Dataset contains a dimension.
+
+    Args:
+        dx (xarray.DataArray or xarray.Dataset): Data.
+        dim (str): Dimension name.
+    
+    Returns:
+        bool: True if dim on object, False otherwise.
+    """
+    return dim in list(dx.dims)
 
 
 def has_attr(obj, attr):
@@ -639,3 +677,29 @@ def batch_split(iterable, n_batches):
         list : List of iterables.
     """
     return np.array_split(iterable, n_batches)
+
+
+def conditional_rename(ds, **kwargs):
+    """Conditionally rename an object on a dataset, if it exists.
+
+    Args:
+        ds (xarray.Dataset): Dataset.
+        **kwargs : Key/value pairs of old=new names.
+
+    Returns:
+        xarray.Dataset : Dataset with renamed variables/coords.
+    """
+    # Start with an empty mapping.
+    renames = dict()
+
+    # If the old exists, then add it to the mapping.
+    for old, new in kwargs.items():
+        if in_ds(ds, old):
+            renames[old] = new
+    
+    # If there are any mappings to apply, do them now
+    if renames:
+        return ds.rename(**renames)
+
+    # Return the original
+    return ds
