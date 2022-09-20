@@ -21,7 +21,7 @@ Install Axiom
 .. code-block:: shell
 
     # Clone the repository
-    git clone git@github.com:climate-resilient-enterprise/axiom.git
+    git clone git@github.com:AusClimateService/axiom.git
 
     # Navigate to the local copy
     cd axiom
@@ -41,7 +41,7 @@ Most of the utilities dependencies will be installed automatically, with the exc
 .. code-block:: shell
 
     # Clone Axiom Schemas
-    git clone git@github.com:climate-resilient-enterprise/axiom-schemas.git
+    git clone git@github.com:AusClimateService/axiom-schemas.git
 
     cd axiom_schemas
     pip install -e .    

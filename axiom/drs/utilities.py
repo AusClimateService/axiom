@@ -490,3 +490,20 @@ def is_time_invariant(ds):
         bool : True if no 'time' coordinate detected, False otherwise
     """
     return 'time' not in list(ds.coords.keys())
+
+
+def is_error_recoverable(stack_trace, recoverable_errors):
+    """Determine if an error is recoverable based on the presence of certain text in the stack trace.
+
+    Args:
+        stack_trace (str): Stack trace.
+        recoverable_errors (list): List of recoverable errors that are permitted.
+    
+    Returns:
+        bool : True if recoverable, False otherwise.
+    """
+    for recoverable_error in recoverable_errors:
+        if recoverable_error in stack_trace:
+            return True
+    
+    return False

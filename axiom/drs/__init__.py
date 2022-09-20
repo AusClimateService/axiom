@@ -1,4 +1,5 @@
 """Main entrypoint for DRS processing."""
+from genericpath import isfile
 import os
 import argparse
 from datetime import datetime
@@ -114,6 +115,9 @@ def process(
         jobid = os.getenv('PBS_JOBID')
         logger.info(f'My PBS_JOBID is {jobid}')
 
+    logger.info('Searching for files matching the following path:')
+    logger.info(input_files)
+
     # Get a list of the potential filepaths
     input_files = au.auto_glob(input_files)
     num_files = len(input_files)
@@ -180,8 +184,10 @@ def process(
     # Subset temporally
     if not adu.is_time_invariant(ds):
         logger.info(f'Subsetting times to {start_year}')
-        ixs = np.where(ds['time.year'] == start_year)
-        ds = ds.isel(time=slice(ixs[0][0], ixs[0][-1] + 1))
+        # ixs = np.where(ds['time.year'] == start_year)
+        time_slice = slice(f'{start_year}-01-01', f'{start_year}-12-31')
+        # ds = ds.isel(time=slice(ixs[0][0], ixs[0][-1] + 1))
+        ds = ds.sel(time=time_slice, drop=True)
 
     # Skip over the file if subdaily resampling is disabled, this will stop 
     native_frequency = adu.detect_input_frequency(ds)
@@ -189,7 +195,7 @@ def process(
     # Ensure blank output frequency is indeed fixed and only one can be written
     if adu.is_time_invariant(ds):
         output_frequency = 'fx'
-        overwrite = False        
+        overwrite = False
 
     logger.info(f'native_frequency = {native_frequency}, output_frequency = {output_frequency}')
     if config.allow_subdaily_resampling == False and native_frequency != output_frequency and 'H' in output_frequency:
@@ -265,14 +271,16 @@ def process(
     logger.debug('Subsetting geographical domain.')
     ds = domain.subset_xarray(ds, drop=True)
 
-    # TODO: Need to find a less manual way o do this.
+    # TODO: Need to find a less manual way to do this.
     for year in generate_years_list(start_year, end_year):
 
         logger.info(f'Processing {year}')
 
         # Subset the data into just this year
         if not time_invariant:
-            _ds = ds.where(ds['time.year'] == year, drop=True)
+            time_slice = slice(f'{year}-01-01', f'{year}-12-31')
+            _ds = ds.sel(time=time_slice, drop=True)
+            # _ds = ds.where(ds['time.year'] == year, drop=True)
         else:
             _ds = ds.copy()
 
@@ -353,41 +361,6 @@ def process(
             for coord in list(_ds.coords.keys()):
                 _ds[coord].attrs = ds[coord].attrs
 
-        # # Get the full output filepath with string interpolation
-        # logger.debug('Working out output paths')
-
-        # # Derive the start/end date strings from the actual timeseries and override
-        # if config.derive_filename_times_from_data:
-        #     logger.info('User has requested that filename times reflect the actual timeseries.')
-        #     str_times = _ds.time.dt.strftime('%Y%m%d').data
-        #     context['start_date'] = str_times[0]
-        #     context['end_date'] = str_times[-1]
-        #     logger.debug('start_date = %(start_date)s, end_date = %(end_date)s' % context)
-
-        # drs_path = adu.get_template(config, 'drs_path') % context
-        # output_filename = adu.get_template(config, 'filename') % context
-        # output_filepath = os.path.join(output_directory, drs_path, output_filename)
-        # logger.debug(f'output_filepath = {output_filepath}')
-
-        # # Skip if already there and overwrite is not set, otherwise continue
-        # if os.path.isfile(output_filepath) and overwrite == False:
-        #     logger.debug(
-        #         f'{output_filepath} exists and overwrite is set to False, skipping.')
-        #     continue
-
-        # # Check for uninterpolated keys in the output path, which should fail at this point.
-        # uninterpolated_keys = adu.get_uninterpolated_placeholders(output_filepath)
-        
-        # if len(uninterpolated_keys) > 0:
-        #     logger.error('Uninterpolated keys remain in the output filepath.')
-        #     logger.error(f'output_filepath = {output_filepath}')
-        #     raise DRSContextInterpolationException(uninterpolated_keys)
-
-        # # Create the output directory
-        # output_dir = os.path.dirname(output_filepath)
-        # logger.debug(f'Creating {output_dir}')
-        # os.makedirs(output_dir, exist_ok=True)
-
         # Assemble the encoding dictionaries (to ensure time units work!)
         logger.debug('Applying encoding')
         encoding = dict()
@@ -433,7 +406,15 @@ def process(
                 'start_date = %(start_date)s, end_date = %(end_date)s' % context)
 
         drs_path = adu.get_template(config, 'drs_path') % context
-        output_filename = adu.get_template(config, 'filename') % context
+        filename_template = adu.get_template(config, 'filename')
+
+        # Override for fixed variables
+        if adu.is_time_invariant(_ds):
+            logger.debug('Overriding output filename template with fixed alternative.')
+            filename_template = adu.get_template(config, 'filename_fixed')
+
+        # Assemble the output filepath
+        output_filename = filename_template % context
         output_filepath = os.path.join(
             output_directory, drs_path, output_filename)
         logger.debug(f'output_filepath = {output_filepath}')
@@ -520,10 +501,20 @@ def process_multi(variables, domain, project, **kwargs):
 
     # Load all variables if nothing was supplied
     if not variables:
-        schema_file = config['schema']
-        logger.info(f'No variables supplied, loading from schema as defined in configuration ({schema_file}).')
-        schema = axs.load_schema(schema_file)
+
+        # Select a default schema
+        schema_key = config['default_schema']
+
+        # Override if requested, this might be a direct filepath
+        if 'schema_key' in kwargs.keys():
+            schema_key = kwargs['schema']
+
+        # Load it
+        logger.info(f'No variables supplied, loading from schema as defined in configuration ({schema_key}).')
+        schema = axs.load_schema(schema_key)        
         variables = list(schema['variables'].keys())
+    
+    
     else:
         logger.debug('User has supplied the following variables')
         logger.debug(variables)
@@ -552,6 +543,9 @@ def process_multi(variables, domain, project, **kwargs):
 
         for output_frequency in output_frequencies:
 
+            # Use to avoid restarting when there are no files to process
+            no_files = False
+
             # for level in levels:
             logger.info(f'Processing {variable} {output_frequency}')
             instance_kwargs = kwargs.copy()
@@ -560,12 +554,13 @@ def process_multi(variables, domain, project, **kwargs):
             instance_kwargs['project'] = project
             instance_kwargs['output_frequency'] = output_frequency
 
-            instance_kwargs['overwrite'] = True
+            # instance_kwargs['overwrite'] = True
 
             if config.dask['enable']:
                 logger.info('Waiting for dask workers')
-                client.wait_for_workers(1, timeout=60)
+                client.wait_for_workers(1, timeout=config['dask']['restart_timeout_seconds'])
                 logger.info(client)
+                logger.info(f'Dashboard located at {client.dashboard_link}')
 
             try:
 
@@ -574,11 +569,14 @@ def process_multi(variables, domain, project, **kwargs):
             except NoFilesToProcessException as ex:
 
                 logger.info(f'No files to process for {variable}')
+                no_files = True
 
             except Exception as ex:
 
                 logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
                 logger.exception(ex)
+
+                # TODO: Add recoverability?
 
                 # Append to failed list
                 if config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
@@ -594,10 +592,12 @@ def process_multi(variables, domain, project, **kwargs):
             # Run regardless of success/failure
             finally:
                 
-                if config.dask['enable'] and config.dask['restart_client_between_variables']:
+                if config.dask['enable'] and config.dask['restart_client_between_variables'] and no_files == False:
                     logger.info('User has requested dask client restarts between each variable (for resilience), restarting now.')
                     client.restart()
                     logger.info(client)
+    
+    logger.info('DRS processing complete, please see consumed/lock/log files for further detail.')
 
 
 def filter_years(filepaths, year, offset=0):

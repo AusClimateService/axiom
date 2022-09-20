@@ -8,7 +8,7 @@ import pathlib
 class Config(dict):
     
 
-    def __getattr__(self, key):
+    def __getattr__(self, key, default=None):
         """Allows attribute access for top-level keys.
 
         Args:
@@ -28,7 +28,6 @@ class Config(dict):
             value (Any): Value to assign.
         """
         super().__setitem__(key, value)
-
 
     def __getitem__(self, key):
         """Boolean fallback method, returning False if key does not exist.
@@ -50,6 +49,16 @@ class Config(dict):
 
         return value
 
+    def get(self, key, default=None):
+        
+        if key in self.keys():
+            return self[key]
+
+        if default:
+            return default
+
+        raise KeyError(f'Config key {key} does not exist.')
+        
 
     def load(self, config_name):
         

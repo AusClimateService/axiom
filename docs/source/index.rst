@@ -1,8 +1,3 @@
-.. Axiom documentation master file, created by
-   sphinx-quickstart on Mon May 31 14:40:57 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Axiom
 =====
 
@@ -10,18 +5,32 @@ Axiom is a Python library and command-line utility for verifying metadata agains
 
 .. toctree::
    :maxdepth: 2
+   :caption: Getting started
 
+   about
    installation
-   cli
-   drs
+
+.. toctree::
+   :maxdepth:
+   :caption: Metadata
+   
    metadata
    schemas
    conversion
    validation
    reporting
+   
+.. toctree::
+   :maxdepth: 2
+   :caption: Data Reference Syntax (DRS)
+   
+   payloads
 
+.. toctree::
+   :maxdepth: 2
+   :caption: For developers
 
-.. automodule:: axiom.parsers
+   api
    
 
 Indices and tables
