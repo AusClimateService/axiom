@@ -1,4 +1,5 @@
 """Command-line methods for the DRS subsystem."""
+from ast import arg
 import os
 import sys
 import json
@@ -85,12 +86,12 @@ def get_parser_consume(config=None, parent=None):
 
     # Input filepaths
     parser.add_argument('input_filepaths', type=str, help='Input json filepaths.', nargs=argparse.ONE_OR_MORE)
-    parser.add_argument('--batch_id', type=int, help='Batch number to process.', default=None)
-    parser.add_argument('--num_batches', type=int, help='Maximum batch number.', default=None)
+    # parser.add_argument('--batch_id', type=int, help='Batch number to process.', default=None)
+    # parser.add_argument('--num_batches', type=int, help='Maximum batch number.', default=None)
     return parser
 
 
-def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, **kwargs):
+def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, **kwargs):
     """Method to launch a series of qsubs for DRS processing.
 
     Args:
@@ -99,6 +100,7 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, **kwargs):
         log_dir (str): Path to which to save the log files.
         batches (int): Number of batches to split variables into (for parallel processing).
         dry_run (bool): Print out the commands rather than executing.
+        unlock (bool): Unlock locked payloads prior to submission (for rerunning walltime overruns)
     """
 
     # List the payloads in the input_directory
@@ -123,13 +125,20 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, **kwargs):
         else:
             _batches = [1]
 
-        # Skip if there is a lock file.
-        if au.is_locked(payload):
+        # Unlock the file if requested
+        if au.is_locked(payload) and unlock == True:
+            print(f'Unlocking {payload} for resubmission')
+            au.unlock(payload)
+        
+        # Skip if not
+        elif au.is_locked(payload):
             print(f'{payload} is locked.')
             continue
 
         # Convert the path to the jobscript to an absolute path for reproducibility
         jobscript = os.path.abspath(jobscript)
+        payload = os.path.abspath(payload)
+        log_dir = os.path.abspath(log_dir)
 
         for batch_id in _batches:
 
@@ -172,13 +181,16 @@ def get_parser_launch(parent=None):
     else:
         parser = parent.add_parser('drs_launch')
 
+    parser.description = 'Submit drs_consume tasks via qsub.'
+
     # Input filepaths
     parser.add_argument('path', type=str, help='Globbable path to payload files (use quotes)')
     parser.add_argument('jobscript', type=str, help='Path to the jobscript for submission.')
     parser.add_argument('log_dir', type=str, help='Directory to which to write logs.')
-    parser.add_argument('-b', '--batches', type=int, help='Divide the the variables into N batches, each in its own job.', default=None)
+    # parser.add_argument('-b', '--batches', type=int, help='Divide the the variables into N batches, each in its own job.', default=None)
     parser.add_argument('-d', '--dry_run', action='store_true', default=False, help='Print commands without executing.')
     parser.add_argument('--walltime', type=str, help='Override walltime in job script.')
+    parser.add_argument('--unlock', help='Unlock locked payloads prior to submission', action='store_true', default=False)
     parser.set_defaults(func=drs_launch)
 
     return parser
