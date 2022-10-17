@@ -15,6 +15,7 @@ from pathlib import Path
 import time
 import subprocess as sp
 import numpy as np
+from jinja2 import Environment, BaseLoader
 
 
 def dict2obj(d):
@@ -703,3 +704,18 @@ def conditional_rename(ds, **kwargs):
 
     # Return the original
     return ds
+
+
+def interpolate_template(template, **kwargs):
+    """Interpolate onto a template string.
+    
+    Args:
+        string (str): Template string.
+        **kwargs : Key/value pairs to interpolate.
+    
+    Returns:
+        str : Interpolated string
+    """
+    _template = Environment(loader=BaseLoader()).from_string(template)
+    return _template.render(**kwargs)
+

@@ -8,6 +8,7 @@ import sys
 import os
 from tabulate import tabulate
 import axiom.drs.cli as adc
+import axiom.qa.cli as aqc
 import axiom.drs as ad
 
 
@@ -221,6 +222,9 @@ def get_parser():
 
     # DRS parser that can launch payload-processing jobs.
     parser_drs_launch = adc.get_parser_launch(parent=subparsers)
+
+    # QA modules
+    parser_qa_timeseries = aqc.get_parser(parent=subparsers)
 
     # Return the fully constructed parser
     return parser

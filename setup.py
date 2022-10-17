@@ -12,7 +12,9 @@ setup(
         'tabulate',
 	    'dask',
         'distributed',
-        'h5netcdf'
+        'h5netcdf',
+        'tqdm',
+        'Jinja2'
     ],
     scripts=['bin/axiom'],
     setup_requires=['pytest-runner'],
