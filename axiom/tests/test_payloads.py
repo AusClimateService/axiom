@@ -3,7 +3,7 @@ from axiom.drs.payload import generate_payloads
 def test_generate_payloads():
     """Test generate_payloads."""
 
-    payloads = generate_payloads('files.nc', 'output', 2000, 2021, 'CORDEX', 'ACCESS', 'AUS-10i', None, 'CORDEX', ['1H', '6H'], 1, test_meta='test_meta_value')
+    payloads = generate_payloads('files.nc', 'output', 2000, 2021, 'CORDEX', 'ACCESS', 'AUS-10i', ['tas', 'tasmax'], 'CORDEX', ['1H', '6H'], 1, test_meta='test_meta_value')
 
     p1 = payloads[0]
     p2 = payloads[-1]
