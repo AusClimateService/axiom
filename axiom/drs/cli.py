@@ -6,6 +6,21 @@ import json
 import argparse
 import axiom.utilities as au
 from axiom.config import load_config
+import axiom.drs.payload as adp
+from tqdm import tqdm
+
+
+def split_args(values):
+    """Split an argument that is comma-separated.
+
+    Args:
+        values (str): Values
+    
+    Returns:
+        list : List of split arguments.
+    """
+    return values.split(',')
+
 
 def get_parser(config=None, parent=None):
     """Parse arguments for command line utiltities.
@@ -192,5 +207,74 @@ def get_parser_launch(parent=None):
     parser.add_argument('--walltime', type=str, help='Override walltime in job script.')
     parser.add_argument('--unlock', help='Unlock locked payloads prior to submission', action='store_true', default=False)
     parser.set_defaults(func=drs_launch)
+
+    return parser
+
+
+def generate_payloads(payload_dst, input_files, output_dir, start_year, end_year, project, model, domain, variables=None, schema=None, output_frequencies='1H,6H,1D,1M', num_batches=1, extra=None):
+    
+    # Unpack the extra arguments
+    _extra = dict()
+    for kv in extra:
+        k, v = kv.split(',')
+        _extra[k] = v
+
+    payloads = adp.generate_payloads(
+        input_files=input_files,
+        output_directory=output_dir,
+        start_year=start_year, end_year=end_year,
+        project=project, model=model, domain=domain,
+        variables=variables, schema=schema,
+        output_frequencies=output_frequencies,
+        num_batches=num_batches,
+        **_extra
+    )
+
+    if len(payloads) == 0:
+        raise Exception('No payloads generated!!!')
+
+    # Create the output directory
+    os.makedirs(payload_dst, exist_ok=True)
+
+    # Generate the payloads at the destination
+    print('Writing payloads...')
+    for payload in tqdm(payloads):
+        
+        filepath = os.path.join(
+            payload_dst,
+            payload.get_filename()
+        )
+
+        payload.to_json(filepath)
+    
+    print(f'Payloads available at {payload_dst}')
+
+        
+
+
+def get_parser_generate_payloads(parent=None):
+    """A parser to generate payloads.
+
+    Args:
+        parent (object, optional): Parent parser object. Defaults to None.
+    """
+    parser = argparse.ArgumentParser() if parent is None else parent.add_parser('drs_gen_payloads')
+
+    parser.description = 'Generate a series of payload files.'
+    parser.add_argument('payload_dst', type=str, help='Where to write payload files.')
+    parser.add_argument('input_files', type=str, help='Globbable path to input files, use quotes.')
+    parser.add_argument('output_dir', type=str, help='Output directory (DRS written from here).')
+    parser.add_argument('start_year', type=int, help='Start year.')
+    parser.add_argument('end_year', type=int, help='End year.')
+    parser.add_argument('project', type=str, help='Project key from projects.json.')
+    parser.add_argument('model', type=str, help='Model key from models.json.')
+    parser.add_argument('domain', type=str, help='Domain key from domains.json.')
+
+    parser.add_argument('--variables', type=split_args, help='Comma-separated list of variables to process.')
+    parser.add_argument('--schema', type=str, help='Schema to read variables from in lieu of variables.')
+    parser.add_argument('--output_frequencies', type=split_args, help='Comma-separated list of output frequencies. Defaults to "1H,6H,1D,1M"', default='1H,6H,1D,1M')
+
+    parser.add_argument('-e', '--extra', type=str, nargs=argparse.ZERO_OR_MORE, help='Extra metadata to add, "key,value".')
+    parser.set_defaults(func=generate_payloads)
 
     return parser

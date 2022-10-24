@@ -31,6 +31,7 @@ Axiom is a Python library and command-line utility for verifying metadata agains
    :caption: For developers
 
    api
+   qa
    
 
 Indices and tables

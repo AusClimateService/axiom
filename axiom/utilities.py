@@ -677,6 +677,9 @@ def batch_split(iterable, n_batches):
     Returns:
         list : List of iterables.
     """
+    if n_batches == 1:
+        return [iterable]
+
     return np.array_split(iterable, n_batches)
 
 

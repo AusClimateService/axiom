@@ -1,5 +1,8 @@
 """Class to represent a JSON payload."""
+import enum
 import json
+import axiom_schemas as axs
+import axiom.utilities as au
 
 
 class Payload:
@@ -31,7 +34,7 @@ class Payload:
         extra (dict): Additional metadata key/value pairs.
     """
 
-    def __init__(self, input_files, output_directory, start_year, end_year, output_frequency, project, model, domain, variables=[], **kwargs):
+    def __init__(self, input_files, output_directory, start_year, end_year, output_frequency, project, model, domain, variables=[], batch=1, **kwargs):
         
         self.input_files = input_files
         self.output_directory = output_directory
@@ -45,6 +48,9 @@ class Payload:
         
         self.variables = variables
         self.output_frequency = output_frequency
+
+        self.batch = batch
+
         self.extra = kwargs
     
 
@@ -57,7 +63,8 @@ class Payload:
         Examples:
             >>> filename = payload.get_filename()
         """
-        return f'payload.{self.start_year}.{self.output_frequency}.json'
+        bbb = str(self.batch).zfill(3)
+        return f'payload.{self.start_year}.{self.output_frequency}.{bbb}.json'
     
 
     def to_dict(self):
@@ -118,3 +125,60 @@ class Payload:
         """
         d = json.load(open(filepath, 'r'))
         return Payload.from_dict(d)
+
+
+def generate_payloads(input_files, output_directory, start_year, end_year, project, model, domain, variables=None, schema=None, output_frequencies=['1H', '6H', '1D', '1M'], num_batches=1, **extra):
+    """Generate payload files.
+
+    Args:
+        input_files (str): Globbable path to input files.
+        output_directory (str): Destination filepath, DRS will be built from here.
+        start_year (int): Start year.
+        end_year (int): End year.
+        project (str): Project key from projects.json.
+        model (str): Model key from models.json.
+        domain (str): Domain key from domains.json.
+        variables (list(str), optional): List of variables to project. Defaults to None (read all from schema).
+        schema (str): Schema name or filepath.
+        output_frequencies (list(str), optional): List of output frequencies. Defaults to ['1H', '6H', '1D', '1M'].
+        num_batches (int, optional): Number of batches to split processing into. Defaults to 1.
+        **extra : Key/value pairs added as additional metadata.
+    
+    Returns:
+        list : A list of payload objects.
+    """
+
+    payloads = list()
+
+    # Load the variables from the schema if not provided
+    if variables is None:
+        schema = axs.load_schema(schema)
+        variables = list(schema['variables'].keys())    
+    
+    # Batch if required (could be a single batch)
+    batches = au.batch_split(variables, num_batches)
+
+    for year in range(start_year, end_year+1):
+
+        for output_frequency in output_frequencies:
+
+            for batch_ix, batch in enumerate(batches):
+        
+                # Generate a payload
+                payload = Payload(
+                    input_files=input_files,
+                    output_directory=output_directory,
+                    project=project,
+                    model=model,
+                    domain=domain,
+                    start_year=year,
+                    end_year=year,
+                    variables=batch,
+                    output_frequency=output_frequency,
+                    batch=batch_ix,
+                    **extra
+                )
+
+                payloads.append(payload)
+    
+    return payloads

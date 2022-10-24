@@ -226,6 +226,9 @@ def get_parser():
     # QA modules
     parser_qa_timeseries = aqc.get_parser(parent=subparsers)
 
+    # Generate payloads
+    parser_gen_payloads = adc.get_parser_generate_payloads(parent=subparsers)
+
     # Return the fully constructed parser
     return parser
 
