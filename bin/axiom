@@ -220,7 +220,7 @@ def get_parser():
     parser_drs_consume = adc.get_parser_consume(parent=subparsers)
     parser_drs_consume.set_defaults(func=_drs_consume)
 
-    # DRS parser that can launch payload-processing jobs.
+    # DRS parser that can launch payload-processing jobs.   
     parser_drs_launch = adc.get_parser_launch(parent=subparsers)
 
     # QA modules
