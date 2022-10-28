@@ -540,63 +540,70 @@ def process_multi(variables, domain, project, **kwargs):
     
     # Yes this is a nested loop, but a single variable/domain/output_freq combination could still be 10K+ files, which WILL be processed in parallel.
     for variable in variables:
-
         for output_frequency in output_frequencies:
 
-            # Use to avoid restarting when there are no files to process
+            attempt = 1
             no_files = False
+            success = False
 
-            # for level in levels:
-            logger.info(f'Processing {variable} {output_frequency}')
-            instance_kwargs = kwargs.copy()
-            instance_kwargs['variable'] = variable
-            instance_kwargs['domain'] = domain
-            instance_kwargs['project'] = project
-            instance_kwargs['output_frequency'] = output_frequency
+            while attempt <= config.get('rerun_attempts', default=1) and no_files == False and success == False:
 
-            # instance_kwargs['overwrite'] = True
+                logger.info(f'Processing {variable} {output_frequency}')
+                instance_kwargs = kwargs.copy()
+                instance_kwargs['variable'] = variable
+                instance_kwargs['domain'] = domain
+                instance_kwargs['project'] = project
+                instance_kwargs['output_frequency'] = output_frequency
 
-            if config.dask['enable']:
-                logger.info('Waiting for dask workers')
-                client.wait_for_workers(1, timeout=config['dask']['restart_timeout_seconds'])
-                logger.info(client)
-                logger.info(f'Dashboard located at {client.dashboard_link}')
-
-            try:
-
-                process(**instance_kwargs)
-
-            except NoFilesToProcessException as ex:
-
-                logger.info(f'No files to process for {variable}')
-                no_files = True
-
-            except Exception as ex:
-
-                logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
-                logger.exception(ex)
-
-                # TODO: Add recoverability?
-
-                # Append to failed list
-                if config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
-                    
-                    failed_filepath = os.path.join(
-                        os.getenv('AXIOM_LOG_DIR'),
-                        os.getenv('PBS_JOBNAME') + '.failed'
-                    )
-
-                    with open(failed_filepath, 'a') as failed:
-                        failed.write(f'{variable}\n')
-
-            # Run regardless of success/failure
-            finally:
-                
-                if config.dask['enable'] and config.dask['restart_client_between_variables'] and no_files == False:
-                    logger.info('User has requested dask client restarts between each variable (for resilience), restarting now.')
-                    client.restart()
+                if config.dask['enable']:
+                    logger.info('Waiting for dask workers')
+                    client.wait_for_workers(1, timeout=config['dask']['restart_timeout_seconds'])
                     logger.info(client)
-    
+                    logger.info(f'Dashboard located at {client.dashboard_link}')
+
+                try:
+
+                    process(**instance_kwargs)
+                    success = True
+
+                except NoFilesToProcessException as ex:
+
+                    logger.info(f'No files to process for {variable}')
+                    no_files = True
+
+                except Exception as ex:
+
+                    logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
+                    logger.exception(ex)
+
+                    # Check if the error is recoverable
+                    recoverable_errors = config.get('recoverable_errors', list())
+                    if adu.is_error_recoverable(ex, recoverable_errors):
+
+                        logger.info('Error is recoverable, incrementing attempts.')
+
+                        attempt += 1
+                        continue
+
+                    # Not recoverable
+                    elif config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
+
+                        failed_filepath = os.path.join(
+                            os.getenv('AXIOM_LOG_DIR'),
+                            os.getenv('PBS_JOBNAME') + '.failed'
+                        )
+
+                        with open(failed_filepath, 'a') as failed:
+                            failed.write(f'{variable}\n')
+
+                # Run regardless of success/failure
+                finally:
+                    
+                    if config.dask['enable'] and config.dask['restart_client_between_variables'] and no_files == False:
+                        logger.info('User has requested dask client restarts between each variable (for resilience), restarting now.')
+                        client.restart()
+                        logger.info(client)
+
     logger.info('DRS processing complete, please see consumed/lock/log files for further detail.')
 
 
