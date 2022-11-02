@@ -72,6 +72,6 @@ The DRS functionality can be accessed via the Python API. For example:
 Error Tolerance
 ---------------
 
-Axiom has built-in error tolerance and recoverability in the form of sandboxed processing of each variable to ensure that exceptions do not cause the system to crash, allowing subsequent variables to continue processing if a prior variable should fail to process.
+Axiom has built-in error tolerance and recoverability in the form of sandboxed processing of each variable. This ensures that exceptions do not cause the system to crash, allowing subsequent variables to continue processing if a prior variable should fail to process for whatever reason.
 
-A list of regular expressions is maintained in the drs.json configuration file (recoverable_errors) which allow the system to cope with any transient errors due to HPC configuration and where a simple re-running of the task will fix the problem without human intervention.
+A list of regular expressions is maintained in the drs.json configuration file (recoverable_errors) which allow the system to query stacktraces and cope with any transient errors due to HPC configuration and where a simple re-running of the task will fix the problem without human intervention.
