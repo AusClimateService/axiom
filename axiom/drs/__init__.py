@@ -546,7 +546,9 @@ def process_multi(variables, domain, project, **kwargs):
             no_files = False
             success = False
 
-            while attempt <= config.get('rerun_attempts', default=1) and no_files == False and success == False:
+            rerun_attempts = config.get('rerun_attempts', default=1)
+
+            while attempt <= rerun_attempts and no_files == False and success == False:
 
                 logger.info(f'Processing {variable} {output_frequency}')
                 instance_kwargs = kwargs.copy()
@@ -566,35 +568,72 @@ def process_multi(variables, domain, project, **kwargs):
                     process(**instance_kwargs)
                     success = True
 
+                # Not technically an error, filtering has discounted all available files.
                 except NoFilesToProcessException as ex:
 
                     logger.info(f'No files to process for {variable}')
                     no_files = True
 
-                except Exception as ex:
+                # Something wrong with the inputs regarding time.
+                except IndexError as ex:
 
-                    logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
-                    logger.exception(ex)
+                    # Log the exception
+                    log_exception(f'Timeseries inconsistency, check input data.', ex)
 
-                    # Check if the error is recoverable
-                    recoverable_errors = config.get('recoverable_errors', list())
-                    if adu.is_error_recoverable(ex, recoverable_errors):
-
+                    # Check recoverability
+                    if is_error_recoverable(ex) and attempt <= rerun_attempts:
                         logger.info('Error is recoverable, incrementing attempts.')
+                        attempt += 1
+                        continue
+                    
+                    # Track the failure and max out the attempts to execute the finally clause
+                    track_failure(variable, ex)
+                    attempt = rerun_attempts + 1
 
+                # Unknown exception
+                except Exception as ex:
+                    
+                    log_exception(
+                        f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow',
+                        ex
+                    )
+
+                    # Check recoverability
+                    if is_error_recoverable(ex) and attempt <= rerun_attempts:
+                        logger.info(
+                            'Error is recoverable, incrementing attempts.')
                         attempt += 1
                         continue
 
-                    # Not recoverable
-                    elif config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
+                    # Track the failure and max out the attempts to execute the finally clause
+                    track_failure(variable, ex)
+                    attempt = rerun_attempts + 1
 
-                        failed_filepath = os.path.join(
-                            os.getenv('AXIOM_LOG_DIR'),
-                            os.getenv('PBS_JOBNAME') + '.failed'
-                        )
+                    # logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
+                    # logger.exception(ex)
 
-                        with open(failed_filepath, 'a') as failed:
-                            failed.write(f'{variable}\n')
+                    # # Check if the error is recoverable
+                    # recoverable_errors = config.get('recoverable_errors', list())
+                    # if adu.is_error_recoverable(ex, recoverable_errors):
+
+                    #     logger.info('Error is recoverable, incrementing attempts.')
+
+                    #     attempt += 1
+                    #     continue
+
+                    # # Not recoverable
+                    # elif config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
+
+                    #     failed_filepath = os.path.join(
+                    #         os.getenv('AXIOM_LOG_DIR'),
+                    #         os.getenv('PBS_JOBNAME') + '.failed'
+                    #     )
+
+                    #     with open(failed_filepath, 'a') as failed:
+                    #         failed.write(f'{variable}\n')
+                        
+                    #     # Break out of the loop, but execute the lines in the finally clause
+                    #     attempt = rerun_attempts + 1
 
                 # Run regardless of success/failure
                 finally:
@@ -654,3 +693,51 @@ def update_cell_methods(ds, variable, dim='time', method='mean'):
 
     ds[variable] = da
     return ds
+
+
+def log_exception(message, ex):
+    """Log the exception.
+
+    Args:
+        message (str): Human-readable error message.
+        ex (Exception): Stack trace.
+    """
+    logger = au.get_logger(__name__)
+    logger.error(message)
+    logger.exception(ex)
+
+
+def is_error_recoverable(exception):
+    """Check if the error is recoverable.
+
+    Args:
+        exception (Exception): Raised exception to check.
+    
+    Returns:
+        bool : True if recoverable, False otherwise.
+    """
+    config = load_config('drs')
+    return adu.is_error_recoverable(exception, config.get('recoverable_errors', list()))
+
+
+def track_failure(variable, exception):
+    """Track the failure for reprocessing.
+
+    Args:
+        variable (str): Variable name.
+        exception (Exception): Exception raised.
+    """
+    
+    config = load_config('drs')
+
+    if config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
+
+        failed_filepath = os.path.join(
+            os.getenv('AXIOM_LOG_DIR'),
+            os.getenv('PBS_JOBNAME') + '.failed'
+        )
+
+        exname = type(exception).__name__
+
+        with open(failed_filepath, 'a') as failed:  
+            failed.write(f'{variable},{exname}\n')
