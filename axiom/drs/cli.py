@@ -296,6 +296,9 @@ def rerun_failures(input_dir):
         raw = open(failed_filepath).read().splitlines()
         failed_variables = [_raw.split(',')[0] for _raw in raw]
 
+        # Filter out duplicates
+        failed_variables = list(set(failed_variables))
+
         # Open the payload
         payload_filename = os.path.basename(failed_filepath).split('_')[0]
         payload_filepath = os.path.join(
