@@ -278,3 +278,61 @@ def get_parser_generate_payloads(parent=None):
     parser.set_defaults(func=generate_payloads)
 
     return parser
+
+
+def rerun_failures(input_dir):
+    """Method to rerun payloads based on the .failed output files.
+    
+    Args:
+        input_dir (str) : Path to the input directory containing both the failed files and the original payloads.
+    """
+
+    # Find all of the failed files in the provided directory
+    failed_filepaths = au.auto_glob(f'{input_dir}/*failed')
+
+    for failed_filepath in failed_filepaths:
+
+        # Open the failed filepath, read out the variables
+        raw = open(failed_filepath).read().splitlines()
+        failed_variables = [_raw.split(',')[0] for _raw in raw]
+
+        # Filter out duplicates
+        failed_variables = list(set(failed_variables))
+
+        # Open the payload
+        payload_filename = os.path.basename(failed_filepath).split('_')[0]
+        payload_filepath = os.path.join(
+            input_dir,
+            payload_filename
+        )
+
+        # Open them
+        payload = adp.Payload.from_json(payload_filepath)
+
+        # Replace the variables listed with that of those included in the failed file
+        payload.variables = failed_variables
+        
+        # Save them to a rerun directory
+        output_dir = os.path.join(input_dir, 'rerun')
+        os.makedirs(output_dir, exist_ok=True)
+
+        output_filepath = os.path.join(
+            output_dir,
+            payload_filename
+        )
+
+        print(output_filepath)
+        payload.to_json(output_filepath)
+
+
+def get_parser_rerun_failures(parent=None):
+    """Get a parser for rerunning payloads.
+
+    Args:
+        parent (object, optional): Parent parser. Defaults to None.
+    """
+    parser = argparse.ArgumentParser() if parent is None else parent.add_parser('drs_rerun_failures')
+    parser.description = 'Generate rerun payloads from the .failed files in the input directory'
+    parser.add_argument('input_dir', type=str, help='Path to .failed files and their payloads.')
+    parser.set_defaults(func=rerun_failures)
+    return parser

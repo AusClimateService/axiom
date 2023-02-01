@@ -31,7 +31,7 @@ def check_timeseries_variable(search_template, variable, start_year, end_year):
             filepaths = sorted(glob.glob(filepath_search))
 
             # row = dict(filepath_search=filepath_search)
-            row = dict(variable=_variable, year=year)
+            row = dict(variable=_variable, year=year, filepath_search=filepath_search)
 
             # Success: file is present
             if len(filepaths) == 1:
