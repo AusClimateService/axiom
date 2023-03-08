@@ -3,7 +3,9 @@
     "reference_time": "1949-12-01 00:00:00",
     "dask": {
         "enable": true,
+	"engine": "h5netcdf",
         "restart_client_between_variables": false,
+	"restart_timeout_seconds": 120,
         "cluster": {
             "n_workers": 1
         }
