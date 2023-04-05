@@ -124,6 +124,20 @@ def has_attr(obj, attr):
     return attr in obj.attrs.keys()
 
 
+def isolate_coordinate(obj, coordinate_name, drop=True):
+    """Ensure that coordinate_name is the only coordinate on obj by selecting the first index of all other coordinates.
+
+    Args:
+        obj (xarray.DataArray or xarray.Dataset): xarray object.
+        coordinate_name (str): Name of the coordinate to retain.
+        drop (bool, optional): Drop the coordinate_name from the object. Defaults to True.
+    """
+    for coord in obj.coords.keys():
+        if coord != coordinate_name:
+            obj = obj.isel(**{coord: 0}, drop=drop)
+    return obj
+
+
 def extract_metadata(ds):
     """Extract metadata from an xarray dataset.
 

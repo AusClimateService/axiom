@@ -106,7 +106,7 @@ def get_parser_consume(config=None, parent=None):
     return parser
 
 
-def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, **kwargs):
+def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, queue='normal', **kwargs):
     """Method to launch a series of qsubs for DRS processing.
 
     Args:
@@ -116,6 +116,7 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
         batches (int): Number of batches to split variables into (for parallel processing).
         dry_run (bool): Print out the commands rather than executing.
         unlock (bool): Unlock locked payloads prior to submission (for rerunning walltime overruns)
+        queue (str): Queue to submit to.
     """
 
     # List the payloads in the input_directory
@@ -168,11 +169,11 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
 
             qsub_vars = ','.join(qsub_vars)
 
-            cmd = f'qsub -N {job_name} -v {qsub_vars} -o {log_dir} {jobscript}'
+            cmd = f'qsub -q {queue} -N {job_name} -v {qsub_vars} -o {log_dir} {jobscript}'
 
             if 'walltime' in kwargs.keys() and kwargs['walltime'] != None:
                 walltime = kwargs['walltime']
-                cmd = f'qsub -N {job_name} -v {qsub_vars} -o {log_dir} -l walltime={walltime} {jobscript}'
+                cmd = f'qsub -q {queue} -N {job_name} -v {qsub_vars} -o {log_dir} -l walltime={walltime} {jobscript}'
 
             # Dry run, just echo the outputs
             if dry_run:
