@@ -60,7 +60,13 @@ class Config(dict):
         raise KeyError(f'Config key {key} does not exist.')
         
 
-    def load(self, config_name):
+    def load(self, config_name, defaults_only=False):
+        """Load the configuration in a cascading fashion, defaults first, then overlay with user.
+
+        Args:
+            config_name (str): Configuration name, without file extension.
+            defaults_only (bool, optional): Load only the defaults. Defaults to False.
+        """
         
         # Load any installed defaults, if they exists
         try:
@@ -76,6 +82,11 @@ class Config(dict):
             
             defaults = dict()
 
+        # Load only the defaults
+        if defaults_only:
+            self.update(defaults)
+            return
+
         # Load the user configuration over the top
         user_filepath = os.path.join(pathlib.Path.home(), f'.axiom/{config_name}.json')
 
@@ -87,15 +98,16 @@ class Config(dict):
         self.update(defaults)
 
 
-def load_config(config_name):
+def load_config(config_name, defaults_only=False):
     """Shorthand to load a configuration object.
 
     Args:
         config_name (str): Name of the config file.
+        defaults_only (bool, optional): Load only the defaults. Defaults to False.
 
     Returns:
         axiom.Config: Configuration object.
     """
     config = Config()
-    config.load(config_name)
+    config.load(config_name, defaults_only=defaults_only)
     return config

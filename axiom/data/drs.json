@@ -3,9 +3,9 @@
     "reference_time": "1949-12-01 00:00:00",
     "dask": {
         "enable": true,
-	"engine": "h5netcdf",
+	    "engine": "h5netcdf",
         "restart_client_between_variables": false,
-	"restart_timeout_seconds": 120,
+	    "restart_timeout_seconds": 120,
         "cluster": {
             "n_workers": 1
         }
@@ -19,6 +19,7 @@
     "allow_subdaily_resampling": false,
     "rolling_time_averaging": true,
     "rerun_failures": false,
+    "rerun_attempts": 3,
     "derive_filename_times_from_data": false,
     "copy_coordinates_from_inputs": true,
     "detect_output_frequency_from_inputs": true,
@@ -114,5 +115,10 @@
         "drs_path": "%(output_directory)s/%(project)s/output/%(domain)s/%(rcm_institute)s/%(gcm_institute)s-%(gcm_model)s/%(driving_experiment_name)s/%(ensemble)s/%(rcm_institute)s-%(rcm_model)s/%(rcm_version_id)s/%(frequency_mapping)s/%(variable)s",
         "filename": "%(variable)s_%(domain)s_%(gcm_institute)s-%(gcm_model)s_%(driving_experiment_name)s_%(ensemble)s_%(rcm_institute)s-%(rcm_model)s_%(rcm_version_id)s_%(frequency_mapping)s_%(start_date)s-%(end_date)s.nc",
         "filename_fixed": "%(variable)s_%(domain)s_%(gcm_institute)s-%(gcm_model)s_%(driving_experiment_name)s_%(ensemble)s_%(rcm_institute)s-%(rcm_model)s_%(rcm_version_id)s.nc"
-    }
+    },
+    "automatic_error_recovery": true,
+    "automatic_error_recovery_count": 1,
+    "recoverable_errors": [
+        "AttributeError: 'NoneType' object has no attribute 'lock_acquire'"
+    ]
 }
