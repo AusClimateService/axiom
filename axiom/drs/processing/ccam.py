@@ -113,28 +113,10 @@ def postprocess_ccam(ds, **kwargs):
 
     # Strip out the extra dimensions from bnds (reduces filesize considerably)
     if 'lat_bnds' in ds.data_vars.keys():
-
-        if adu.is_time_invariant(ds):
-            
-            if au.has_coord(ds.lat_bnds, 'lon'):
-                ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, drop=True)
-            
-            if au.has_coord(ds.lon_bnds, 'lat'):
-                ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, drop=True)
-            
-            return ds
-
-        else:
-
-            if au.has_coord(ds.lat_bnds, 'lon'):
-                ds['lat_bnds'] = ds.lat_bnds.isel(lon=0, time=0, drop=True)
-            else:
-                ds['lat_bnds'] = ds.lat_bnds.isel(time=0, drop=True)
-
-            if au.has_coord(ds.lon_bnds, 'lat'):
-                ds['lon_bnds'] = ds.lon_bnds.isel(lat=0, time=0, drop=True)
-            else:
-                ds['lon_bnds'] = ds.lon_bnds.isel(time=0, drop=True)
+        
+        # Drop surplus coordinates
+        ds['lat_bnds'] = au.isolate_coordinate(ds.lat_bnds, 'lat', drop=True)
+        ds['lon_bnds'] = au.isolate_coordinate(ds.lon_bnds, 'lon', drop=True)
 
     # Center the times for non-instantaneous data.
     _is_instantaneous = is_instantaneous(ds, kwargs['variable'])
