@@ -23,7 +23,7 @@
     "derive_filename_times_from_data": false,
     "copy_coordinates_from_inputs": true,
     "detect_output_frequency_from_inputs": true,
-    "default_schema": "CORDEX-CMIP6",
+    "default_schema": "CORDEX",
     "historical_cutoff": 2006,
     "enable_historical_cutoff": false,
     "track_failures": true,
