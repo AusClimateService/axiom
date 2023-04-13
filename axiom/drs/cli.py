@@ -7,6 +7,7 @@ import argparse
 import axiom.utilities as au
 from axiom.config import load_config
 import axiom.drs.payload as adp
+import axiom.drs.utilities as adu
 from tqdm import tqdm
 
 
@@ -106,7 +107,7 @@ def get_parser_consume(config=None, parent=None):
     return parser
 
 
-def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, queue='normal', **kwargs):
+def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, **launch_context):
     """Method to launch a series of qsubs for DRS processing.
 
     Args:
@@ -116,7 +117,7 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
         batches (int): Number of batches to split variables into (for parallel processing).
         dry_run (bool): Print out the commands rather than executing.
         unlock (bool): Unlock locked payloads prior to submission (for rerunning walltime overruns)
-        queue (str): Queue to submit to.
+        **launch_context: Additional arguments that will be interpolated as launch context.
     """
 
     # List the payloads in the input_directory
@@ -162,18 +163,38 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
             batch_str = str(batch_id).zfill(3)
             job_name = f'{job_name}_{batch_str}'
 
-            qsub_vars = [
-                f'AXIOM_PAYLOAD={payload}',
-                f'AXIOM_LOG_DIR={log_dir}'
-            ]
+            # Assemble the command from configuration
+            config = load_config('drs')
+            directives = config['launch']['directives']
 
-            qsub_vars = ','.join(qsub_vars)
+            # Override walltime
+            if 'walltime' in launch_context.keys() and launch_context['walltime'] is not None:
+                walltime = launch_context['walltime']
+                directives.append(f'-l walltime={walltime}')
 
-            cmd = f'qsub -q {queue} -N {job_name} -v {qsub_vars} -o {log_dir} {jobscript}'
+            qsub_vars = dict(
+                AXIOM_PAYLOAD=payload,
+                AXIOM_LOG_DIR=log_dir,
+                AXIOM_BATCH=batch_id
+            )
 
-            if 'walltime' in kwargs.keys() and kwargs['walltime'] != None:
-                walltime = kwargs['walltime']
-                cmd = f'qsub -q {queue} -N {job_name} -v {qsub_vars} -o {log_dir} -l walltime={walltime} {jobscript}'
+            # Assemble the launch context for this job
+            _launch_context = dict(
+                qsub_vars=adu.assemble_qsub_vars(**qsub_vars),
+                job_name=job_name,
+                log_dir=log_dir,
+                batch_str=batch_str
+            )
+
+            # Add this to the user-supplied launch context
+            launch_context.update(_launch_context)
+
+            # Assemble the qsub command
+            cmd = adu.assemble_qsub_command(
+                jobscript=jobscript,
+                directives=directives,
+                **launch_context
+            )
 
             # Dry run, just echo the outputs
             if dry_run:
@@ -203,7 +224,6 @@ def get_parser_launch(parent=None):
     parser.add_argument('path', type=str, help='Globbable path to payload files (use quotes)')
     parser.add_argument('jobscript', type=str, help='Path to the jobscript for submission.')
     parser.add_argument('log_dir', type=str, help='Directory to which to write logs.')
-    # parser.add_argument('-b', '--batches', type=int, help='Divide the the variables into N batches, each in its own job.', default=None)
     parser.add_argument('-d', '--dry_run', action='store_true', default=False, help='Print commands without executing.')
     parser.add_argument('--walltime', type=str, help='Override walltime in job script.')
     parser.add_argument('--unlock', help='Unlock locked payloads prior to submission', action='store_true', default=False)

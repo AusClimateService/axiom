@@ -120,5 +120,14 @@
     "automatic_error_recovery_count": 1,
     "recoverable_errors": [
         "AttributeError: 'NoneType' object has no attribute 'lock_acquire'"
-    ]
+    ],
+    "launch": {
+        "directives": [
+            "-q %(queue)s",
+            "-N %(job_name)s",
+            "-v %(qsub_vars)s",
+            "-o %(log_dir)s",
+            "-e %(log_dir)s"
+        ]
+    }
 }
