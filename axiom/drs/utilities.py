@@ -513,3 +513,31 @@ def is_error_recoverable(exception, recoverable_errors):
             return True
     
     return False
+
+
+def assemble_qsub_vars(**kwargs):
+    """Assemble variables into a qsub-compliant -v format, without the -v.
+
+    Args:
+        **kwargs (dict): Keyword arguments to convert into qsub variables.
+    
+    Returns:
+        str : String of qsub variables.
+    """
+    return ','.join([f'{k}={v}' for k, v in kwargs.items()])
+
+
+def assemble_qsub_command(jobscript, directives, **context):
+    """Assemble the qsub command.
+    
+    Args:
+        jobscript (str) : Path to the jobscript.
+        directives (list) : List of directives to interpolate.
+        **context (dict) : Context dictionary to interpolate into the directives.
+    
+    Returns:
+        str : The qsub command.
+    """
+    # Collapse the directives into a single string and interpolate
+    directives = ' '.join(directives) % context
+    return f'qsub {directives} {jobscript}'

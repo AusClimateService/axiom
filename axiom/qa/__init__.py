@@ -1,8 +1,10 @@
 """Quality-Assurance module."""
 import glob
 import pandas as pd
+import numpy as np
 import axiom.utilities as au
 from tqdm import tqdm
+import os
 
 
 def check_timeseries_variable(search_template, variable, start_year, end_year):
@@ -26,8 +28,8 @@ def check_timeseries_variable(search_template, variable, start_year, end_year):
 
             context = dict(variable=_variable, year=year)
 
-            # filepath_search = search_template % context
-            filepath_search = au.interpolate_template(search_template, **context)
+            filepath_search = search_template % context
+            # filepath_search = au.interpolate_template(search_template, **context)
             filepaths = sorted(glob.glob(filepath_search))
 
             # row = dict(filepath_search=filepath_search)
@@ -35,15 +37,19 @@ def check_timeseries_variable(search_template, variable, start_year, end_year):
 
             # Success: file is present
             if len(filepaths) == 1:
-                _row = dict(status='SUCCESS', comment='File is present.')
+
+                # Get the filesize in mb
+                num_bytes = os.path.getsize(filepaths[0])
+                filesize_mb = num_bytes / (1024 * 1024)
+                _row = dict(status='SUCCESS', comment='File is present.', size=filesize_mb)
 
             # Error: no file
             elif len(filepaths) == 0:
-                _row = dict(status='ERROR', comment='File is missing.')
+                _row = dict(status='ERROR', comment='File is missing.', size=np.nan)
 
             # Error: multiple files detected
             else:
-                _row = dict(status='ERROR', comment='Multiple files detected.')
+                _row = dict(status='ERROR', comment='Multiple files detected.', size=np.nan)
 
             row.update(_row)
             rows.append(row)

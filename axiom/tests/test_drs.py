@@ -3,6 +3,7 @@ import re
 import axiom.drs.utilities as adu
 
 
+
 def test_parse_domain():
     """Test parsing a domain."""
     directive = "Antarctica,0.5,-90.0,-50.0,-180.0,180.0"
