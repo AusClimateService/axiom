@@ -86,7 +86,6 @@ def process(
         input_files (str or list): Globbable string or list of filepaths.
         output_directory (str) : Path from which to build DRS structure.
         variable (str): Variable to process.
-        level (numeric or list) : Vertical levels to process.
         project (str): Project metadata to apply (loaded from user config).
         model (str): Model metadata to apply (loaded from user config).
         start_year (int): Start year.
@@ -226,17 +225,6 @@ def process(
     context.update(local_args)
     context['res_km'] = input_resolution
 
-    # Select the variable from the dataset
-    # TODO: Deprecate
-    if level:
-
-        # Select each of the levels requested into a new variable.
-        for _level in au.pluralise(level):
-            ds[f'{variable}{_level}'] = ds[variable].sel(lev=_level, drop=True)
-
-        # Drop the original variable
-        ds = ds.drop(variable)
-
     # Sort the dimensions (fixes domain subsetting)
     logger.debug('Sorting data')
     sort_coords = list()
@@ -280,7 +268,6 @@ def process(
         if not time_invariant:
             time_slice = slice(f'{year}-01-01', f'{year}-12-31')
             _ds = ds.sel(time=time_slice, drop=True)
-            # _ds = ds.where(ds['time.year'] == year, drop=True)
         else:
             _ds = ds.copy()
 
@@ -492,6 +479,14 @@ def load_variable_config(project_config):
 
 
 def process_multi(variables, domain, project, **kwargs):
+    """Start a processing chain of multiple variables.
+
+    Args:
+        variables (list): List of variables to process.
+        domain (str): Domain to process from domains.json.
+        project (str): Project metadata to use from projects.json.
+        **kwargs: Additional keyword arguments to pass to the processing chain.
+    """
 
     logger = au.get_logger(__name__)
 
@@ -608,32 +603,6 @@ def process_multi(variables, domain, project, **kwargs):
                     # Track the failure and max out the attempts to execute the finally clause
                     track_failure(variable, ex)
                     attempt = rerun_attempts + 1
-
-                    # logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
-                    # logger.exception(ex)
-
-                    # # Check if the error is recoverable
-                    # recoverable_errors = config.get('recoverable_errors', list())
-                    # if adu.is_error_recoverable(ex, recoverable_errors):
-
-                    #     logger.info('Error is recoverable, incrementing attempts.')
-
-                    #     attempt += 1
-                    #     continue
-
-                    # # Not recoverable
-                    # elif config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
-
-                    #     failed_filepath = os.path.join(
-                    #         os.getenv('AXIOM_LOG_DIR'),
-                    #         os.getenv('PBS_JOBNAME') + '.failed'
-                    #     )
-
-                    #     with open(failed_filepath, 'a') as failed:
-                    #         failed.write(f'{variable}\n')
-                        
-                    #     # Break out of the loop, but execute the lines in the finally clause
-                    #     attempt = rerun_attempts + 1
 
                 # Run regardless of success/failure
                 finally:
