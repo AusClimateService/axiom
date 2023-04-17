@@ -105,7 +105,7 @@ def get_parser_consume(config=None, parent=None):
     return parser
 
 
-def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, **launch_context):
+def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, interactive=False, unlock=False, **launch_context):
     """Method to launch a series of qsubs for DRS processing.
 
     Args:
@@ -114,6 +114,7 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
         log_dir (str): Path to which to save the log files.
         batches (int): Number of batches to split variables into (for parallel processing).
         dry_run (bool): Print out the commands rather than executing.
+        interactive (bool): Dump the interactive flag into the qsub command when dumping.
         unlock (bool): Unlock locked payloads prior to submission (for rerunning walltime overruns)
         **launch_context: Additional arguments that will be interpolated as launch context.
     """
@@ -164,6 +165,10 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
             # Assemble the command from configuration
             config = load_config('drs')
             directives = config['launch']['directives']
+
+            # Add interactive flag when dry running
+            if dry_run and interactive:
+                directives.append('-I')
 
             # Override walltime
             if 'walltime' in launch_context.keys() and launch_context['walltime'] is not None:
@@ -223,6 +228,7 @@ def get_parser_launch(parent=None):
     parser.add_argument('jobscript', type=str, help='Path to the jobscript for submission.')
     parser.add_argument('log_dir', type=str, help='Directory to which to write logs.')
     parser.add_argument('-d', '--dry_run', action='store_true', default=False, help='Print commands without executing.')
+    parser.add_argument('-i', '--interactive', action='store_true', default=False, help='Dump the interactive flag into the qsub command when dry-running.')
     parser.add_argument('--walltime', type=str, help='Override walltime in job script.')
     parser.add_argument('--unlock', help='Unlock locked payloads prior to submission', action='store_true', default=False)
     parser.set_defaults(func=drs_launch)
