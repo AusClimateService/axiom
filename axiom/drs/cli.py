@@ -102,8 +102,6 @@ def get_parser_consume(config=None, parent=None):
 
     # Input filepaths
     parser.add_argument('input_filepaths', type=str, help='Input json filepaths.', nargs=argparse.ONE_OR_MORE)
-    # parser.add_argument('--batch_id', type=int, help='Batch number to process.', default=None)
-    # parser.add_argument('--num_batches', type=int, help='Maximum batch number.', default=None)
     return parser
 
 
