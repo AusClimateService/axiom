@@ -1,6 +1,14 @@
 {
     "time_units": "days since 1949-12-01 00:00:00",
     "reference_time": "1949-12-01 00:00:00",
+    "xarray": {
+        "open_dataset": {
+            "engine": "h5netcdf",
+            "chunks": {
+                "time": 100
+            }
+        }
+    },
     "dask": {
         "enable": true,
 	    "engine": "h5netcdf",

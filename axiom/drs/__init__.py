@@ -169,16 +169,23 @@ def process(
     preprocessor = adu.load_preprocessor(preprocessor)
     def preprocess(ds, *args, **kwargs): return preprocessor(ds, **local_args)
 
+    # Load the open_dataset configuration
+    open_dataset_kwargs = config['xarray']['open_dataset']
+
     # Account for fixed variables, if defined
     if 'variables_fixed' in project.keys() and variable in project['variables_fixed']:
 
         # Load just the first file
-        ds = xr.open_dataset(input_files[0], engine='h5netcdf')
+        ds = xr.open_dataset(input_files[0], **open_dataset_kwargs)
         ds = preprocess(ds, variable=variable)
 
     else:
-        ds = xr.open_mfdataset(input_files, chunks=dict(
-            time=100), preprocess=preprocess, engine='h5netcdf')
+        
+        ds = xr.open_mfdataset(
+            input_files,
+            preprocess=preprocess,
+            **open_dataset_kwargs
+        )
 
     # Subset temporally
     if not adu.is_time_invariant(ds):
