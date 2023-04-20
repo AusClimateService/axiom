@@ -21,6 +21,7 @@ from axiom.exceptions import ResolutionDetectionException, MalformedDRSJSONPaylo
 from cerberus import Validator
 from axiom.drs.domain import Domain
 from axiom.config import load_config
+import shutil
 
 
 def is_fixed_variable(config, variable):
@@ -541,3 +542,42 @@ def assemble_qsub_command(jobscript, directives, **context):
     # Collapse the directives into a single string and interpolate
     directives = ' '.join(directives) % context
     return f'qsub {directives} {jobscript}'
+
+    
+def generate_user_config():
+    """Generate the user .axiom directory with all installed data files.
+    
+    Args:
+        overwrite (bool): Overwrite existing .axiom directory.
+    """
+
+    logger = au.get_logger(__name__)
+
+    # Work out the users home directory (os independent)
+    axiom_dir = os.path.join(
+        str(Path.home()),
+        '.axiom'
+    )
+
+    # Does it already exist? back it up with a timestamp of the current tim
+    if os.path.exists(axiom_dir):
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        backup_dir = f'{axiom_dir}_{timestamp}'
+        print(f'Backing up existing .axiom directory to {backup_dir}')
+        shutil.move(axiom_dir, backup_dir)
+
+    # Create the directory and copy the files over.
+    logger.info(f'Creating new .axiom directory at {axiom_dir}')
+    os.makedirs(axiom_dir, exist_ok=True)
+    
+    config_files = au.auto_glob(os.path.join(
+        importlib.resources.files('axiom'),
+        'data/*.json'
+    ))
+
+    for src in config_files:
+        dst = os.path.join(axiom_dir, os.path.basename(src))
+        logger.info(f'Copying {src} to {dst}')
+        shutil.copy(src, dst)
+    
+    logger.info('User configuration generated successfully.')

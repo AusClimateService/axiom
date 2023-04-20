@@ -9,6 +9,9 @@ from axiom.config import load_config
 import axiom.drs.payload as adp
 import axiom.drs.utilities as adu
 from tqdm import tqdm
+from pathlib import Path
+import shutil
+import datetime
 
 
 def split_args(values):
@@ -360,4 +363,16 @@ def get_parser_rerun_failures(parent=None):
     parser.description = 'Generate rerun payloads from the .failed files in the input directory'
     parser.add_argument('input_dir', type=str, help='Path to .failed files and their payloads.')
     parser.set_defaults(func=rerun_failures)
+    return parser
+
+
+def get_parser_generate_user_config(parent=None):
+    """Get a parser for generating a set of user config files from the installation directory.
+
+    Args:
+        parent (object, optional): Parent parser. Defaults to None.
+    """
+    parser = argparse.ArgumentParser() if parent is None else parent.add_parser('drs_gen_user_config')
+    parser.description = 'Copy installation configuration to the user space (backing up anything already there).'
+    parser.set_defaults(func=adu.generate_user_config)
     return parser
