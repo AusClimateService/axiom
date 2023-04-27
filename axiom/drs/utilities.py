@@ -8,7 +8,7 @@ import xarray as xr
 import glob
 import sys
 import axiom.utilities as au
-import axiom_schemas as axs
+import axiom.schemas as axs
 import numpy as np
 import importlib
 from pprint import pprint
