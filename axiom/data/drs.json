@@ -20,6 +20,7 @@
     },
     "filename_filtering": {
         "variable": true,
+        "variable_regex": "^%(variable)s_*",
         "year": true,
         "year_offset": 1
     },

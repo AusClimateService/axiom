@@ -124,8 +124,8 @@ def process(
 
     # Filter by those that actually have the variable in the filename.
     if config.filename_filtering['variable']:
-        input_files = [
-            f for f in input_files if f'{variable}_' in os.path.basename(f)]
+
+        input_files = adu.filter_by_variable_name(input_files, variable)
         num_files = len(input_files)
         logger.debug(
             f'{num_files} to consider after filename variable filtering.')
