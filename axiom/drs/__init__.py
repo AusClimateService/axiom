@@ -150,11 +150,19 @@ def process(
 
     # Load project config
     logger.info(f'Loading project config ({project})')
-    project = load_config('projects')[project]
+    project_key = project
+    project = load_config('projects')[project_key]
+
+    # Ensure it actually exists
+    assert isinstance(project, dict), f'Project {project_key} not found, does it exist in projects.json?'
 
     # Load model config
     logger.info(f'Loading model config ({model})')
-    model = load_config('models')[model]
+    model_key = model
+    model = load_config('models')[model_key]
+
+    # Ensure it actually exists
+    assert isinstance(model, dict), f'Model {model_key} not found, does it exist in models.json?'
 
     logger.debug(
         'Loading files into distributed memory, this may take some time.')
