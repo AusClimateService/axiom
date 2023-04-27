@@ -23,7 +23,7 @@ def test_assemble_qsub_vars():
 
 
 def test_assemble_qsub_command():
-    """"Test assemble_qsub_command."""
+    """Test assemble_qsub_command."""
     
     directives = [
         '-l walltime=%(walltime)s',
@@ -43,3 +43,16 @@ def test_assemble_qsub_command():
     expected = 'qsub -l walltime=00:30:00 -q normal -N myjob -v myvar1=myval1,myvar2=myval2 test.sh'
     
     assert result == expected
+
+
+def test_filter_by_variable_name():
+    """Test filter_by_variable_name."""
+    
+    filepaths = [
+        'var1_test.nc',
+        'var2_test.nc'
+    ]
+
+    # Ensure that only one file is returned
+    result = adu.filter_by_variable_name(filepaths, 'var1')
+    assert len(result) == 1 and result[0] == filepaths[0]

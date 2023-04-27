@@ -581,3 +581,32 @@ def generate_user_config():
         shutil.copy(src, dst)
     
     logger.info('User configuration generated successfully.')
+
+
+def filter_by_variable_name(filepaths, variable):
+    """Filter for filenames that include the variable name.
+
+    Args:
+        filepaths (list): List of filepaths.
+
+    Returns:
+        list : List of filepaths that include the variable name.
+    """
+    config = load_config('drs')
+
+    # Bail out if not filtering
+    if not config['filename_filtering']['variable']:
+        return filepaths
+    
+    # Get the regex information, interpolate the variable name
+    pattern_template = config['filename_filtering']['variable_regex']
+    pattern = pattern_template % dict(variable=variable)
+
+    # Filter for the variable name
+    filtered_filepaths = list()
+    for filepath in filepaths:
+        filename = os.path.basename(filepath)
+        if re.search(pattern, filename):
+            filtered_filepaths.append(filepath)
+    
+    return filtered_filepaths
