@@ -1,0 +1,441 @@
+{
+    "name": "CORDEX Metadata Specification",
+    "description": "Converted from CSV",
+    "original_file": "cordex_var_info_fx.csv",
+    "created": "2021-06-07T04:42:37Z",
+    "_global": {},
+    "variables": {
+        "time": {
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "time"
+                ]
+            },
+            "axis": {
+                "type": "string",
+                "allowed": [
+                    "T"
+                ]
+            }
+        },
+        "areacella": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Grid-Cell Area for Atmospheric Grid Variables"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cell_area"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: sum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string"
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m2"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "areacellr": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Grid-Cell Area for River Model Variables"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cell_area"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: sum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string"
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m2"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "orog": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Altitude"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_altitude"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "sftlf": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Percentage of the grid  cell occupied by land (including lakes)"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "land_area_fraction"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "sftgif": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Land Ice Area Percentage"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "land_ice_area_fraction"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "mrsofc": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Capacity of Soil to Store Water (Field Capacity)"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "soil_moisture_content_at_field_capacity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean where land"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "rootd": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Maximum Root Depth"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "root_depth"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        },
+        "zfull": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Altitude of Model Full-Levels"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "height_above_reference_ellipsoid"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude alevel"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "fx"
+                ]
+            }
+        }
+    }
+}

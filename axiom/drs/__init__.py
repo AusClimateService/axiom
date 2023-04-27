@@ -8,7 +8,7 @@ import xarray as xr
 import axiom.utilities as au
 import axiom.drs.utilities as adu
 from axiom.drs.domain import Domain
-import axiom_schemas as axs
+import axiom.schemas as axs
 import json
 import sys
 from distributed import Client, LocalCluster
@@ -339,7 +339,6 @@ def process(
         logger.debug('Assembling global metadata.')
         global_attrs = dict(
             axiom_version=axiom_version,
-            axiom_schemas_version=axs.__version__,
             axiom_schema=schema_key
         )
 

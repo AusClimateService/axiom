@@ -1,0 +1,4056 @@
+{
+    "name": "CORDEX",
+    "description": "Working draft of CORDEX-CMIP6 variable list.",
+    "source": "https://cordex.org/experiment-guidelines/cordex-cmip6/data-request/",
+    "created": "2022-03-30T11:08:52Z",
+    "_global": {
+        "institute_id": {
+            "type": "string"
+        },
+        "institution": {
+            "type": "string"
+        },
+        "model_id": {
+            "type": "string"
+        },
+        "experiment_id": {
+            "type": "string"
+        },
+        "experiment": {
+            "type": "string"
+        },
+        "contact": {
+            "type": "string"
+        },
+        "product": {
+            "type": "string"
+        },
+        "Conventions": {
+            "type": "string"
+        },
+        "creation_date": {
+            "type": "string"
+        },
+        "frequency": {
+            "type": "string"
+        },
+        "driving_model_id": {
+            "type": "string"
+        },
+        "driving_model_ensemble_member": {
+            "type": "string"
+        },
+        "driving_experiment_name": {
+            "type": "string"
+        },
+        "driving_experiment": {
+            "type": "string"
+        },
+        "rcm_version_id": {
+            "type": "string"
+        },
+        "project_id": {
+            "type": "string"
+        },
+        "CORDEX_domain": {
+            "type": "string"
+        },
+        "references": {
+            "type": "string"
+        },
+        "tracking_id": {
+            "type": "string"
+        },
+        "modelling_realmtime_reference_point": {
+            "type": "string"
+        },
+        "calendar": {
+            "type": "string"
+        },
+        "grid_attributes": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "tas": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "tasmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Near-Surface Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "tasmin": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Minimum Near-Surface Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "pr": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Precipitation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "precipitation_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "evspsbl": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Evaporation Including Sublimation and Transpiration"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "water_evapotranspiration_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "huss": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hurs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Relative Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "relative_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "ps": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Air Pressure"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_air_pressure"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "Pa"
+                ]
+            }
+        },
+        "psl": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Sea Level Pressure"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_pressure_at_mean_sea_level"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "Pa"
+                ]
+            }
+        },
+        "sfcWind": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Wind Speed"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "wind_speed"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "uas": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Near-Surface Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "vas": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Near-Surface Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "clt": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Cloud Cover Percentage"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cloud_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "rsds": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downwelling Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downwelling_shortwave_flux_in_air"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rlds": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downwelling Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downwelling_longwave_flux_in_air"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "orog": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Altitude"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_altitude"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "sftlf": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Percentage of the Grid Cell Occupied by Land"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "land_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "ts": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "tsl": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Temperature of Soil"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "soil_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "prc": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Convective Precipitation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "convective_precipitation_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "prhmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Hourly Precipitation Rate"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "precipitation_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "prsn": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Snowfall Flux"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "snowfall_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "mrros": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Runoff"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_runoff_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "mrro": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Runoff"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "runoff_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "snm": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Snow Melt"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_snow_melt_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "tauu": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downward Eastward Wind Stress"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downward_eastward_stress"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "Pa"
+                ]
+            }
+        },
+        "tauv": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downward Northward Wind Stress"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downward_northward_stress"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "Pa"
+                ]
+            }
+        },
+        "sfcWindmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Near-Surface Wind Speed"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "wind_speed"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "sund": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Duration of Sunshine"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "duration_of_sunshine"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "s"
+                ]
+            }
+        },
+        "rsdsdir": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Direct Downwelling Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_direct_downwelling_shortwave_flux_in_air"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rsus": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upwelling Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upwelling_shortwave_flux_in_air"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rlus": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upwelling Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upwelling_longwave_flux_in_air"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rlut": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "TOA Outgoing Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "toa_outgoing_longwave_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rsdt": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "TOA Incident Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "toa_incoming_shortwave_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rsut": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "TOA Outgoing Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "toa_outgoing_shortwave_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "hfls": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upward Latent Heat Flux"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upward_latent_heat_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "hfss": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upward Sensible Heat Flux"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upward_sensible_heat_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "mrfso": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Soil Frozen Water Content"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "soil_frozen_water_content"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "mrfsos": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Frozen Water Content in Upper Portion of Soil Column"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "frozen_water_content_of_soil_layer"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "mrfsol": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Frozen Water Content of Soil Layer"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "frozen_water_content_of_soil_layer"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "mrso": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Soil Moisture Content"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "mass_content_of_water_in_soil\\n"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "mrsos": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Moisture in Upper Portion of Soil Column"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "mass_content_of_water_in_soil_layer\\n"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "mrsol": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Water Content of Soil Layer"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "mass_content_of_water_in_soil_layer"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "snw": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Snow Amount"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_snow_amount"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "snc": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Snow Area Percentage"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_snow_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "snd": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Snow Depth"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_snow_thickness"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "siconca": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Sea-Ice Area Percentage (Atmospheric Grid)"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "sea_ice_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "zmla": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Height of Boundary Layer"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_boundary_layer_thickness"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "prw": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Water Vapor Path"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_mass_content_of_water_vapor"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "clwvi": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Condensed Water Path"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_mass_content_of_cloud_condensed_water"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "clivi": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Ice Water Path"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_mass_content_of_cloud_ice"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "ua1000": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua925": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua700": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua600": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua400": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua300": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua250": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va1000": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va925": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va700": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va600": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va400": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va300": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va250": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ta1000": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta925": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta700": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta600": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta400": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta300": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta250": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "hus1000": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus925": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus700": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus600": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus400": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus300": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus250": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "zg1000": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg925": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg700": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg600": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg400": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg300": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg250": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "wa1000": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa925": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa700": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa600": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa400": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa300": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa250": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua50m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind at 50m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua100m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind at 100m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua150m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind at 150m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va50m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind at 50m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va100m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind at 100m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va150m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind at 150m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ta50m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature at 50m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "hus50m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity at 50m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "evspsblpot": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Potential Evapotranspiration"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "water_potential_evaporation_flux"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            }
+        },
+        "wsgsmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Near-Surface Wind Speed of Gust"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "wind_speed_of_gust "
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "clh": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "High Level Cloud Fraction"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cloud_area_fraction_in_atmosphere_layer"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "clm": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Mid Level Cloud Fraction"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cloud_area_fraction_in_atmosphere_layer"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "cll": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Low Level Cloud Fraction"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cloud_area_fraction_in_atmosphere_layer"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "rsdscs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downwelling Clear-Sky Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downwelling_shortwave_flux_in_air_assuming_clear_sky"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rldscs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downwelling Clear-Sky Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downwelling_longwave_flux_in_air_assuming_clear_sky"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rsuscs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upwelling Clear-Sky Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upwelling_shortwave_flux_in_air_assuming_clear_sky"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rluscs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upwelling Clear-Sky Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upwelling_longwave_flux_in_air_assuming_clear_sky"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rsutcs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "TOA Outgoing Clear-Sky Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "toa_outgoing_shortwave_flux_assuming_clear_sky"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "rlutcs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "TOA Outgoing Clear-Sky Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "toa_outgoing_longwave_flux_assuming_clear_sky"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            }
+        },
+        "z0": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Roughness Length"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_roughness_length"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "CAPE": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Convective Available Potential Energy"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_convective_available_potential_energy_wrt_surface"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "J kg-1"
+                ]
+            }
+        },
+        "LI": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Lifted Index"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "temperature_difference_between_ambient_air_and_air_lifted_adiabatically_from_the_surface"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "CIN": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Convective Inhibition"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_convective_inhibition_wrt_surface"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "J kg-1"
+                ]
+            }
+        },
+        "CAPEmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Convective Available Potential Energy"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_convective_available_potential_energy_wrt_surface"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "J kg-1"
+                ]
+            }
+        },
+        "LImax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Lifted Index"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "temperature_difference_between_ambient_air_and_air_lifted_adiabatically_from_the_surface"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "CINmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Convective Inhibition"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_convective_inhibition_wrt_surface"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "J kg-1"
+                ]
+            }
+        },
+        "od550aer ": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_optical_thickness_due_to_ambient_aerosol_particles"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "atmosphere_optical_thickness_due_to_ambient_aerosol_particles"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "ua150": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua100": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua70": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua50": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua30": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua20": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua10": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va150": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va100": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va70": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va50": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va30": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va20": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va10": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ta150": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta100": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta70": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta50": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta30": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta20": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "ta10": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "hus150": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus100": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus70": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus50": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus30": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus20": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "hus10": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "zg150": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg100": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg70": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg50": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg30": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg20": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "zg10": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "wa150": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa100": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa70": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa50": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa30": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa20": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "wa10": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua750": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va750": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ta750": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            }
+        },
+        "hus750": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            }
+        },
+        "zg750": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "wa750": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Upward Air Velocity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "upward_air_velocity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua200m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind at 200m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua250m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind at 250m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "ua300m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind at 250m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va200m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind at 200m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va250m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind at 250m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "va300m": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind at 350m"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            }
+        },
+        "sftgif": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Percentage of the Grid Cell Covered by Glacier"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "land_ice_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "mrsofc": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Capacity of Soil to Store Water  (Field Capacity)"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "soil_moisture_content_at_field_capacity"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            }
+        },
+        "rootd": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Maximum Root Depth"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "root_depth"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "sftlaf": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Percentage of the Grid Cell Occupied by Lake"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "lake_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "sfturf": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Percentage of the Grid Cell Occupied by City"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "urban_area_fraction"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            }
+        },
+        "dtb": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Depth to Bedrock"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "bedrock_depth"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            }
+        },
+        "areacella": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Atmosphere Grid-Cell Area"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cell_area"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m2"
+                ]
+            }
+        }
+    }
+}

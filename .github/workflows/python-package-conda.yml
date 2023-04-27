@@ -21,10 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         conda env update --file environment.yml --name base
-    - name: Install Axiom and Axiom Schemas
+    - name: Install Axiom
       run: |
         pip install -e .
-        pip install git+https://${{ secrets.AXIOM_ACTIONS_TOKEN }}@github.com/AusClimateService/axiom-schemas.git@master
     - name: Lint with flake8
       run: |
         conda install flake8
