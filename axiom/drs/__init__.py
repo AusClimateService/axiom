@@ -242,7 +242,14 @@ def process(
     ds = ds.sortby(sort_coords)
 
     logger.debug('Applying metadata schema')
-    schema = axs.load_schema(config['default_schema'])
+
+    # Load a user-supplied schema, if one exists.
+    if 'schema' in kwargs.keys():
+        schema_key = kwargs['schema']
+    else:
+        schema_key = config['default_schema']
+
+    schema = axs.load_schema(schema_key)
     ds = au.apply_schema(ds, schema)
 
     logger.info(f'Parsing domain {domain}')
@@ -333,7 +340,7 @@ def process(
         global_attrs = dict(
             axiom_version=axiom_version,
             axiom_schemas_version=axs.__version__,
-            axiom_schema=config.default_schema
+            axiom_schema=schema_key
         )
 
         for key, value in config.metadata_defaults.items():
