@@ -12,6 +12,7 @@ import glob
 import os
 from configparser import ConfigParser, ExtendedInterpolation
 from pathlib import Path
+import importlib
 import time
 import subprocess as sp
 import numpy as np
@@ -736,3 +737,40 @@ def interpolate_template(template, **kwargs):
     _template = Environment(loader=BaseLoader()).from_string(template)
     return _template.render(**kwargs)
 
+
+def get_installed_data_root():
+    """Get the root directory for installed data.
+    
+    Returns:
+        str : Root directory.
+    """
+    return os.path.join(importlib.resources.files('axiom'), 'data')
+
+
+def get_user_data_root():
+    """Get the root directory for user data.
+    
+    Returns:
+        str : Root directory.
+    """
+    return os.path.join(Path.home(), '.axiom')
+
+
+def load_package_json(path):
+    """Load package JSON data from the Axiom installation directory or from the user's home directory.
+
+    Args:
+        path (str): Path to the data.
+    
+    Returns:
+        dict : Data.
+    """
+    # Try to load from the user's home directory first.
+    user_filepath = os.path.join(get_user_data_root(), path)
+    installed_filepath = os.path.join(get_installed_data_root(), path)
+
+    for _path in [user_filepath, installed_filepath]:
+        if os.path.isfile(_path):
+            return json.load(open(_path, 'r'))
+    
+    raise FileNotFoundError(f'No installed or user data found at {path}')

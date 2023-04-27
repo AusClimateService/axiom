@@ -1,0 +1,2747 @@
+{
+    "name": "CORDEX Metadata Specification",
+    "description": "Converted from CSV",
+    "original_file": "cordex_var_info_day.csv",
+    "created": "2021-06-07T04:41:07Z",
+    "_global": {},
+    "variables": {
+        "time": {
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "time"
+                ]
+            },
+            "axis": {
+                "type": "string",
+                "allowed": [
+                    "T"
+                ]
+            }
+        },
+        "huss": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "tasmin": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Minimum Near-Surface Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean time: minimum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "tasmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Near-Surface Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean time: maximum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "tas": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "pr": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Precipitation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "precipitation_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "psl": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Sea Level Pressure"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_pressure_at_mean_sea_level"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "Pa"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "sfcWind": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Wind Speed"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "wind_speed"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height10m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "mrso": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Soil Moisture Content"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "mass_content_of_water_in_soil"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean where land time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "mrsos": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Moisture in Upper Portion of Soil Column"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "mass_content_of_water_in_soil_layer"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean where land time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time sdepth1"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hurs": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Near-Surface Relative Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "relative_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hursmin": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Minimum Near-Surface Relative Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "relative_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean time: minimum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hursmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Near-Surface Relative Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "relative_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean time: maximum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height2m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "snc": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Snow Area Percentage"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_snow_area_fraction"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "landIce land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "clt": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Cloud Cover Percentage"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "cloud_area_fraction"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "tslsi": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Temperature Where Land or Sea Ice"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean (comment: over land and sea ice)"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "snw": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Snow Amount"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_snow_amount"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean where land time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "landIce land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "prc": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Convective Precipitation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "convective_precipitation_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "prsn": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Snowfall Flux"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "snowfall_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "mrro": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Total Runoff"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "runoff_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean where land time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "kg m-2 s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "land"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "uas": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Near-Surface Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height10m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "vas": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Near-Surface Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height10m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "sfcWindmax": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Daily Maximum Near-Surface Wind Speed"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "wind_speed"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: mean time: maximum"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time height10m"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hfls": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upward Latent Heat Flux"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upward_latent_heat_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "up"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hfss": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upward Sensible Heat Flux"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upward_sensible_heat_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "up"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "rlds": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downwelling Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downwelling_longwave_flux_in_air"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "down"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "rlus": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upwelling Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upwelling_longwave_flux_in_air"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "up"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "rsds": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Downwelling Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_downwelling_shortwave_flux_in_air"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "down"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "rsus": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Surface Upwelling Shortwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "surface_upwelling_shortwave_flux_in_air"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "up"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "rlut": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "TOA Outgoing Longwave Radiation"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "toa_outgoing_longwave_flux"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "area: time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "W m-2"
+                ]
+            },
+            "positive": {
+                "type": "string",
+                "allowed": [
+                    "up"
+                ]
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ta": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ta200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ta500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ta850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Air Temperature"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "air_temperature"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "K"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hur": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Relative Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "relative_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "%"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hus": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hus200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hus500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "hus850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Specific Humidity"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "specific_humidity"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "wap": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Omega (=dp/dt)"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "lagrangian_tendency_of_air_pressure"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "Pa s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "va": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "va200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "va500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "va850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Northward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "northward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ua": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ua200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ua500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "ua850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Eastward Wind"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "eastward_wind"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m s-1"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "zg": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "zg200": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "zg500": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        },
+        "zg850": {
+            "long_name": {
+                "type": "string",
+                "allowed": [
+                    "Geopotential Height"
+                ]
+            },
+            "standard_name": {
+                "type": "string",
+                "allowed": [
+                    "geopotential_height"
+                ]
+            },
+            "cell_methods": {
+                "type": "string",
+                "allowed": [
+                    "time: mean"
+                ]
+            },
+            "cell_measures": {
+                "type": "string",
+                "allowed": [
+                    "area: areacella"
+                ]
+            },
+            "units": {
+                "type": "string",
+                "allowed": [
+                    "m"
+                ]
+            },
+            "positive": {
+                "type": "string"
+            },
+            "dimensions": {
+                "type": "string",
+                "allowed": [
+                    "longitude latitude plev8 time"
+                ]
+            },
+            "modeling_realm": {
+                "type": "string",
+                "allowed": [
+                    "atmos"
+                ]
+            },
+            "frequency": {
+                "type": "string",
+                "allowed": [
+                    "day"
+                ]
+            }
+        }
+    }
+}
