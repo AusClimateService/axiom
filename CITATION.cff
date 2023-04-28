@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: Axiom
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Benjamin J. E.
+    family-names: Schroeter
+    email: ben.schroeter@csiro.au
+    affiliation: CSIRO
+    orcid: 'https://orcid.org/0000-0002-0252-8090'
+repository-code: 'https://github.com/AusClimateService/axiom'
+abstract: >-
+  A prototype utility for validating/applying metadata
+  templates for scientific data files.
+keywords:
+  - post-processing
+  - Data Reference Syntax
+license: MIT
+version: 0.1.0
