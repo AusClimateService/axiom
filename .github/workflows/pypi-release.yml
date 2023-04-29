@@ -4,9 +4,9 @@ name: Build and upload to PyPI
 #   release:
 #     types: 
 #       - published
-#     push:
-#       tags:
-#         - 'v*.*.*'
+    # push:
+    #   tags:
+    #     - 'v*.*.*'
 on: [push]
 
 
@@ -67,6 +67,15 @@ jobs:
         with:
           name: releases
           path: dist
+      
+      - name: Check built artifacts
+        run: |
+          python -m twine check --strict dist/*
+          pwd
+          if [ -f dist/axiom-0.0.0.tar.gz ]; then
+            echo "INVALID VERSION NUMBER"
+            exit 1
+          fi
 
       - name: Publish package distributions to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
