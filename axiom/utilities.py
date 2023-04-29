@@ -744,7 +744,7 @@ def get_installed_data_root():
     Returns:
         str : Root directory.
     """
-    return os.path.join(importlib.resources.files('axiom'), 'data')
+    return os.path.join(importlib.resources.files('acs-axiom'), 'data')
 
 
 def get_user_data_root():
