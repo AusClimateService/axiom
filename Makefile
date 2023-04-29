@@ -1,6 +1,6 @@
 # Test
 test:
-	python setup.py test
+	pytest
 
 # Style
 lint:

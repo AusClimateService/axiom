@@ -1,0 +1,10 @@
+# Included to allow Github to render the dependency graph. All dependencies are covered in setup.cfg.
+xarray >= 2022.3.0
+netCDF4 >= 1.5.8
+h5netcdf >= 1.0.0
+cerberus >= 1.3.4
+tabulate >= 0.8.9
+dask >= 2022.8.1
+distributed >= 2022.8.1
+tqdm >= 4.64.1
+Jinja2 >= 3.1.2
