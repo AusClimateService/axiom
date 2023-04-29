@@ -23,7 +23,7 @@ jobs:
       - name: Install CI dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest
+          pip install pytest flake8
 
       - name: Install Axiom
         run: |
@@ -31,4 +31,8 @@ jobs:
 
       - name: pytest
         run: |
-          pytest
+          make test
+      
+      - name: flake8
+        run: |
+          make lint
