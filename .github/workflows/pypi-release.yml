@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: release
-      url: https://test.pypi.org/project/axiom
+      url: https://test.pypi.org/project/acs-axiom
     permissions:
       id-token: write
     
