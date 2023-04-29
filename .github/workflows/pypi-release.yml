@@ -1,14 +1,9 @@
 name: Build and upload to PyPI
 
-# on:
-#   release:
-#     types: 
-#       - published
-    # push:
-    #   tags:
-    #     - 'v*.*.*'
-on: [push]
-
+on:
+  release:
+    types: 
+      - published
 
 jobs:
 
