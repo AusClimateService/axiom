@@ -232,6 +232,9 @@ def get_parser():
     # Rerun payloads
     parser_rerun = adc.get_parser_rerun_failures(parent=subparsers)
 
+    # Generate user config
+    parser_gen_user_config = adc.get_parser_generate_user_config(parent=subparsers)
+
     # Return the fully constructed parser
     return parser
 

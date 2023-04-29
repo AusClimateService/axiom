@@ -12,6 +12,7 @@ import glob
 import os
 from configparser import ConfigParser, ExtendedInterpolation
 from pathlib import Path
+import importlib
 import time
 import subprocess as sp
 import numpy as np
@@ -122,6 +123,20 @@ def has_attr(obj, attr):
         bool: True if obj has attribute attr, False otherwise.
     """
     return attr in obj.attrs.keys()
+
+
+def isolate_coordinate(obj, coordinate_name, drop=True):
+    """Ensure that coordinate_name is the only coordinate on obj by selecting the first index of all other coordinates.
+
+    Args:
+        obj (xarray.DataArray or xarray.Dataset): xarray object.
+        coordinate_name (str): Name of the coordinate to retain.
+        drop (bool, optional): Drop the coordinate_name from the object. Defaults to True.
+    """
+    for coord in obj.coords.keys():
+        if coord != coordinate_name:
+            obj = obj.isel(**{coord: 0}, drop=drop)
+    return obj
 
 
 def extract_metadata(ds):
@@ -722,3 +737,40 @@ def interpolate_template(template, **kwargs):
     _template = Environment(loader=BaseLoader()).from_string(template)
     return _template.render(**kwargs)
 
+
+def get_installed_data_root():
+    """Get the root directory for installed data.
+    
+    Returns:
+        str : Root directory.
+    """
+    return os.path.join(importlib.resources.files('axiom'), 'data')
+
+
+def get_user_data_root():
+    """Get the root directory for user data.
+    
+    Returns:
+        str : Root directory.
+    """
+    return os.path.join(Path.home(), '.axiom')
+
+
+def load_package_json(path):
+    """Load package JSON data from the Axiom installation directory or from the user's home directory.
+
+    Args:
+        path (str): Path to the data.
+    
+    Returns:
+        dict : Data.
+    """
+    # Try to load from the user's home directory first.
+    user_filepath = os.path.join(get_user_data_root(), path)
+    installed_filepath = os.path.join(get_installed_data_root(), path)
+
+    for _path in [user_filepath, installed_filepath]:
+        if os.path.isfile(_path):
+            return json.load(open(_path, 'r'))
+    
+    raise FileNotFoundError(f'No installed or user data found at {path}')

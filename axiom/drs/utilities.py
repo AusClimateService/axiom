@@ -8,7 +8,7 @@ import xarray as xr
 import glob
 import sys
 import axiom.utilities as au
-import axiom_schemas as axs
+import axiom.schemas as axs
 import numpy as np
 import importlib
 from pprint import pprint
@@ -21,6 +21,7 @@ from axiom.exceptions import ResolutionDetectionException, MalformedDRSJSONPaylo
 from cerberus import Validator
 from axiom.drs.domain import Domain
 from axiom.config import load_config
+import shutil
 
 
 def is_fixed_variable(config, variable):
@@ -513,3 +514,99 @@ def is_error_recoverable(exception, recoverable_errors):
             return True
     
     return False
+
+
+def assemble_qsub_vars(**kwargs):
+    """Assemble variables into a qsub-compliant -v format, without the -v.
+
+    Args:
+        **kwargs (dict): Keyword arguments to convert into qsub variables.
+    
+    Returns:
+        str : String of qsub variables.
+    """
+    return ','.join([f'{k}={v}' for k, v in kwargs.items()])
+
+
+def assemble_qsub_command(jobscript, directives, **context):
+    """Assemble the qsub command.
+    
+    Args:
+        jobscript (str) : Path to the jobscript.
+        directives (list) : List of directives to interpolate.
+        **context (dict) : Context dictionary to interpolate into the directives.
+    
+    Returns:
+        str : The qsub command.
+    """
+    # Collapse the directives into a single string and interpolate
+    directives = ' '.join(directives) % context
+    return f'qsub {directives} {jobscript}'
+
+    
+def generate_user_config():
+    """Generate the user .axiom directory with all installed data files.
+    
+    Args:
+        overwrite (bool): Overwrite existing .axiom directory.
+    """
+
+    logger = au.get_logger(__name__)
+
+    # Work out the users home directory (os independent)
+    axiom_dir = os.path.join(
+        str(Path.home()),
+        '.axiom'
+    )
+
+    # Does it already exist? back it up with a timestamp of the current tim
+    if os.path.exists(axiom_dir):
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        backup_dir = f'{axiom_dir}_{timestamp}'
+        print(f'Backing up existing .axiom directory to {backup_dir}')
+        shutil.move(axiom_dir, backup_dir)
+
+    # Create the directory and copy the files over.
+    logger.info(f'Creating new .axiom directory at {axiom_dir}')
+    os.makedirs(axiom_dir, exist_ok=True)
+    
+    config_files = au.auto_glob(os.path.join(
+        importlib.resources.files('axiom'),
+        'data/*.json'
+    ))
+
+    for src in config_files:
+        dst = os.path.join(axiom_dir, os.path.basename(src))
+        logger.info(f'Copying {src} to {dst}')
+        shutil.copy(src, dst)
+    
+    logger.info('User configuration generated successfully.')
+
+
+def filter_by_variable_name(filepaths, variable):
+    """Filter for filenames that include the variable name.
+
+    Args:
+        filepaths (list): List of filepaths.
+
+    Returns:
+        list : List of filepaths that include the variable name.
+    """
+    config = load_config('drs')
+
+    # Bail out if not filtering
+    if not config['filename_filtering']['variable']:
+        return filepaths
+    
+    # Get the regex information, interpolate the variable name
+    pattern_template = config['filename_filtering']['variable_regex']
+    pattern = pattern_template % dict(variable=variable)
+
+    # Filter for the variable name
+    filtered_filepaths = list()
+    for filepath in filepaths:
+        filename = os.path.basename(filepath)
+        if re.search(pattern, filename):
+            filtered_filepaths.append(filepath)
+    
+    return filtered_filepaths

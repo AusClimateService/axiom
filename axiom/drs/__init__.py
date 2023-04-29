@@ -8,7 +8,7 @@ import xarray as xr
 import axiom.utilities as au
 import axiom.drs.utilities as adu
 from axiom.drs.domain import Domain
-import axiom_schemas as axs
+import axiom.schemas as axs
 import json
 import sys
 from distributed import Client, LocalCluster
@@ -86,7 +86,6 @@ def process(
         input_files (str or list): Globbable string or list of filepaths.
         output_directory (str) : Path from which to build DRS structure.
         variable (str): Variable to process.
-        level (numeric or list) : Vertical levels to process.
         project (str): Project metadata to apply (loaded from user config).
         model (str): Model metadata to apply (loaded from user config).
         start_year (int): Start year.
@@ -125,8 +124,8 @@ def process(
 
     # Filter by those that actually have the variable in the filename.
     if config.filename_filtering['variable']:
-        input_files = [
-            f for f in input_files if f'{variable}_' in os.path.basename(f)]
+
+        input_files = adu.filter_by_variable_name(input_files, variable)
         num_files = len(input_files)
         logger.debug(
             f'{num_files} to consider after filename variable filtering.')
@@ -151,11 +150,19 @@ def process(
 
     # Load project config
     logger.info(f'Loading project config ({project})')
-    project = load_config('projects')[project]
+    project_key = project
+    project = load_config('projects')[project_key]
+
+    # Ensure it actually exists
+    assert isinstance(project, dict), f'Project {project_key} not found, does it exist in projects.json?'
 
     # Load model config
     logger.info(f'Loading model config ({model})')
-    model = load_config('models')[model]
+    model_key = model
+    model = load_config('models')[model_key]
+
+    # Ensure it actually exists
+    assert isinstance(model, dict), f'Model {model_key} not found, does it exist in models.json?'
 
     logger.debug(
         'Loading files into distributed memory, this may take some time.')
@@ -170,16 +177,23 @@ def process(
     preprocessor = adu.load_preprocessor(preprocessor)
     def preprocess(ds, *args, **kwargs): return preprocessor(ds, **local_args)
 
+    # Load the open_dataset configuration
+    open_dataset_kwargs = config['xarray']['open_dataset']
+
     # Account for fixed variables, if defined
     if 'variables_fixed' in project.keys() and variable in project['variables_fixed']:
 
         # Load just the first file
-        ds = xr.open_dataset(input_files[0], engine='h5netcdf')
+        ds = xr.open_dataset(input_files[0], **open_dataset_kwargs)
         ds = preprocess(ds, variable=variable)
 
     else:
-        ds = xr.open_mfdataset(input_files, chunks=dict(
-            time=100), preprocess=preprocess, engine='h5netcdf')
+        
+        ds = xr.open_mfdataset(
+            input_files,
+            preprocess=preprocess,
+            **open_dataset_kwargs
+        )
 
     # Subset temporally
     if not adu.is_time_invariant(ds):
@@ -226,17 +240,6 @@ def process(
     context.update(local_args)
     context['res_km'] = input_resolution
 
-    # Select the variable from the dataset
-    # TODO: Deprecate
-    if level:
-
-        # Select each of the levels requested into a new variable.
-        for _level in au.pluralise(level):
-            ds[f'{variable}{_level}'] = ds[variable].sel(lev=_level, drop=True)
-
-        # Drop the original variable
-        ds = ds.drop(variable)
-
     # Sort the dimensions (fixes domain subsetting)
     logger.debug('Sorting data')
     sort_coords = list()
@@ -247,7 +250,14 @@ def process(
     ds = ds.sortby(sort_coords)
 
     logger.debug('Applying metadata schema')
-    schema = axs.load_schema(config['schema'])
+
+    # Load a user-supplied schema, if one exists.
+    if 'schema' in kwargs.keys():
+        schema_key = kwargs['schema']
+    else:
+        schema_key = config['default_schema']
+
+    schema = axs.load_schema(schema_key)
     ds = au.apply_schema(ds, schema)
 
     logger.info(f'Parsing domain {domain}')
@@ -280,7 +290,6 @@ def process(
         if not time_invariant:
             time_slice = slice(f'{year}-01-01', f'{year}-12-31')
             _ds = ds.sel(time=time_slice, drop=True)
-            # _ds = ds.where(ds['time.year'] == year, drop=True)
         else:
             _ds = ds.copy()
 
@@ -338,8 +347,7 @@ def process(
         logger.debug('Assembling global metadata.')
         global_attrs = dict(
             axiom_version=axiom_version,
-            axiom_schemas_version=axs.__version__,
-            axiom_schema=config.schema
+            axiom_schema=schema_key
         )
 
         for key, value in config.metadata_defaults.items():
@@ -492,6 +500,14 @@ def load_variable_config(project_config):
 
 
 def process_multi(variables, domain, project, **kwargs):
+    """Start a processing chain of multiple variables.
+
+    Args:
+        variables (list): List of variables to process.
+        domain (str): Domain to process from domains.json.
+        project (str): Project metadata to use from projects.json.
+        **kwargs: Additional keyword arguments to pass to the processing chain.
+    """
 
     logger = au.get_logger(__name__)
 
@@ -608,32 +624,6 @@ def process_multi(variables, domain, project, **kwargs):
                     # Track the failure and max out the attempts to execute the finally clause
                     track_failure(variable, ex)
                     attempt = rerun_attempts + 1
-
-                    # logger.error(f'Variable {variable} failed for output_frequency {output_frequency}. Error to follow')
-                    # logger.exception(ex)
-
-                    # # Check if the error is recoverable
-                    # recoverable_errors = config.get('recoverable_errors', list())
-                    # if adu.is_error_recoverable(ex, recoverable_errors):
-
-                    #     logger.info('Error is recoverable, incrementing attempts.')
-
-                    #     attempt += 1
-                    #     continue
-
-                    # # Not recoverable
-                    # elif config.track_failures and 'AXIOM_LOG_DIR' in os.environ.keys() and 'PBS_JOBNAME' in os.environ.keys():
-
-                    #     failed_filepath = os.path.join(
-                    #         os.getenv('AXIOM_LOG_DIR'),
-                    #         os.getenv('PBS_JOBNAME') + '.failed'
-                    #     )
-
-                    #     with open(failed_filepath, 'a') as failed:
-                    #         failed.write(f'{variable}\n')
-                        
-                    #     # Break out of the loop, but execute the lines in the finally clause
-                    #     attempt = rerun_attempts + 1
 
                 # Run regardless of success/failure
                 finally:

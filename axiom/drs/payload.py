@@ -1,7 +1,7 @@
 """Class to represent a JSON payload."""
 import enum
 import json
-import axiom_schemas as axs
+import axiom.schemas as axs
 import axiom.utilities as au
 
 

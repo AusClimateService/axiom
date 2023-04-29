@@ -3,6 +3,7 @@ import os
 import json
 import pkgutil
 import pathlib
+import axiom.utilities as au
 
 
 class Config(dict):
@@ -60,42 +61,42 @@ class Config(dict):
         raise KeyError(f'Config key {key} does not exist.')
         
 
-    def load(self, config_name):
+    def load(self, config_name, defaults_only=False):
+        """Load the configuration in a cascading fashion, defaults first, then overlay with user.
+
+        Args:
+            config_name (str): Configuration name, without file extension.
+            defaults_only (bool, optional): Load only the defaults. Defaults to False.
+        """
+
+        default_filepath = os.path.join(au.get_installed_data_root(), f'{config_name}.json')
+        user_filepath = os.path.join(au.get_user_data_root(), f'{config_name}.json')
         
         # Load any installed defaults, if they exists
-        try:
-            
-            defaults = pkgutil.get_data('axiom', f'data/{config_name}.json')
-    
-            if defaults is None:
-                defaults = dict()
-            else:
-                defaults = json.loads(defaults.decode('utf-8'))
-        
-        except FileNotFoundError:
-            
-            defaults = dict()
+        defaults = json.load(open(default_filepath, 'r'))
+
+        if defaults_only:
+            self.update(defaults)
+            return
 
         # Load the user configuration over the top
-        user_filepath = os.path.join(pathlib.Path.home(), f'.axiom/{config_name}.json')
-
         if os.path.isfile(user_filepath):
             user = json.load(open(user_filepath, 'r'))
             defaults.update(user)
 
-        # Update the object dictionary
         self.update(defaults)
 
 
-def load_config(config_name):
+def load_config(config_name, defaults_only=False):
     """Shorthand to load a configuration object.
 
     Args:
         config_name (str): Name of the config file.
+        defaults_only (bool, optional): Load only the defaults. Defaults to False.
 
     Returns:
         axiom.Config: Configuration object.
     """
     config = Config()
-    config.load(config_name)
+    config.load(config_name, defaults_only=defaults_only)
     return config

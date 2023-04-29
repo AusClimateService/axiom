@@ -1,7 +1,7 @@
 """Command-line methods for the QA subsystem."""
 import os
 import argparse
-import axiom_schemas as axs
+import axiom.schemas as axs
 import axiom.qa as axq
 
 

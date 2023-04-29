@@ -7,7 +7,11 @@ import argparse
 import axiom.utilities as au
 from axiom.config import load_config
 import axiom.drs.payload as adp
+import axiom.drs.utilities as adu
 from tqdm import tqdm
+from pathlib import Path
+import shutil
+import datetime
 
 
 def split_args(values):
@@ -101,12 +105,10 @@ def get_parser_consume(config=None, parent=None):
 
     # Input filepaths
     parser.add_argument('input_filepaths', type=str, help='Input json filepaths.', nargs=argparse.ONE_OR_MORE)
-    # parser.add_argument('--batch_id', type=int, help='Batch number to process.', default=None)
-    # parser.add_argument('--num_batches', type=int, help='Maximum batch number.', default=None)
     return parser
 
 
-def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=False, **kwargs):
+def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, interactive=False, unlock=False, **launch_context):
     """Method to launch a series of qsubs for DRS processing.
 
     Args:
@@ -115,7 +117,9 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
         log_dir (str): Path to which to save the log files.
         batches (int): Number of batches to split variables into (for parallel processing).
         dry_run (bool): Print out the commands rather than executing.
+        interactive (bool): Dump the interactive flag into the qsub command when dumping.
         unlock (bool): Unlock locked payloads prior to submission (for rerunning walltime overruns)
+        **launch_context: Additional arguments that will be interpolated as launch context.
     """
 
     # List the payloads in the input_directory
@@ -161,18 +165,42 @@ def drs_launch(path, jobscript, log_dir, batches=None, dry_run=True, unlock=Fals
             batch_str = str(batch_id).zfill(3)
             job_name = f'{job_name}_{batch_str}'
 
-            qsub_vars = [
-                f'AXIOM_PAYLOAD={payload}',
-                f'AXIOM_LOG_DIR={log_dir}'
-            ]
+            # Assemble the command from configuration
+            config = load_config('drs')
+            directives = config['launch']['directives']
 
-            qsub_vars = ','.join(qsub_vars)
+            # Add interactive flag when dry running
+            if dry_run and interactive:
+                directives.append('-I')
 
-            cmd = f'qsub -N {job_name} -v {qsub_vars} -o {log_dir} {jobscript}'
+            # Override walltime
+            if 'walltime' in launch_context.keys() and launch_context['walltime'] is not None:
+                walltime = launch_context['walltime']
+                directives.append(f'-l walltime={walltime}')
 
-            if 'walltime' in kwargs.keys() and kwargs['walltime'] != None:
-                walltime = kwargs['walltime']
-                cmd = f'qsub -N {job_name} -v {qsub_vars} -o {log_dir} -l walltime={walltime} {jobscript}'
+            qsub_vars = dict(
+                AXIOM_PAYLOAD=payload,
+                AXIOM_LOG_DIR=log_dir,
+                AXIOM_BATCH=batch_id
+            )
+
+            # Assemble the launch context for this job
+            _launch_context = dict(
+                qsub_vars=adu.assemble_qsub_vars(**qsub_vars),
+                job_name=job_name,
+                log_dir=log_dir,
+                batch_str=batch_str
+            )
+
+            # Add this to the user-supplied launch context
+            launch_context.update(_launch_context)
+
+            # Assemble the qsub command
+            cmd = adu.assemble_qsub_command(
+                jobscript=jobscript,
+                directives=directives,
+                **launch_context
+            )
 
             # Dry run, just echo the outputs
             if dry_run:
@@ -202,8 +230,8 @@ def get_parser_launch(parent=None):
     parser.add_argument('path', type=str, help='Globbable path to payload files (use quotes)')
     parser.add_argument('jobscript', type=str, help='Path to the jobscript for submission.')
     parser.add_argument('log_dir', type=str, help='Directory to which to write logs.')
-    # parser.add_argument('-b', '--batches', type=int, help='Divide the the variables into N batches, each in its own job.', default=None)
     parser.add_argument('-d', '--dry_run', action='store_true', default=False, help='Print commands without executing.')
+    parser.add_argument('-i', '--interactive', action='store_true', default=False, help='Dump the interactive flag into the qsub command when dry-running.')
     parser.add_argument('--walltime', type=str, help='Override walltime in job script.')
     parser.add_argument('--unlock', help='Unlock locked payloads prior to submission', action='store_true', default=False)
     parser.set_defaults(func=drs_launch)
@@ -335,4 +363,16 @@ def get_parser_rerun_failures(parent=None):
     parser.description = 'Generate rerun payloads from the .failed files in the input directory'
     parser.add_argument('input_dir', type=str, help='Path to .failed files and their payloads.')
     parser.set_defaults(func=rerun_failures)
+    return parser
+
+
+def get_parser_generate_user_config(parent=None):
+    """Get a parser for generating a set of user config files from the installation directory.
+
+    Args:
+        parent (object, optional): Parent parser. Defaults to None.
+    """
+    parser = argparse.ArgumentParser() if parent is None else parent.add_parser('drs_gen_user_config')
+    parser.description = 'Copy installation configuration to the user space (backing up anything already there).'
+    parser.set_defaults(func=adu.generate_user_config)
     return parser
