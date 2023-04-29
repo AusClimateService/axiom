@@ -52,6 +52,8 @@ jobs:
     environment:
       name: release
       url: https://test.pypi.org/project/axiom
+    permissions:
+      id-token: write
     
     steps:
     
