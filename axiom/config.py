@@ -71,7 +71,7 @@ class Config(dict):
         # Load any installed defaults, if they exists
         try:
             
-            defaults = pkgutil.get_data('acs-axiom', f'data/{config_name}.json')
+            defaults = pkgutil.get_data('axiom', f'data/{config_name}.json')
     
             if defaults is None:
                 defaults = dict()

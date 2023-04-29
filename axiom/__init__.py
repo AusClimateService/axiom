@@ -2,4 +2,4 @@
 from importlib.metadata import version
 
 # Version handle
-__version__ = version('acs-axiom')
+__version__ = version('axiom')
