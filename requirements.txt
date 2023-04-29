@@ -8,3 +8,4 @@ dask >= 2022.8.1
 distributed >= 2022.8.1
 tqdm >= 4.64.1
 Jinja2 >= 3.1.2
+importlib-metadata >= 6.6.0
