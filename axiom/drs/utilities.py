@@ -464,7 +464,7 @@ def detect_input_frequency(ds):
 
     # Take the difference between the first two time steps
     diff = (ds.time.data[1] - ds.time.data[0])
-    total_seconds =  pd.to_timedelta([diff]).astype('timedelta64[s]')[0].astype(np.int32)
+    total_seconds =  pd.to_timedelta([diff]).total_seconds()
 
     # TODO: These should be configurable
     intervals = '1H,3H,6H,1D,1M'.split(',')
