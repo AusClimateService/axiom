@@ -1,4 +1,4 @@
-[![Python package](https://github.com/AusClimateService/axiom/actions/workflows/ci.yml/badge.svg)](https://github.com/AusClimateService/axiom/actions/workflows/ci.yml)
+[![Python package](https://github.com/AusClimateService/axiom/actions/workflows/ci.yml/badge.svg)](https://github.com/AusClimateService/axiom/actions/workflows/ci.yml) [![Build and upload to PyPI](https://github.com/AusClimateService/axiom/actions/workflows/pypi-release.yml/badge.svg)](https://github.com/AusClimateService/axiom/actions/workflows/pypi-release.yml)
 
 # Axiom
 
