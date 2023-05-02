@@ -1,4 +1,4 @@
-![example workflow](https://github.com/AusClimateService/axiom/actions/workflows/python-package-conda.yml/badge.svg)
+[![Python package](https://github.com/AusClimateService/axiom/actions/workflows/ci.yml/badge.svg)](https://github.com/AusClimateService/axiom/actions/workflows/ci.yml)
 
 # Axiom
 
