@@ -63,6 +63,9 @@ def consume(json_filepath):
     # Unlock
     au.unlock(json_filepath)
 
+    # Explicit exit (#125)
+    sys.exit(0)
+
 
 def process(
     input_files,
