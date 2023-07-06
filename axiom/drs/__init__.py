@@ -282,7 +282,7 @@ def process(
     ds = domain.subset_xarray(ds, drop=True)
 
     # TODO: Need to find a less manual way to do this.
-    for year in generate_years_list(start_year, end_year):
+    for year in adu.generate_years_list(start_year, end_year):
 
         logger.info(f'Processing {year}')
 
@@ -332,8 +332,10 @@ def process(
         _ds = _ds.persist()
 
         # Monthly data should have the days truncated
-        context['start_date'] = f'{year}0101' if output_frequency[-1] != 'M' else f'{year}01'
-        context['end_date'] = f'{year}1231' if output_frequency[-1] != 'M' else f'{year}12'
+        # context['start_date'] = f'{year}0101' if output_frequency[-1] != 'M' else f'{year}01'
+        # context['end_date'] = f'{year}1231' if output_frequency[-1] != 'M' else f'{year}12'
+
+        context['start_date'], context['end_date'] = adu.get_start_and_end_dates(year, output_frequency)
 
         # Tracking info
         context['creation_date'] = datetime.utcnow()
@@ -460,19 +462,6 @@ def process(
 
     elapsed_time = timer.stop()
     logger.info(f'DRS processing task took {elapsed_time} seconds.')
-
-
-def generate_years_list(start_year, end_year):
-    """Generate a list of years (decades) to process.
-
-    Args:
-        start_year (int): Start year.
-        end_year (int): End year.
-
-    Returns:
-        iterator : Years to process.
-    """
-    return range(start_year, end_year+1, 10)
 
 
 def load_variable_config(project_config):

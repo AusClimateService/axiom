@@ -464,7 +464,8 @@ def detect_input_frequency(ds):
 
     # Take the difference between the first two time steps
     diff = (ds.time.data[1] - ds.time.data[0])
-    total_seconds =  pd.to_timedelta([diff]).astype('timedelta64[s]')[0].astype(np.int32)
+    # total_seconds =  pd.to_timedelta([diff]).astype('timedelta64[s]')[0].astype(np.int32)
+    total_seconds =  pd.to_timedelta([diff]).total_seconds()
 
     # TODO: These should be configurable
     intervals = '1H,3H,6H,1D,1M'.split(',')
@@ -610,3 +611,28 @@ def filter_by_variable_name(filepaths, variable):
             filtered_filepaths.append(filepath)
     
     return filtered_filepaths
+
+
+def get_start_and_end_dates(year, output_frequency):
+    """Get the start and end dates for interpolation context.
+
+    Args:
+        year (int): Current year
+        output_frequency (str): Frequency.
+    """
+    start_date = f'{year}0101' if output_frequency[-1] != 'M' else f'{year}01'
+    end_date = f'{year}1231' if output_frequency[-1] != 'M' else f'{year}12'
+    return start_date, end_date
+
+
+def generate_years_list(start_year, end_year):
+    """Generate a list of years (decades) to process.
+
+    Args:
+        start_year (int): Start year.
+        end_year (int): End year.
+
+    Returns:
+        iterator : Years to process.
+    """
+    return range(start_year, end_year+1, 10)

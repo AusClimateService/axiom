@@ -73,7 +73,10 @@ class Config(dict):
         user_filepath = os.path.join(au.get_user_data_root(), f'{config_name}.json')
         
         # Load any installed defaults, if they exists
-        defaults = json.load(open(default_filepath, 'r'))
+        if os.path.isfile(default_filepath):
+            defaults = json.load(open(default_filepath, 'r'))
+        else:
+            defaults = dict()
 
         if defaults_only:
             self.update(defaults)
