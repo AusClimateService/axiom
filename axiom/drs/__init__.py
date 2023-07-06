@@ -18,6 +18,7 @@ from axiom.exceptions import NoFilesToProcessException, DRSContextInterpolationE
 import shutil
 from dask.distributed import progress, wait
 import numpy as np
+from axiom.supervisor import Supervisor
 
 
 def consume(json_filepath):
@@ -62,6 +63,9 @@ def consume(json_filepath):
 
     # Unlock
     au.unlock(json_filepath)
+
+    # Explicit exit (#125)
+    sys.exit(0)
 
 
 def process(
@@ -449,8 +453,10 @@ def process(
         logger.debug(f'Creating {output_dir}')
         os.makedirs(output_dir, exist_ok=True)
 
-        logger.info('Waiting for computations to finish.')
-        progress(_ds)
+        # Supervise this job to ensure that it does in fact complete.
+        with Supervisor(seconds=config.processing_timeout_seconds, error_msg=f'Variable {variable} took too long to complete, moving on.'):
+            logger.info('Waiting for computations to finish.')
+            progress(_ds)
 
         logger.debug(f'Writing {output_filepath}')
         write = _ds.to_netcdf(

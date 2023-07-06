@@ -11,7 +11,7 @@ Axiom is a Python library and command-line utility for verifying metadata agains
    installation
 
 .. toctree::
-   :maxdepth:
+   :maxdepth: 2
    :caption: Metadata
    
    metadata
