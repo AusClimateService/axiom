@@ -11,6 +11,7 @@ from axiom.drs.payload import Payload
 from blush import parallelise, unpack_results
 import numpy as np
 import pandas as pd
+import xarray as xr
 
 
 def qa_timeseries(path, schema, start_year, end_year, output_filepath, errors=False):
@@ -43,7 +44,7 @@ def qa_timeseries(path, schema, start_year, end_year, output_filepath, errors=Fa
     print(f'Report available at {output_filepath}')
 
 
-def qc(schema, payload, start_year, end_year, report_dir=None, nstd=2.0, pct_mean=0.75, checks='nan,nstd,pct_mean'):
+def qc(schema, payload, start_year, end_year, report_dir=None, nstd=2.0, pct_mean=0.75, checks='nan,nstd,pct_mean', ignore_missing_inputs=False, create_payloads=False):
     """Run Quality-Control.
 
     Args:
@@ -55,6 +56,7 @@ def qc(schema, payload, start_year, end_year, report_dir=None, nstd=2.0, pct_mea
         nstd (float, optional): Number of standard deviations out to consider anomalous. Defaults to 2.0.
         pct_mean (float, optional): Threshold percentage of mean file size to consider anomalous. Defaults to 0.75.
         checks (str, optional): Comma-separated checks to apply. Defaults to 'nan,nstd,pct_mean'.
+        ignore_missing_inputs (bool, optional): Ignore variables that are missing from the input directory, requires that directory still exists. Defaults to False.
     """
 
     # Break up the checks for evaluation later
@@ -87,8 +89,54 @@ def qc(schema, payload, start_year, end_year, report_dir=None, nstd=2.0, pct_mea
     variables = list()
     years = list()
 
+    # Create a list of variables to check
+    variables2check = _schema['variables'].keys()
+    variables2ignore = list()
+
+    # Get a list of variables that are in the input directory to exclude.
+    input_variables = list()
+
+    logger.info('Assembling a list of variables to check.')
+
+    if ignore_missing_inputs:
+
+        logger.info('User has requested missing inputs be ignored')
+
+        input_filepaths = au.auto_glob(_payload.input_files)
+        if len(input_filepaths) == 0:
+            logger.error('Inputs no longer exist! Unable to proceed with QC using --ignore_missing_inputs')
+            raise FileNotFoundError('Unable to collect a list of variables from payload inputs, does the directory still exist?')
+        
+        for input_filepath in input_filepaths:
+            
+            input_variable = os.path.basename(input_filepath).split('_')[0]
+            
+            # Skip variables that have previously been ignored / added.
+            if input_variable in variables2ignore or input_variable in input_variables:
+                continue
+
+            # On the first instance, check if it is not expected due to frequency
+            if input_variable not in input_variables:
+
+                logger.info(f'Checking if we should test for {input_variable}')
+                
+                ds = xr.open_dataset(input_filepath, chunks=dict(time=1))
+                freq = adu.detect_input_frequency(ds)
+            
+                if freq != _payload.output_frequency and config.allow_subdaily_resampling == False:
+                    logger.info(f'{input_variable} is on a different frequency and allow_subdaily_resampling is disabled. Ignoring')
+                    variables2ignore.append(input_variable)
+                    continue
+
+            logger.info(f'Adding {input_variable} to the list to be checked.')                    
+            input_variables.append(input_variable)
+
+        # Perform an intersection to get the true list of variables to check.
+        variables2check = list(set(variables2check) & set(input_variables))
+
     # Loop through all of the variables
-    for variable in _schema['variables'].keys():
+    for variable in variables2check:
+        
         for year in range(start_year, end_year+1):
 
             context['variable'] = variable
@@ -164,6 +212,24 @@ def qc(schema, payload, start_year, end_year, report_dir=None, nstd=2.0, pct_mea
         
         logger.error(f'Reports written to {report_dir}')
 
+    # Create payloads to rerun for the errors
+    if create_payloads and is_error:
+
+        for year, group_df in df_nan.groupby('year'):
+
+            rerun_payload = _payload
+            rerun_payload.start_year = year
+            rerun_payload.end_year = year
+            rerun_payload.variables = group_df.variable.unique().tolist()
+
+            # print(rerun_payload.to_dict())
+            payload_filepath = os.path.join(
+                report_dir,
+                rerun_payload.get_filename()
+            )
+
+            rerun_payload.to_json(payload_filepath)
+
     sys.exit(int(is_error))
 
 
@@ -222,11 +288,24 @@ def _check_file(filepath, year, variable):
 
     result = dict(year=year, variable=variable)
 
-    if not found_files:
+    # Check if the variable is actually fixed?
+    fixed_path = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(filepath))),
+        'fx',
+        variable,
+        f'{variable}_*.nc'
+    )
+
+    found_fixed_files = au.auto_glob(fixed_path)
+
+    if not found_files and not found_fixed_files:
         result.update(dict(filepath=filepath, size=np.nan))
         return result
-
-    _filepath = found_files[0]
+    
+    if found_files:
+        _filepath = found_files[0]
+    elif found_fixed_files:
+        _filepath = found_fixed_files[0]
 
     if not _filepath:
         result.update(dict(filepath=_filepath, size=np.nan))
@@ -260,6 +339,8 @@ def get_parser(config=None, parent=None):
     parser.add_argument('--nstd', type=float, help='Number of standard deviations out to consider an error. (Default = 2.0)', default=2.0)
     parser.add_argument('--pct_mean', type=float, help='Percentage of mean file size out to consider an error (fraction). (Default = 0.75)', default=0.75)
     parser.add_argument('--checks', type=str, help='Checks to run. Defaults to "nan,nstd,pct_mean"', default='nan,std,pct_mean')
+    parser.add_argument('--ignore_missing_inputs', help='Ignore variables that are not found in the input directory (requires that directory still exist!)', action='store_true', default=False)
+    parser.add_argument('--create_payloads', help='Create payloads to rerun for the different errors.', action='store_true', default=False)
     parser.set_defaults(func=qc)
     
     return parser

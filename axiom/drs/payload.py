@@ -97,15 +97,18 @@ class Payload:
         return Payload(**d)
     
 
-    def to_json(self, filepath):
+    def to_json(self, filepath=None):
         """Serialize the Payload to the filepath (save as JSON).
 
         Args:
-            filepath (str): Filepath.
+            filepath (str, optional): Filepath to write. Defaults to None (Writes default filename to current directory).
         
         Examples:
             >>> payload.to_json('payload.json')
         """
+        if filepath is None:
+            filepath = self.get_filename()
+
         _dict = self.to_dict()
         with open(filepath, 'w') as f:
             f.write(json.dumps(_dict, indent=4))
