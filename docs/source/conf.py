@@ -12,17 +12,20 @@
 #
 import os
 import sys
+from datetime import datetime
+from axiom import __version__
 sys.path.insert(0, os.path.abspath('../..'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'Axiom'
-copyright = '2021, Ben Schroeter'
+year = datetime.utcnow().year
+copyright = f'{year}, Ben Schroeter'
 author = 'Ben Schroeter'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = __version__
 
 
 # -- General configuration ---------------------------------------------------
