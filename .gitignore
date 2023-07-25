@@ -4,5 +4,5 @@ __pycache__
 **.pyc
 **.DS_Store
 .eggs
-docs/build/
+docs/build
 dist
