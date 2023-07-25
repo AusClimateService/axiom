@@ -18,3 +18,10 @@ test_pypi_publish: pypi_build
 pypi_publish: pypi_build
 	python3 -m twine upload dist/*
 
+# Clean documentation
+docs_clean:
+	rm -rf docs/build
+
+# Build documentation
+docs_build:
+	cd docs && make html
