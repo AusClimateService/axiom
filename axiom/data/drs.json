@@ -133,7 +133,6 @@
     ],
     "launch": {
         "directives": [
-            "-q %(queue)s",
             "-N %(job_name)s",
             "-v %(qsub_vars)s",
             "-o %(log_dir)s",
