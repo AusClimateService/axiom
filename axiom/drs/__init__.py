@@ -146,6 +146,12 @@ def process(
     if len(input_files) == 0:
         raise NoFilesToProcessException()
 
+    # Dump filepaths prior to loading
+    if config.get('dump_filepaths_prior_to_loading', default=False):
+        logger.debug('Dumping filepaths prior to loading... there may be a lot.')
+        for input_file in input_files:
+            logger.debug(input_file)
+
     # Detect the input resolution if it it not supplied
     if input_resolution is None:
         logger.debug('No input resolution supplied, auto-detecting')
