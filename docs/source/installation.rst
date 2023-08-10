@@ -3,9 +3,7 @@ Installation
 
 Axiom is installed via pip and should be installed inside a virtual environment such as conda.
 
-As the project matures, these steps will become more automated and familiar.
-
-Create environment
+Install Axiom from scratch.
 ------------------
 
 .. code-block:: shell
@@ -14,34 +12,27 @@ Create environment
     conda create -n axiom_dev
     conda activate axiom_dev
 
+    # Install Axiom from pip
+    pip install acs-axiom
 
-Install Axiom
+
+Install Axiom on NCI
 -------------
 
 .. code-block:: shell
 
-    # Clone the repository
-    git clone git@github.com:AusClimateService/axiom.git
+    # Select the hh5 modules
+    module use /g/data/hh5/public/modules
 
-    # Navigate to the local copy
-    cd axiom
+    # Load the module
+    module load conda/analysis3
 
-    # Install
-    pip install .
+    # Create a virtual environment and activate it
+    conda create -n axiom_dev pip
+    conda activate axiom_dev
 
-    # Move back up
-    cd ..
+    # Install Axiom
+    pip install acs-axiom
 
-
-Install Axiom Schemas
----------------------
-
-Most of the utilities dependencies will be installed automatically, with the exception of the Axiom Schemas component, which must be installed separately.
-
-.. code-block:: shell
-
-    # Clone Axiom Schemas
-    git clone git@github.com:AusClimateService/axiom-schemas.git
-
-    cd axiom_schemas
-    pip install -e .    
+    # Alternatively, install to user space
+    pip install --user acs-axiom
