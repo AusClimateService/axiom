@@ -24,6 +24,7 @@
         "year": true,
         "year_offset": 1
     },
+    "dump_filepaths_prior_to_loading": true,
     "auto_detect_ccam": false,
     "allow_subdaily_resampling": false,
     "rolling_time_averaging": true,
