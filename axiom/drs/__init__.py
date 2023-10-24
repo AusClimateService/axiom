@@ -464,10 +464,13 @@ def process(
             logger.info('Waiting for computations to finish.')
             progress(_ds)
 
+        # Get the output format from config
+        output_format = config.get('output_format', 'NETCDF4')
+        
         logger.debug(f'Writing {output_filepath}')
         write = _ds.to_netcdf(
             output_filepath,
-            format='NETCDF4',
+            format=output_format,
             encoding=encoding,
             unlimited_dims=['time']
         )

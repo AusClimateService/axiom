@@ -70,6 +70,7 @@
         "6H": "6hr",
         "fx": "fx"
     },
+    "output_format": "NETCDF4",
     "encoding": {
         "variables": {
             "dtype": "float32",
