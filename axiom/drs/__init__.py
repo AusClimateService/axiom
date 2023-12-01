@@ -348,7 +348,7 @@ def process(
         context['start_date'], context['end_date'] = adu.get_start_and_end_dates(year, output_frequency)
 
         # Tracking info
-        context['creation_date'] = datetime.utcnow()
+        context['creation_date'] = datetime.utcnow().isoformat(timespec='seconds')+'Z'
         context['uuid'] = uuid4()
 
         # Interpolate context
