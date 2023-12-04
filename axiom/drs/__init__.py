@@ -19,7 +19,7 @@ import shutil
 from dask.distributed import progress, wait
 import numpy as np
 from axiom.supervisor import Supervisor
-
+from axiom.drs.processing.ccam import is_instantaneous
 
 def consume(json_filepath):
     """Consume a json payload (for message passing)
@@ -411,6 +411,9 @@ def process(
         # Update the cell methods
         if resampling_applied:
             _ds = update_cell_methods(_ds, variable, dim='time', method='mean')
+        else:
+            if is_instantaneous(_ds, variable):
+                _ds = update_cell_methods(_ds, variable, dim='time', method='point')
 
         # Get the full output filepath with string interpolation
         logger.debug('Working out output paths')
